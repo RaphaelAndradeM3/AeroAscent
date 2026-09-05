@@ -46,6 +46,11 @@ public class Voo
     public ResultadoVoo? Resultado { get; private set; }
 
     /// <summary>
+    /// Reservatório de combustível carregado para esta sessão de voo.
+    /// </summary>
+    public Combustivel Combustivel { get; private set; }
+
+    /// <summary>
     /// Construtor privado para controle estrito via método de fábrica Iniciar.
     /// </summary>
     private Voo(Guid id, Aeronave aeronave)
@@ -57,6 +62,7 @@ public class Voo
         AltitudeMaxima = 0f;
         MoedasColetadas = 0;
         Resultado = null;
+        Combustivel = Combustivel.CriarCheio(20f + (aeronave.NivelTanqueCombustivel - 1) * 10f, 5.0f);
     }
 
     /// <summary>

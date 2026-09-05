@@ -1,8 +1,10 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/AeroAscent.Core.Aplicacao/AeroAscent.Core.Aplicacao.csproj" />
     <Project Path="src/AeroAscent.Core.Dominio/AeroAscent.Core.Dominio.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/AeroAscent.Core.Aplicacao.Testes/AeroAscent.Core.Aplicacao.Testes.csproj" />
     <Project Path="tests/AeroAscent.Core.Dominio.Testes/AeroAscent.Core.Dominio.Testes.csproj" />
   </Folder>
 </Solution>
