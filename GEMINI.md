@@ -25,22 +25,22 @@
 ---
 
 ## 🏛️ Clean Architecture e Separação de Camadas
-1. **Domínio (`Core/Dominio`):** C# Puro (.NET Standard 2.1 / .NET 8). Zero dependências de frameworks de interface (MAUI), engines gráficas ou bibliotecas externas.
+1. **Domínio (`Core/Dominio`):** C# Puro (.NET Standard 2.1 / .NET 8). Zero dependências de `UnityEngine`, `MonoBehaviour` ou frameworks externos.
 2. **Aplicação (`Core/Aplicacao`):** Casos de uso e orquestração dos fluxos de jogo. Depende exclusivamente do Domínio.
-3. **Infraestrutura (`Infraestrutura`):** Implementações de repositórios (JSON via `System.Text.Json` e `FileSystem.AppDataDirectory`), adaptadores de áudio e logging.
-4. **Apresentação (`Apresentacao/MAUI`):** Aplicação **.NET MAUI** multiplataforma (**Windows e Android**), contendo telas XAML, renderização gráfica via `GraphicsView` / `IDrawable` (ou Canvas 2D), ViewModels (MVVM) e HUD reativo.
+3. **Infraestrutura (`Infraestrutura`):** Implementações de repositórios (JSON via `System.Text.Json` e `Application.persistentDataPath`), adaptadores de áudio e logging.
+4. **Apresentação (`Apresentacao/Unity`):** Projeto **Unity** multiplataforma (**Windows e Android**), contendo scripts `MonoBehaviour`, renderização 2D/3D nativa em GPU, Unity UI / Canvas, partículas Shuriken e controladores visuais.
 
 ---
 
 ## 🗺️ Domain-Driven Design (DDD) & SOLID
 - **Entidades:** Modeladas como `class` (NUNCA `record`), com `Guid Id` único e encapsulamento de invariantes.
-- **Objetos de Valor (Value Objects):** Modelados como `record` imutável em C# (ex: `Combustivel`, `Moeda`, `VetorVoo`).
+- **Objetos de Valor (Value Objects):** Modelados como `record` ou `readonly record struct` imutável em C# (ex: `Combustivel`, `Moeda`, `VetorVoo`).
 - **Inversão de Dependências (DIP):** Depender exclusivamente de interfaces (`IServico...`, `IRepositorio...`), nunca de implementações concretas.
 - **Documentação XML:** Toda classe pública, interface, método e propriedade pública deve conter `/// <summary>`, `<param>`, `<returns>`.
 
 ---
 
 ## ⚡ Performance Mobile First e Multiplataforma (Windows e Android)
-- **Alocação Zero no Loop de Execução e Renderização (`GC Alloc = 0 bytes`):** Proibido instanciar objetos (`new`) dentro do loop de desenho (`IDrawable.Draw`), atualização física contínua ou no ciclo de despacho de frames.
+- **Alocação Zero no Loop de Execução e Renderização (`GC Alloc = 0 bytes`):** Proibido instanciar objetos (`new`) dentro de `Update()`, `FixedUpdate()`, `LateUpdate()` ou no loop de física contínua.
 - **Object Pooling:** Obrigatório para coletáveis (moedas, anéis de vento), partículas e elementos dinâmicos da simulação.
-- **Taxa de Quadros Alvo:** 60 FPS estáveis tanto em dispositivos móveis Android quanto em desktop Windows.
+- **Taxa de Quadros Alvo:** 60 FPS estáveis tanto em dispositivos móveis Android quanto em desktop Windows via Unity (IL2CPP / Vulkan / DirectX).

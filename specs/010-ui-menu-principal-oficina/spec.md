@@ -86,4 +86,4 @@ Como jogador, ao pressionar o botão "DECOLAR", desejo que o jogo transite suave
 ## Assumptions
 
 - Os assets visuais de interface seguem o pacote UI Pack da Kenney.nl (CC0).
-- A interface utiliza telas e componentes XAML do .NET MAUI com layouts responsivos (Grid, FlexLayout) adaptáveis para múltiplos aspectos de tela no Android (16:9, 18:9, 20:9) e janelas redimensionáveis no Windows.
+- A interface utiliza o sistema moderno de UI da Unity (Unity UI / Canvas) com âncoras responsivas adaptáveis para múltiplos aspectos de tela no Android (16:9, 18:9, 20:9) e janelas redimensionáveis no Windows.

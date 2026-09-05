@@ -62,7 +62,7 @@ Como jogador em um smartphone ou tablet, desejo que o jogo execute a 60 FPS est�
 
 ### Functional Requirements
 
-- **FR-001**: O sistema DEVE fornecer o serviço `IServicoAudio` desacoplado, com implementação multiplataforma para .NET MAUI (compatível com Windows e Android) para gerenciar canais de efeitos (SFX) e música ambiente.
+- **FR-001**: O sistema DEVE fornecer o serviço `IServicoAudio` desacoplado, com implementação multiplataforma para Unity (compatível com Windows e Android) para gerenciar canais de efeitos (SFX) e música ambiente.
 - **FR-002**: Todos os efeitos sonoros DEVEM utilizar fontes sob licença CC0 / Domínio Público (Kenney.nl Audio Packs).
 - **FR-003**: O sistema DEVE fornecer emissores de partículas para: rastro de cauda do avião (*trail*), chamas de boost, brilho de coleta de moedas e confetes comemorativos de recorde.
 - **FR-004**: O áudio do propulsor DEVE variar dinamicamente de volume de acordo com a aceleração e o estado do motor.
@@ -88,4 +88,4 @@ Como jogador em um smartphone ou tablet, desejo que o jogo execute a 60 FPS est�
 ## Assumptions
 
 - Todos os clipes sonoros são pré-carregados na memória durante a inicialização para evitar engasgos em tempo de execução.
-- As partículas visuais utilizam um sistema 2D leve com *Object Pooling*, renderizado eficientemente via `GraphicsView` / Canvas do .NET MAUI em Windows e Android.
+- As partículas visuais utilizam o sistema nativo de partículas Shuriken da Unity com *Object Pooling*, com alto desempenho acelerado por GPU em Windows e Android.
