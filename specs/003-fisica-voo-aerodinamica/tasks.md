@@ -38,14 +38,14 @@
 
 ### Testes da User Story 1 ⚠️
 
-- [ ] T007 [P] [US1] Criar testes unitários em `tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs` cobrindo cálculo de sustentação positiva em subida, aceleração em mergulho, estol suave pós-20°, autoestabilização ao soltar comandos e desaceleração por atrito de solo
-- [ ] T008 [P] [US1] Criar testes unitários para o caso de uso `AtualizarFisicaVooCasoDeUsoTestes` em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/AtualizarFisicaVooCasoDeUsoTestes.cs` cobrindo atualização de métricas (`DistanciaPercorrida`, `AltitudeMaxima`) e transição automática para `StatusVoo.Pousado`
+- [X] T007 [P] [US1] Criar testes unitários em `tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs` cobrindo cálculo de sustentação positiva em subida, aceleração em mergulho, estol suave pós-20°, autoestabilização ao soltar comandos e desaceleração por atrito de solo
+- [X] T008 [P] [US1] Criar testes unitários para o caso de uso `AtualizarFisicaVooCasoDeUsoTestes` em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/AtualizarFisicaVooCasoDeUsoTestes.cs` cobrindo atualização de métricas (`DistanciaPercorrida`, `AltitudeMaxima`) e transição automática para `StatusVoo.Pousado`
 
 ### Implementação da User Story 1
 
-- [ ] T009 [US1] Implementar no serviço de domínio `ServicoFisicaVoo` os métodos matemáticos de coeficiente de sustentação $C_L(\alpha)$ com estol suave acolhedor, coeficiente de arrasto parabólico $C_D$, aceleração da gravidade e integração de Euler Semi-Implícito em `src/AeroAscent.Core.Dominio/Servicos/ServicoFisicaVoo.cs`
-- [ ] T010 [US1] Implementar no serviço de domínio `ServicoFisicaVoo` a dinâmica de variação angular do pitch por input, limites de inclinação ($-45^\circ$ a $+60^\circ$), autoestabilização e dinâmica de contato/deslizamento no solo com atrito cinético ($\mu = 0.3$) no método `SimularPasso` em `src/AeroAscent.Core.Dominio/Servicos/ServicoFisicaVoo.cs`
-- [ ] T011 [US1] Implementar o caso de uso `AtualizarFisicaVooCasoDeUso` em `src/AeroAscent.Core.Aplicacao/CasosDeUso/AtualizarFisicaVooCasoDeUso.cs`, orquestrando a atualização periódica do `EstadoFisicoAeronave`, alimentando as métricas da entidade `Voo` e executando `voo.Pousar()` ao parar no solo
+- [X] T009 [US1] Implementar no serviço de domínio `ServicoFisicaVoo` os métodos matemáticos de coeficiente de sustentação $C_L(\alpha)$ com estol suave acolhedor, coeficiente de arrasto parabólico $C_D$, aceleração da gravidade e integração de Euler Semi-Implícito em `src/AeroAscent.Core.Dominio/Servicos/ServicoFisicaVoo.cs`
+- [X] T010 [US1] Implementar no serviço de domínio `ServicoFisicaVoo` a dinâmica de variação angular do pitch por input, limites de inclinação ($-45^\circ$ a $+60^\circ$), autoestabilização e dinâmica de contato/deslizamento no solo com atrito cinético ($\mu = 0.3$) no método `SimularPasso` em `src/AeroAscent.Core.Dominio/Servicos/ServicoFisicaVoo.cs`
+- [X] T011 [US1] Implementar o caso de uso `AtualizarFisicaVooCasoDeUso` em `src/AeroAscent.Core.Aplicacao/CasosDeUso/AtualizarFisicaVooCasoDeUso.cs`, orquestrando a atualização periódica do `EstadoFisicoAeronave`, alimentando as métricas da entidade `Voo` e executando `voo.Pousar()` ao parar no solo
 
 **Checkpoint**: User Story 1 100% funcional e testável de forma independente. O loop principal de voo e pouso arcade está concluído (MVP alcançado).
 
