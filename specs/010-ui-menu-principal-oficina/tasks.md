@@ -17,11 +17,11 @@
 
 **Objetivo**: Criação dos DTOs imutáveis de apresentação e das interfaces desacopladas da visão e do apresentador (`GC Alloc = 0 bytes`).
 
-- [ ] T003 [P] Implementar o DTO imutável `ItemCartaoOficinaDTO` em `src/AeroAscent.Core.Aplicacao/DTOs/ItemCartaoOficinaDTO.cs`
-- [ ] T004 [P] Implementar o modelo de dados imutável `ModeloVisualOficina` em `src/AeroAscent.Core.Aplicacao/DTOs/ModeloVisualOficina.cs`
-- [ ] T005 [P] Implementar o contrato da visão passiva `IVisaoOficina` em `src/AeroAscent.Core.Aplicacao/Contratos/IVisaoOficina.cs`
-- [ ] T006 [P] Implementar o contrato do apresentador `IApresentadorOficina` em `src/AeroAscent.Core.Aplicacao/Contratos/IApresentadorOficina.cs`
-- [ ] T007 [P] Criar testes unitários para verificação de inicialização e integridade dos DTOs de apresentação em `tests/AeroAscent.Core.Aplicacao.Testes/DTOs/ModeloVisualOficinaTestes.cs`
+- [X] T003 [P] Implementar o DTO imutável `ItemCartaoOficinaDTO` em `src/AeroAscent.Core.Aplicacao/DTOs/ItemCartaoOficinaDTO.cs`
+- [X] T004 [P] Implementar o modelo de dados imutável `ModeloVisualOficina` em `src/AeroAscent.Core.Aplicacao/DTOs/ModeloVisualOficina.cs`
+- [X] T005 [P] Implementar o contrato da visão passiva `IVisaoOficina` em `src/AeroAscent.Core.Aplicacao/Contratos/IVisaoOficina.cs`
+- [X] T006 [P] Implementar o contrato do apresentador `IApresentadorOficina` em `src/AeroAscent.Core.Aplicacao/Contratos/IApresentadorOficina.cs`
+- [X] T007 [P] Criar testes unitários para verificação de inicialização e integridade dos DTOs de apresentação em `tests/AeroAscent.Core.Aplicacao.Testes/DTOs/ModeloVisualOficinaTestes.cs`
 
 **Ponto de Verificação**: Modelos de dados e contratos de interface prontos, testados e disponíveis para implementação do apresentador.
 
