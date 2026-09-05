@@ -140,4 +140,147 @@ public class FinalizarVooCasoDeUsoTestes
         Assert.Equal(1, _repositorioMock.QuantidadeChamadasSalvar);
         Assert.Equal(1, _repositorioMock.ProgressoArmazenado.TotalVoosRealizados);
     }
+
+    [Fact]
+    public async Task ExecutarAsync_NovoRecordeDistancia_DeveSinalizarEhNovoRecordeDistanciaEAtualizarRepositorio()
+    {
+        // Arrange: recorde anterior de 300m e altitude de 100m
+        var progresso = new ProgressoJogador(
+            Guid.NewGuid(),
+            Aeronave.CriarPadrao(),
+            Moeda.Zero,
+            recordeDistanciaMetros: 300f,
+            recordeAltitudeMetros: 100f,
+            totalVoosRealizados: 5);
+        _repositorioMock.ProgressoArmazenado = progresso;
+
+        var voo = Voo.Iniciar(progresso.Aeronave);
+        voo.Decolar();
+        voo.AtualizarMetricas(350f, 80f, 0); // Nova distância maior (350m > 300m), altitude menor (80m < 100m)
+        voo.Pousar();
+
+        // Act
+        var resumo = await _casoDeUso.ExecutarAsync(voo);
+
+        // Assert
+        Assert.True(resumo.EhNovoRecordeDistancia);
+        Assert.False(resumo.EhNovoRecordeAltitude);
+        Assert.Equal(350f, _repositorioMock.ProgressoArmazenado.RecordeDistanciaMetros);
+        Assert.Equal(100f, _repositorioMock.ProgressoArmazenado.RecordeAltitudeMetros);
+    }
+
+    [Fact]
+    public async Task ExecutarAsync_DistanciaInferiorAoRecorde_DeveManterEhNovoRecordeDistanciaComoFalseEPreservarRecordeAnterior()
+    {
+        // Arrange: recorde anterior de 300m
+        var progresso = new ProgressoJogador(
+            Guid.NewGuid(),
+            Aeronave.CriarPadrao(),
+            Moeda.Zero,
+            recordeDistanciaMetros: 300f,
+            recordeAltitudeMetros: 100f,
+            totalVoosRealizados: 5);
+        _repositorioMock.ProgressoArmazenado = progresso;
+
+        var voo = Voo.Iniciar(progresso.Aeronave);
+        voo.Decolar();
+        voo.AtualizarMetricas(280f, 80f, 0); // Distância menor que o recorde (280m < 300m)
+        voo.Pousar();
+
+        // Act
+        var resumo = await _casoDeUso.ExecutarAsync(voo);
+
+        // Assert
+        Assert.False(resumo.EhNovoRecordeDistancia);
+        Assert.Equal(300f, _repositorioMock.ProgressoArmazenado.RecordeDistanciaMetros);
+    }
+
+    [Fact]
+    public async Task ExecutarAsync_NovoRecordeAltitude_DeveSinalizarEhNovoRecordeAltitudeEAtualizarRepositorio()
+    {
+        // Arrange: recorde de altitude anterior de 50m
+        var progresso = new ProgressoJogador(
+            Guid.NewGuid(),
+            Aeronave.CriarPadrao(),
+            Moeda.Zero,
+            recordeDistanciaMetros: 400f,
+            recordeAltitudeMetros: 50f,
+            totalVoosRealizados: 2);
+        _repositorioMock.ProgressoArmazenado = progresso;
+
+        var voo = Voo.Iniciar(progresso.Aeronave);
+        voo.Decolar();
+        voo.AtualizarMetricas(200f, 75f, 0); // Altitude maior (75m > 50m)
+        voo.Pousar();
+
+        // Act
+        var resumo = await _casoDeUso.ExecutarAsync(voo);
+
+        // Assert
+        Assert.True(resumo.EhNovoRecordeAltitude);
+        Assert.False(resumo.EhNovoRecordeDistancia);
+        Assert.Equal(75f, _repositorioMock.ProgressoArmazenado.RecordeAltitudeMetros);
+        Assert.Equal(400f, _repositorioMock.ProgressoArmazenado.RecordeDistanciaMetros);
+    }
+
+    [Fact]
+    public async Task ExecutarAsync_AltitudeInferiorAoRecorde_DeveManterEhNovoRecordeAltitudeComoFalseEPreservarRecordeAnterior()
+    {
+        // Arrange: recorde anterior de altitude de 80m
+        var progresso = new ProgressoJogador(
+            Guid.NewGuid(),
+            Aeronave.CriarPadrao(),
+            Moeda.Zero,
+            recordeDistanciaMetros: 200f,
+            recordeAltitudeMetros: 80f,
+            totalVoosRealizados: 1);
+        _repositorioMock.ProgressoArmazenado = progresso;
+
+        var voo = Voo.Iniciar(progresso.Aeronave);
+        voo.Decolar();
+        voo.AtualizarMetricas(100f, 60f, 0); // Altitude menor (60m < 80m)
+        voo.Pousar();
+
+        // Act
+        var resumo = await _casoDeUso.ExecutarAsync(voo);
+
+        // Assert
+        Assert.False(resumo.EhNovoRecordeAltitude);
+        Assert.Equal(80f, _repositorioMock.ProgressoArmazenado.RecordeAltitudeMetros);
+    }
+
+    [Fact]
+    public async Task ExecutarAsync_IntegracaoE2E_ComQuebraDeAmbosOsRecordes_DeveAtualizarProgressoERetornarExtratoConsistente()
+    {
+        // Arrange: histórico com 200m distância, 60m altitude e 50 moedas
+        var progresso = new ProgressoJogador(
+            Guid.NewGuid(),
+            Aeronave.CriarPadrao(),
+            new Moeda(50),
+            recordeDistanciaMetros: 200f,
+            recordeAltitudeMetros: 60f,
+            totalVoosRealizados: 3);
+        _repositorioMock.ProgressoArmazenado = progresso;
+
+        var voo = Voo.Iniciar(progresso.Aeronave);
+        voo.Decolar();
+        voo.AtualizarMetricas(320f, 90f, 10);
+        voo.Pousar();
+
+        // Act
+        var resumo = await _casoDeUso.ExecutarAsync(voo);
+
+        // Assert
+        // Recompensas: floor(320*0.1) + floor(90*0.05) + 10 = 32 + 4 + 10 = 46 moedas
+        // Saldo total: 50 + 46 = 96 moedas
+        Assert.True(resumo.EhNovoRecordeDistancia);
+        Assert.True(resumo.EhNovoRecordeAltitude);
+        Assert.Equal(46, resumo.MoedasTotalGanhas.Quantidade);
+        Assert.Equal(96, resumo.SaldoTotalAtualizado.Quantidade);
+        Assert.Equal(320f, _repositorioMock.ProgressoArmazenado.RecordeDistanciaMetros);
+        Assert.Equal(90f, _repositorioMock.ProgressoArmazenado.RecordeAltitudeMetros);
+        Assert.Equal(96, _repositorioMock.ProgressoArmazenado.SaldoMoedas.Quantidade);
+        Assert.Equal(4, _repositorioMock.ProgressoArmazenado.TotalVoosRealizados);
+        Assert.True(voo.PremiacaoLiquidada);
+    }
 }

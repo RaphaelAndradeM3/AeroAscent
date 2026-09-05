@@ -68,13 +68,13 @@
 
 ### Testes da User Story 2
 
-- [ ] T012 [P] [US2] Criar testes unitários para identificação e sinalização de novo recorde de distância (`EhNovoRecordeDistancia == true`) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
-- [ ] T013 [P] [US2] Criar testes unitários para identificação de novo recorde de altitude (`EhNovoRecordeAltitude == true`) e preservação de recordes anteriores superiores em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
+- [X] T012 [P] [US2] Criar testes unitários para identificação e sinalização de novo recorde de distância (`EhNovoRecordeDistancia == true`) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
+- [X] T013 [P] [US2] Criar testes unitários para identificação de novo recorde de altitude (`EhNovoRecordeAltitude == true`) e preservação de recordes anteriores superiores em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
 
 ### Implementação da User Story 2
 
-- [ ] T014 [US2] Atualizar `FinalizarVooCasoDeUso.cs` para comparar métricas com `progresso.RecordeDistanciaMetros` e `progresso.RecordeAltitudeMetros`, alimentando as flags do extrato em `src/AeroAscent.Core.Aplicacao/CasosDeUso/FinalizarVooCasoDeUso.cs`
-- [ ] T015 [US2] Criar testes de integração ponta a ponta simulando voo pousado com quebra de recorde histórico e persistência no repositório em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
+- [X] T014 [US2] Atualizar `FinalizarVooCasoDeUso.cs` para comparar métricas com `progresso.RecordeDistanciaMetros` e `progresso.RecordeAltitudeMetros`, alimentando as flags do extrato em `src/AeroAscent.Core.Aplicacao/CasosDeUso/FinalizarVooCasoDeUso.cs`
+- [X] T015 [US2] Criar testes de integração ponta a ponta simulando voo pousado com quebra de recorde histórico e persistência no repositório em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
 
 **Ponto de Verificação**: User Stories 1 e 2 funcionando de forma integrada com recompensas financeiras e registro de recordes.
 
