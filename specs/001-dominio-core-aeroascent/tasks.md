@@ -32,14 +32,14 @@
 
 **⚠️ CRITICAL**: Nenhuma história de usuário pode ser iniciada até a conclusão desta fase
 
-- [ ] T005 [P] Implementar enumeração `StatusVoo` em `src/AeroAscent.Core.Dominio/Enums/StatusVoo.cs`
-- [ ] T006 [P] Implementar enumeração `TipoMelhoria` em `src/AeroAscent.Core.Dominio/Enums/TipoMelhoria.cs`
-- [ ] T007 [P] Implementar exceção de domínio `SaldoInsuficienteException` em `src/AeroAscent.Core.Dominio/Excecoes/SaldoInsuficienteException.cs`
-- [ ] T008 [P] Implementar exceção de domínio `MelhoriaNivelMaximoException` em `src/AeroAscent.Core.Dominio/Excecoes/MelhoriaNivelMaximoException.cs`
-- [ ] T009 [P] Implementar exceção de domínio `DominioInvalidoException` em `src/AeroAscent.Core.Dominio/Excecoes/DominioInvalidoException.cs`
-- [ ] T010 [P] Implementar contrato da interface `IRepositorioProgresso` em `src/AeroAscent.Core.Dominio/Contratos/IRepositorioProgresso.cs`
-- [ ] T011 [P] Implementar contrato da interface `IServicoFisicaVoo` em `src/AeroAscent.Core.Dominio/Contratos/IServicoFisicaVoo.cs`
-- [ ] T012 [P] Implementar contrato da interface `IServicoEconomia` em `src/AeroAscent.Core.Dominio/Contratos/IServicoEconomia.cs`
+- [X] T005 [P] Implementar enumeração `StatusVoo` em `src/AeroAscent.Core.Dominio/Enums/StatusVoo.cs`
+- [X] T006 [P] Implementar enumeração `TipoMelhoria` em `src/AeroAscent.Core.Dominio/Enums/TipoMelhoria.cs`
+- [X] T007 [P] Implementar exceção de domínio `SaldoInsuficienteException` em `src/AeroAscent.Core.Dominio/Excecoes/SaldoInsuficienteException.cs`
+- [X] T008 [P] Implementar exceção de domínio `MelhoriaNivelMaximoException` em `src/AeroAscent.Core.Dominio/Excecoes/MelhoriaNivelMaximoException.cs`
+- [X] T009 [P] Implementar exceção de domínio `DominioInvalidoException` em `src/AeroAscent.Core.Dominio/Excecoes/DominioInvalidoException.cs`
+- [X] T010 [P] Implementar contrato da interface `IRepositorioProgresso` em `src/AeroAscent.Core.Dominio/Contratos/IRepositorioProgresso.cs`
+- [X] T011 [P] Implementar contrato da interface `IServicoFisicaVoo` em `src/AeroAscent.Core.Dominio/Contratos/IServicoFisicaVoo.cs`
+- [X] T012 [P] Implementar contrato da interface `IServicoEconomia` em `src/AeroAscent.Core.Dominio/Contratos/IServicoEconomia.cs`
 
 **Checkpoint**: Base e contratos estabelecidos — o desenvolvimento das histórias de usuário pode começar.
 
