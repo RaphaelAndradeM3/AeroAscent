@@ -71,13 +71,13 @@
 
 > **NOTE: Escreva estes testes PRIMEIRO e confirme que FALHAM antes da implementação.**
 
-- [ ] T011 [P] [US2] Criar testes unitários para a dinâmica periódica triangular de MedidorForcaOscilante em tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/MedidorForcaOscilanteTestes.cs
-- [ ] T012 [P] [US2] Criar testes unitários para a validação de piso protetivo de 10% e limites de ângulo em tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ParametrosLancamentoTestes.cs
+- [X] T011 [P] [US2] Criar testes unitários para a dinâmica periódica triangular de MedidorForcaOscilante em tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/MedidorForcaOscilanteTestes.cs
+- [X] T012 [P] [US2] Criar testes unitários para a validação de piso protetivo de 10% e limites de ângulo em tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ParametrosLancamentoTestes.cs
 
 ### Implementation for User Story 2
 
-- [ ] T013 [US2] Implementar Objeto de Valor MedidorForcaOscilante como readonly record struct com amostragem periódica triangular em src/AeroAscent.Core.Dominio/ObjetosDeValor/MedidorForcaOscilante.cs (depende de T011)
-- [ ] T014 [US2] Integrar o piso protetivo e validações de temporização na orquestração de lançamento em src/AeroAscent.Core.Aplicacao/CasosDeUso/LancarAeronaveCasoDeUso.cs (depende de T010, T012, T013)
+- [X] T013 [US2] Implementar Objeto de Valor MedidorForcaOscilante como readonly record struct com amostragem periódica triangular em src/AeroAscent.Core.Dominio/ObjetosDeValor/MedidorForcaOscilante.cs (depende de T011)
+- [X] T014 [US2] Integrar o piso protetivo e validações de temporização na orquestração de lançamento em src/AeroAscent.Core.Aplicacao/CasosDeUso/LancarAeronaveCasoDeUso.cs (depende de T010, T012, T013)
 
 **Checkpoint**: Neste estágio, as User Stories 1 e 2 estarão totalmente integradas e testadas com zero falhas.
 

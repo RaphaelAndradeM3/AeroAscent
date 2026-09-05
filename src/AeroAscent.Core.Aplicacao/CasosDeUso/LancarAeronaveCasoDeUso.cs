@@ -52,4 +52,23 @@ public class LancarAeronaveCasoDeUso : ILancarAeronaveCasoDeUso
 
         return ResultadoLancamento.CriarSucesso(velocidadeInicial);
     }
+
+    /// <summary>
+    /// Executa o procedimento de lançamento com base na amostragem instantânea de um medidor oscilante de força.
+    /// </summary>
+    /// <param name="voo">Instância da sessão de voo em preparação.</param>
+    /// <param name="medidor">Medidor de força oscilante.</param>
+    /// <param name="tempoSegundos">Tempo transcorrido no momento do toque do jogador.</param>
+    /// <param name="anguloGraus">Ângulo de lançamento da rampa em graus.</param>
+    /// <returns>Resultado contendo o vetor de velocidade inicial ou motivo da falha.</returns>
+    public ResultadoLancamento ExecutarComTemporizador(
+        Voo voo,
+        MedidorForcaOscilante medidor,
+        float tempoSegundos,
+        float anguloGraus = ParametrosLancamento.ANGULO_PADRAO_GRAUS)
+    {
+        var precisaoInstantanea = medidor.ObterFatorPrecisao(tempoSegundos);
+        var parametros = ParametrosLancamento.Criar(precisaoInstantanea, anguloGraus);
+        return Executar(voo, parametros);
+    }
 }

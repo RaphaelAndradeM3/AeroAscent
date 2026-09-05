@@ -105,4 +105,36 @@ public class LancarAeronaveCasoDeUsoTestes
         Assert.True(resultado.Sucesso);
         Assert.InRange(resultado.VelocidadeInicial.Magnitude(), velocidadeEsperada - 0.05f, velocidadeEsperada + 0.05f);
     }
+
+    [Fact]
+    public void ExecutarComTemporizador_NoApiceDeMeioSegundo_DeveDispararComForcaMaxima()
+    {
+        // Arrange (1.0 Hz atinge o ápice de 100% em 0.5s)
+        var voo = Voo.Iniciar(Aeronave.CriarPadrao());
+        var medidor = new MedidorForcaOscilante(1.0f);
+
+        // Act
+        var resultado = _casoDeUso.ExecutarComTemporizador(voo, medidor, 0.5f);
+
+        // Assert
+        Assert.True(resultado.Sucesso);
+        Assert.Equal(StatusVoo.EmVoo, voo.Status);
+        Assert.InRange(resultado.VelocidadeInicial.Magnitude(), 24.95f, 25.05f);
+    }
+
+    [Fact]
+    public void ExecutarComTemporizador_NoInstanteZero_DeveAplicarPisoProtetivoDe10PorCento()
+    {
+        // Arrange (t = 0.0s -> fator 0.0 -> piso protetivo 0.10f -> 2.5 m/s)
+        var voo = Voo.Iniciar(Aeronave.CriarPadrao());
+        var medidor = new MedidorForcaOscilante(1.0f);
+
+        // Act
+        var resultado = _casoDeUso.ExecutarComTemporizador(voo, medidor, 0.0f);
+
+        // Assert
+        Assert.True(resultado.Sucesso);
+        Assert.Equal(StatusVoo.EmVoo, voo.Status);
+        Assert.InRange(resultado.VelocidadeInicial.Magnitude(), 2.45f, 2.55f);
+    }
 }
