@@ -124,10 +124,10 @@
 **Independent Test**: Testar atualização atômica de recordes históricos, crédito/débito de moedas e substituição íntegra de aeronave na raiz de agregação.
 
 ### Tests for User Story 5
-- [ ] T029 [P] [US5] Criar testes unitários para a raiz de agregação `ProgressoJogador` em `tests/AeroAscent.Core.Dominio.Testes/Entidades/ProgressoJogadorTestes.cs`
+- [X] T029 [P] [US5] Criar testes unitários para a raiz de agregação `ProgressoJogador` em `tests/AeroAscent.Core.Dominio.Testes/Entidades/ProgressoJogadorTestes.cs`
 
 ### Implementation for User Story 5
-- [ ] T030 [US5] Implementar entidade raiz de agregação `ProgressoJogador` em `src/AeroAscent.Core.Dominio/Entidades/ProgressoJogador.cs`
+- [X] T030 [US5] Implementar entidade raiz de agregação `ProgressoJogador` em `src/AeroAscent.Core.Dominio/Entidades/ProgressoJogador.cs`
 
 **Checkpoint**: Todas as 5 histórias de usuário do domínio estão completas e testadas.
 
