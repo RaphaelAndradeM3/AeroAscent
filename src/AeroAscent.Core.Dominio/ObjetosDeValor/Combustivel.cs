@@ -1,5 +1,6 @@
 namespace AeroAscent.Core.Dominio.ObjetosDeValor;
 
+using System;
 using AeroAscent.Core.Dominio.Excecoes;
 
 /// <summary>
@@ -79,15 +80,38 @@ public record Combustivel
     /// <returns>Nova instância imutável com a quantidade restante calculada.</returns>
     public Combustivel Consumir(float deltaTempoSegundos)
     {
-        if (deltaTempoSegundos <= 0f || EstaVazio)
+        return ConsumirFracionario(deltaTempoSegundos, out _);
+    }
+
+    /// <summary>
+    /// Executa o consumo de combustível calculando precisamente o tempo efetivo de queima no intervalo informado.
+    /// Se o combustível restante for insuficiente para o passo completo, queima apenas a fração residual disponível,
+    /// zerando o tanque e retornando o tempo real em que o motor permaneceu ligado (SC-001).
+    /// </summary>
+    /// <param name="deltaTempoSegundos">Duração total do passo de simulação em segundos.</param>
+    /// <param name="tempoEfetivoQueima">Tempo efetivo durante o qual houve queima de combustível no passo.</param>
+    /// <returns>Nova instância imutável com a quantidade restante calculada.</returns>
+    public Combustivel ConsumirFracionario(float deltaTempoSegundos, out float tempoEfetivoQueima)
+    {
+        if (deltaTempoSegundos <= 0f || EstaVazio || TaxaQueimaPorSegundo <= 0f)
         {
+            tempoEfetivoQueima = 0f;
             return this;
         }
 
-        var consumo = TaxaQueimaPorSegundo * deltaTempoSegundos;
-        var novaQuantidade = MathF.Max(0f, QuantidadeAtual - consumo);
+        var consumoDesejado = TaxaQueimaPorSegundo * deltaTempoSegundos;
 
-        return new Combustivel(novaQuantidade, CapacidadeMaxima, TaxaQueimaPorSegundo);
+        if (QuantidadeAtual >= consumoDesejado)
+        {
+            tempoEfetivoQueima = deltaTempoSegundos;
+            var novaQuantidade = QuantidadeAtual - consumoDesejado;
+            return new Combustivel(novaQuantidade, CapacidadeMaxima, TaxaQueimaPorSegundo);
+        }
+        else
+        {
+            tempoEfetivoQueima = QuantidadeAtual / TaxaQueimaPorSegundo;
+            return new Combustivel(0f, CapacidadeMaxima, TaxaQueimaPorSegundo);
+        }
     }
 
     /// <summary>

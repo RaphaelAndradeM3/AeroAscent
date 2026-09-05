@@ -3,7 +3,7 @@ namespace AeroAscent.Core.Dominio.ObjetosDeValor;
 using System;
 
 /// <summary>
-/// Representa o estado cinemático e dinâmico instantâneo da aeronave no espaço tridimensional (plano longitudinal Y-Z),
+/// Representa o estado cinemático, dinâmico e de propulsão instantâneo da aeronave no espaço tridimensional (plano longitudinal Y-Z),
 /// alocado exclusivamente na stack como readonly record struct garantindo GC Alloc = 0 bytes.
 /// </summary>
 public readonly record struct EstadoFisicoAeronave
@@ -44,6 +44,11 @@ public readonly record struct EstadoFisicoAeronave
     public bool NoSolo { get; }
 
     /// <summary>
+    /// Estado e telemetria instantânea do propulsor (boost) da aeronave na stack.
+    /// </summary>
+    public EstadoPropulsor Propulsor { get; }
+
+    /// <summary>
     /// Magnitude escalar da velocidade atual da aeronave em metros por segundo.
     /// </summary>
     public float VelocidadeEscalar => Velocidade.Magnitude();
@@ -56,12 +61,14 @@ public readonly record struct EstadoFisicoAeronave
     /// <param name="inclinacaoPitchGraus">Ângulo de pitch em graus.</param>
     /// <param name="forcaResultante">Força resultante atuante.</param>
     /// <param name="noSolo">Indicador de contato com o solo.</param>
+    /// <param name="propulsor">Estado instantâneo do propulsor.</param>
     public EstadoFisicoAeronave(
         VetorVoo posicao,
         VetorVoo velocidade,
         float inclinacaoPitchGraus,
         VetorVoo forcaResultante,
-        bool noSolo)
+        bool noSolo,
+        EstadoPropulsor propulsor = default)
     {
         // Invariante: Altitude física não pode ser negativa
         var yEfetivo = MathF.Max(0f, posicao.Y);
@@ -75,6 +82,7 @@ public readonly record struct EstadoFisicoAeronave
         InclinacaoPitchGraus = Math.Clamp(inclinacaoPitchGraus, PITCH_MINIMO_GRAUS, PITCH_MAXIMO_GRAUS);
         ForcaResultante = forcaResultante;
         NoSolo = (noSolo || yEfetivo <= 0f) && (velocidade.Y <= 0f);
+        Propulsor = propulsor;
     }
 
     /// <summary>
@@ -83,11 +91,13 @@ public readonly record struct EstadoFisicoAeronave
     /// <param name="posicaoInicial">Posição inicial de voo.</param>
     /// <param name="velocidadeInicial">Velocidade inicial conferida.</param>
     /// <param name="inclinacaoPitchGraus">Ângulo inicial de arfagem em graus.</param>
+    /// <param name="propulsor">Estado inicial do propulsor opcional.</param>
     /// <returns>Novo EstadoFisicoAeronave alocado na stack.</returns>
     public static EstadoFisicoAeronave CriarInicial(
         VetorVoo posicaoInicial,
         VetorVoo velocidadeInicial,
-        float inclinacaoPitchGraus)
+        float inclinacaoPitchGraus,
+        EstadoPropulsor propulsor = default)
     {
         var noSolo = posicaoInicial.Y <= 0f && velocidadeInicial.Y <= 0f;
         return new EstadoFisicoAeronave(
@@ -95,7 +105,8 @@ public readonly record struct EstadoFisicoAeronave
             velocidadeInicial,
             inclinacaoPitchGraus,
             VetorVoo.Zero,
-            noSolo);
+            noSolo,
+            propulsor);
     }
 
     /// <summary>
@@ -106,9 +117,10 @@ public readonly record struct EstadoFisicoAeronave
         VetorVoo velocidade,
         float inclinacaoPitchGraus,
         VetorVoo forcaResultante,
-        bool noSolo)
+        bool noSolo,
+        EstadoPropulsor propulsor = default)
     {
-        return new EstadoFisicoAeronave(posicao, velocidade, inclinacaoPitchGraus, forcaResultante, noSolo);
+        return new EstadoFisicoAeronave(posicao, velocidade, inclinacaoPitchGraus, forcaResultante, noSolo, propulsor);
     }
 
     /// <summary>
@@ -119,8 +131,9 @@ public readonly record struct EstadoFisicoAeronave
         VetorVoo novaVelocidade,
         float novoPitch,
         VetorVoo novaForca,
-        bool novoNoSolo)
+        bool novoNoSolo,
+        EstadoPropulsor novoPropulsor = default)
     {
-        return new EstadoFisicoAeronave(novaPosicao, novaVelocidade, novoPitch, novaForca, novoNoSolo);
+        return new EstadoFisicoAeronave(novaPosicao, novaVelocidade, novoPitch, novaForca, novoNoSolo, novoPropulsor);
     }
 }

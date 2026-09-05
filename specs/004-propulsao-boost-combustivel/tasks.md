@@ -32,12 +32,12 @@
 
 **⚠️ CRÍTICO**: Nenhuma implementação de história de usuário pode começar antes da conclusão desta fase.
 
-- [ ] T003 [P] Criar o objeto de valor `EstadoPropulsor` (`readonly record struct`) na stack em `src/AeroAscent.Core.Dominio/ObjetosDeValor/EstadoPropulsor.cs`
-- [ ] T004 [P] Enriquecer `ParametrosControlePiloto` com a propriedade `bool AcionarBoost` e construtores compatíveis em `src/AeroAscent.Core.Dominio/ObjetosDeValor/ParametrosControlePiloto.cs`
-- [ ] T005 [P] Enriquecer `Combustivel` com o método `ConsumirFracionario(float deltaTempoSegundos, out float tempoEfetivoQueima)` em `src/AeroAscent.Core.Dominio/ObjetosDeValor/Combustivel.cs`
-- [ ] T006 Enriquecer `EstadoFisicoAeronave` para incorporar a propriedade `EstadoPropulsor Propulsor` com zero alocação no heap em `src/AeroAscent.Core.Dominio/ObjetosDeValor/EstadoFisicoAeronave.cs`
-- [ ] T007 Atualizar o contrato `IServicoFisicaVoo` com sobrecargas de propulsão e método `CalcularEmpuxoMotor` em `src/AeroAscent.Core.Dominio/Contratos/IServicoFisicaVoo.cs`
-- [ ] T008 Atualizar o contrato `IAtualizarFisicaVooCasoDeUso` com documentação da propulsão e boost em `src/AeroAscent.Core.Aplicacao/Contratos/IAtualizarFisicaVooCasoDeUso.cs`
+- [x] T003 [P] Criar o objeto de valor `EstadoPropulsor` (`readonly record struct`) na stack em `src/AeroAscent.Core.Dominio/ObjetosDeValor/EstadoPropulsor.cs`
+- [x] T004 [P] Enriquecer `ParametrosControlePiloto` com a propriedade `bool AcionarBoost` e construtores compatíveis em `src/AeroAscent.Core.Dominio/ObjetosDeValor/ParametrosControlePiloto.cs`
+- [x] T005 [P] Enriquecer `Combustivel` com o método `ConsumirFracionario(float deltaTempoSegundos, out float tempoEfetivoQueima)` em `src/AeroAscent.Core.Dominio/ObjetosDeValor/Combustivel.cs`
+- [x] T006 Enriquecer `EstadoFisicoAeronave` para incorporar a propriedade `EstadoPropulsor Propulsor` com zero alocação no heap em `src/AeroAscent.Core.Dominio/ObjetosDeValor/EstadoFisicoAeronave.cs`
+- [x] T007 Atualizar o contrato `IServicoFisicaVoo` com sobrecargas de propulsão e método `CalcularEmpuxoMotor` em `src/AeroAscent.Core.Dominio/Contratos/IServicoFisicaVoo.cs`
+- [x] T008 Atualizar o contrato `IAtualizarFisicaVooCasoDeUso` com documentação da propulsão e boost em `src/AeroAscent.Core.Aplicacao/Contratos/IAtualizarFisicaVooCasoDeUso.cs`
 
 **Ponto de Verificação**: Estruturas de dados de domínio e contratos prontos. A implementação das histórias de usuário pode ser iniciada.
 

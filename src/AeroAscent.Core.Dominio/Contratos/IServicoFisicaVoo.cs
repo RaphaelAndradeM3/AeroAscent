@@ -3,7 +3,7 @@ namespace AeroAscent.Core.Dominio.Contratos;
 using AeroAscent.Core.Dominio.ObjetosDeValor;
 
 /// <summary>
-/// Contrato de serviço para os cálculos das forças aerodinâmicas e cinemáticas do voo.
+/// Contrato de serviço para os cálculos das forças aerodinâmicas, propulsão e cinemáticas do voo.
 /// </summary>
 public interface IServicoFisicaVoo
 {
@@ -26,18 +26,37 @@ public interface IServicoFisicaVoo
     VetorVoo CalcularProximoPasso(VetorVoo velocidadeAtual, float inclinacaoGraus, int nivelAerodinamica, float deltaTempoSegundos);
 
     /// <summary>
-    /// Simula um passo cinemático completo da aeronave integrando forças de sustentação, arrasto, gravidade,
-    /// controle de arfagem/pitch e dinâmica de solo, retornando um novo EstadoFisicoAeronave na stack.
+    /// Simula um passo cinemático completo da aeronave integrando sustentação, arrasto, gravidade,
+    /// controle de arfagem/pitch e dinâmica de solo (sem propulsão ativa).
     /// </summary>
     /// <param name="estadoAtual">Estado físico anterior da aeronave.</param>
     /// <param name="controle">Comandos de controle do piloto.</param>
     /// <param name="nivelAerodinamica">Nível da melhoria de aerodinâmica (1 a 10).</param>
     /// <param name="deltaTempoSegundos">Intervalo de tempo transcorrido (dt).</param>
-    /// <returns>Novo EstadoFisicoAeronave atualizado com alocação zero no heap.</returns>
+    /// <returns>Novo EstadoFisicoAeronave atualizado na stack com zero alocação no heap.</returns>
     EstadoFisicoAeronave SimularPasso(
         EstadoFisicoAeronave estadoAtual,
         ParametrosControlePiloto controle,
         int nivelAerodinamica,
+        float deltaTempoSegundos);
+
+    /// <summary>
+    /// Simula um passo cinemático completo da aeronave integrando sustentação, arrasto, gravidade,
+    /// controle de arfagem/pitch, dinâmica de solo e propulsão vetorial de boost por queima de combustível.
+    /// </summary>
+    /// <param name="estadoAtual">Estado físico anterior da aeronave.</param>
+    /// <param name="controle">Comandos de controle do piloto (pitch e boost).</param>
+    /// <param name="nivelAerodinamica">Nível da melhoria de aerodinâmica (1 a 10).</param>
+    /// <param name="nivelMotor">Nível da melhoria de motor para cálculo de empuxo (1 a 10).</param>
+    /// <param name="tempoEfetivoQueimaSegundos">Duração efetiva com queima autorizada no passo (fração dt).</param>
+    /// <param name="deltaTempoSegundos">Intervalo de tempo transcorrido total (dt).</param>
+    /// <returns>Novo EstadoFisicoAeronave atualizado na stack com telemetria do propulsor.</returns>
+    EstadoFisicoAeronave SimularPasso(
+        EstadoFisicoAeronave estadoAtual,
+        ParametrosControlePiloto controle,
+        int nivelAerodinamica,
+        int nivelMotor,
+        float tempoEfetivoQueimaSegundos,
         float deltaTempoSegundos);
 
     /// <summary>
@@ -48,4 +67,11 @@ public interface IServicoFisicaVoo
     /// <param name="deltaTempoSegundos">Intervalo de tempo de acionamento.</param>
     /// <returns>Vetor de velocidade incrementado pelo empuxo do motor.</returns>
     VetorVoo AplicarPropulsaoMotor(VetorVoo velocidadeAtual, int nivelMotor, float deltaTempoSegundos);
+
+    /// <summary>
+    /// Calcula a magnitude escalar de empuxo (T) gerada pelo motor em Newtons com base no nível da melhoria.
+    /// </summary>
+    /// <param name="nivelMotor">Nível do motor da aeronave (1 a 10).</param>
+    /// <returns>Força escalar de empuxo em Newtons (N).</returns>
+    float CalcularEmpuxoMotor(int nivelMotor);
 }
