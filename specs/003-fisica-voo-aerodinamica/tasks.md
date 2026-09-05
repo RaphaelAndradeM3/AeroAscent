@@ -21,10 +21,10 @@
 
 **⚠️ CRITICAL**: Nenhuma história de usuário pode ser iniciada antes da conclusão desta fase.
 
-- [ ] T003 [P] Implementar o Objeto de Valor `ParametrosControlePiloto` (`readonly record struct`) com intensidade de arfagem ($-1.0$ a $+1.0$), taxa angular e autoestabilização em `src/AeroAscent.Core.Dominio/ObjetosDeValor/ParametrosControlePiloto.cs`
-- [ ] T004 [P] Implementar o Objeto de Valor `EstadoFisicoAeronave` (`readonly record struct`) com posição 3D, velocidade 3D, inclinação de pitch, força resultante e indicador de solo em `src/AeroAscent.Core.Dominio/ObjetosDeValor/EstadoFisicoAeronave.cs`
-- [ ] T005 [P] Criar testes unitários para `ParametrosControlePiloto` validando invariantes, clamping e comando ativo em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ParametrosControlePilotoTestes.cs`
-- [ ] T006 [P] Criar testes unitários para `EstadoFisicoAeronave` validando imutabilidade na stack, altitude não-negativa e clamping de pitch ($-45^\circ$ a $+60^\circ$) em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/EstadoFisicoAeronaveTestes.cs`
+- [X] T003 [P] Implementar o Objeto de Valor `ParametrosControlePiloto` (`readonly record struct`) com intensidade de arfagem ($-1.0$ a $+1.0$), taxa angular e autoestabilização em `src/AeroAscent.Core.Dominio/ObjetosDeValor/ParametrosControlePiloto.cs`
+- [X] T004 [P] Implementar o Objeto de Valor `EstadoFisicoAeronave` (`readonly record struct`) com posição 3D, velocidade 3D, inclinação de pitch, força resultante e indicador de solo em `src/AeroAscent.Core.Dominio/ObjetosDeValor/EstadoFisicoAeronave.cs`
+- [X] T005 [P] Criar testes unitários para `ParametrosControlePiloto` validando invariantes, clamping e comando ativo em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ParametrosControlePilotoTestes.cs`
+- [X] T006 [P] Criar testes unitários para `EstadoFisicoAeronave` validando imutabilidade na stack, altitude não-negativa e clamping de pitch ($-45^\circ$ a $+60^\circ$) em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/EstadoFisicoAeronaveTestes.cs`
 
 **Checkpoint**: Estruturas de dados cinemáticos na stack validadas e prontas. O desenvolvimento das histórias de usuário pode começar.
 
