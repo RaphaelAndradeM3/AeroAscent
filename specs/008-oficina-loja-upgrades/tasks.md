@@ -84,11 +84,11 @@
 
 **Objetivo**: Validação dos critérios de sucesso mensuráveis, resiliência na 1ª execução, benchmarks de performance (SC-002), validação de tipos inválidos e revisão de documentação.
 
-- [ ] T016 [P] Criar testes de resiliência na primeira execução (quando o repositório retorna null) para compra e consulta inicializando `ProgressoJogador.CriarNovo()` em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ComprarMelhoriaCasoDeUsoTestes.cs`
-- [ ] T017 [P] Criar teste automatizado de benchmark comprovando tempo total de execução da compra inferior a 5 milissegundos (SC-002) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ComprarMelhoriaCasoDeUsoTestes.cs`
-- [ ] T018 [P] Criar testes para validação de tipo de melhoria inválido lançando `DominioInvalidoException` em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ComprarMelhoriaCasoDeUsoTestes.cs`
-- [ ] T019 Executar suíte completa de testes automatizados com `dotnet test AeroAscent.slnx` garantindo 100% de sucesso e zero regressões em `tests/`
-- [ ] T020 Revisar documentação XML (`///`) de todas as novas classes, métodos, structs e propriedades públicas em pt-BR conforme GEMINI.md
+- [X] T016 [P] Criar testes de resiliência na primeira execução (quando o repositório retorna null) para compra e consulta inicializando `ProgressoJogador.CriarNovo()` em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ComprarMelhoriaCasoDeUsoTestes.cs`
+- [X] T017 [P] Criar teste automatizado de benchmark comprovando tempo total de execução da compra inferior a 5 milissegundos (SC-002) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ComprarMelhoriaCasoDeUsoTestes.cs`
+- [X] T018 [P] Criar testes para validação de tipo de melhoria inválido lançando `DominioInvalidoException` em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ComprarMelhoriaCasoDeUsoTestes.cs`
+- [X] T019 Executar suíte completa de testes automatizados com `dotnet test AeroAscent.slnx` garantindo 100% de sucesso e zero regressões em `tests/`
+- [X] T020 Revisar documentação XML (`///`) de todas as novas classes, métodos, structs e propriedades públicas em pt-BR conforme GEMINI.md
 
 ---
 

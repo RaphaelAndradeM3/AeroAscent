@@ -2,7 +2,7 @@
 
 **Feature Branch**: `008-oficina-loja-upgrades`  
 **Created**: 2026-09-04  
-**Status**: Ready for Planning  
+**Status**: Implemented  
 **Input**: User description: "008 - Sistema de Compra e Evolução de Melhorias (Motor, Aerodinâmica, Tanque, Catapulta com curva de custo exponencial)."
 
 ---
