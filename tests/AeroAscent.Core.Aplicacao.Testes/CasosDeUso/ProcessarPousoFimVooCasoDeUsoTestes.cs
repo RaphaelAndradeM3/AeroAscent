@@ -258,6 +258,45 @@ public class ProcessarPousoFimVooCasoDeUsoTestes
         Assert.Equal(1, _espiaoPublicador.ChamadasPublicarVooConcluido);
     }
 
+    [Fact]
+    public void Executar_AposStatusVooPousado_TentativaDeAcionarBoostOuPitchDeveSerBloqueada()
+    {
+        // Arrange: voo já concluído e aeronave parada
+        var voo = Voo.Iniciar(Aeronave.CriarPadrao());
+        voo.Decolar();
+        voo.AtualizarMetricas(200f, 50f, 10);
+
+        var estadoParado = EstadoFisicoAeronave.Criar(
+            new VetorVoo(0f, 0f, 200f),
+            VetorVoo.Zero,
+            0.0f,
+            VetorVoo.Zero,
+            true);
+
+        _casoDeUso.Executar(voo, estadoParado);
+        Assert.Equal(StatusVoo.Pousado, voo.Status);
+
+        // Act 1: Tentar simular passo físico com comandos táteis agressivos de boost e arfagem
+        var comandoAgressivo = new ParametrosControlePiloto(1.0f, 45f, true);
+        var proximoEstadoFisico = _servicoFisica.SimularPasso(estadoParado, comandoAgressivo, 10, 10, 0.05f, 0.05f);
+
+        // Act 2: Tentar consumir combustível diretamente no voo pós-pouso
+        var tempoQueima = voo.ConsumirCombustivel(0.1f, out var efetivo);
+
+        // Act 3: Reavaliar caso de uso com o estado resultante
+        var resultadoSubsequente = _casoDeUso.Executar(voo, proximoEstadoFisico);
+
+        // Assert: Propulsor inativo, sem empuxo, sem queima de combustível, pitch travado e métricas inalteradas
+        Assert.False(proximoEstadoFisico.Propulsor.EstaAtivo);
+        Assert.Equal(0f, proximoEstadoFisico.Propulsor.EmpuxoNewtons);
+        Assert.Equal(0f, tempoQueima);
+        Assert.Equal(0f, efetivo);
+        Assert.Equal(0f, proximoEstadoFisico.InclinacaoPitchGraus);
+        Assert.Equal(200f, resultadoSubsequente.DistanciaFinalMetros);
+        Assert.Equal(50f, resultadoSubsequente.AltitudeMaximaMetros);
+        Assert.Equal(StatusVoo.Pousado, resultadoSubsequente.Status);
+    }
+
     private class EspiaoPublicadorEventosVoo : IPublicadorEventosVoo
     {
         public int ChamadasPublicarVooConcluido { get; private set; }

@@ -84,11 +84,11 @@
 
 **Propósito**: Validação dos critérios de sucesso mensuráveis, benchmarks de alocação zero, limites de latência e documentação técnica.
 
-- [ ] T016 [P] Criar teste automatizado de benchmark de 10.000 iterações de deslizamento e teste de pouso com validação de `GC.GetAllocatedBytesForCurrentThread() == 0` (SC-003) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarPousoFimVooCasoDeUsoTestes.cs`
-- [ ] T017 [P] Criar teste automatizado de benchmark de latência de disparo do evento em menos de 10ms (SC-002) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarPousoFimVooCasoDeUsoTestes.cs`
-- [ ] T018 [P] Criar testes para casos de borda (tentativa de acionar boost ou pitch após `StatusVoo.Pousado` e chamadas idempotentes a `Executar`) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarPousoFimVooCasoDeUsoTestes.cs`
-- [ ] T019 Executar suíte completa de testes automatizados com `dotnet test AeroAscent.slnx` garantindo 100% de sucesso e zero regressões em `tests/`
-- [ ] T020 Revisar documentação XML (`///`) de todas as novas classes, métodos, structs e propriedades públicas em pt-BR conforme GEMINI.md
+- [x] T016 [P] Criar teste automatizado de benchmark de 10.000 iterações de deslizamento e teste de pouso com validação de `GC.GetAllocatedBytesForCurrentThread() == 0` (SC-003) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarPousoFimVooCasoDeUsoTestes.cs`
+- [x] T017 [P] Criar teste automatizado de benchmark de latência de disparo do evento em menos de 10ms (SC-002) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarPousoFimVooCasoDeUsoTestes.cs`
+- [x] T018 [P] Criar testes para casos de borda (tentativa de acionar boost ou pitch após `StatusVoo.Pousado` e chamadas idempotentes a `Executar`) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarPousoFimVooCasoDeUsoTestes.cs`
+- [x] T019 Executar suíte completa de testes automatizados com `dotnet test AeroAscent.slnx` garantindo 100% de sucesso e zero regressões em `tests/`
+- [x] T020 Revisar documentação XML (`///`) de todas as novas classes, métodos, structs e propriedades públicas em pt-BR conforme GEMINI.md
 
 ---
 
