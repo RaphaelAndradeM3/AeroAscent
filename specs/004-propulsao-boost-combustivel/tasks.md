@@ -21,8 +21,8 @@
 
 **Propósito**: Validação da solução .NET e preparação de utilitários e fixtures de teste para propulsão.
 
-- [ ] T001 Verificar compatibilidade da solução e alinhamento de referências em `AeroAscent.slnx`
-- [ ] T002 [P] Configurar fixtures de teste e dados de apoio para simulação de boost e combustível em `tests/AeroAscent.Core.Dominio.Testes/Fixtures/`
+- [x] T001 Verificar compatibilidade da solução e alinhamento de referências em `AeroAscent.slnx`
+- [x] T002 [P] Configurar fixtures de teste e dados de apoio para simulação de boost e combustível em `tests/AeroAscent.Core.Dominio.Testes/Fixtures/`
 
 ---
 
