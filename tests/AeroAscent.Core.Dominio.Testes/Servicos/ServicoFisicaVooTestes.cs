@@ -264,5 +264,49 @@ public class ServicoFisicaVooTestes
         Assert.Equal(0f, proximo.Posicao.Y);
         Assert.Equal(0f, proximo.Velocidade.Y);
     }
+
+    [Fact]
+    public void SimularPasso_Nivel5Aerodinamica_DeveSofrerMenosArrastoQueNivel1()
+    {
+        // Arrange: Duas aeronaves idênticas em velocidade horizontal alta (30 m/s)
+        var estadoInicial = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 100f, 0f),
+            new VetorVoo(0f, 0f, 30f),
+            0.0f);
+
+        var controle = ParametrosControlePiloto.Neutro;
+
+        // Act: Simular 50 passos (1 segundo) para nível 1 e nível 5
+        var estadoNivel1 = estadoInicial;
+        var estadoNivel5 = estadoInicial;
+
+        for (var i = 0; i < 50; i++)
+        {
+            estadoNivel1 = _servicoFisica.SimularPasso(estadoNivel1, controle, 1, 0.02f);
+            estadoNivel5 = _servicoFisica.SimularPasso(estadoNivel5, controle, 5, 0.02f);
+        }
+
+        // Assert: Nível 5 deve ter sofrido menor arrasto frontal, mantendo mais velocidade Z e avançando mais
+        Assert.True(estadoNivel5.Velocidade.Z > estadoNivel1.Velocidade.Z,
+            $"Vz nível 5 ({estadoNivel5.Velocidade.Z}) deve ser maior que nível 1 ({estadoNivel1.Velocidade.Z}).");
+        Assert.True(estadoNivel5.Posicao.Z > estadoNivel1.Posicao.Z,
+            $"Distância Z nível 5 ({estadoNivel5.Posicao.Z}) deve ser maior que nível 1 ({estadoNivel1.Posicao.Z}).");
+    }
+
+    [Fact]
+    public void CalcularProximoPasso_Nivel10Aerodinamica_DeveReterMaisVelocidadeQueNivel1()
+    {
+        // Arrange
+        var velInicial = new VetorVoo(0f, 5f, 25f);
+
+        // Act
+        var velNivel1 = _servicoFisica.CalcularProximoPasso(velInicial, 5.0f, 1, 0.1f);
+        var velNivel10 = _servicoFisica.CalcularProximoPasso(velInicial, 5.0f, 10, 0.1f);
+
+        // Assert
+        Assert.True(velNivel10.Magnitude() > velNivel1.Magnitude(),
+            $"Velocidade com nível 10 ({velNivel10.Magnitude()}) deve ser maior que nível 1 ({velNivel1.Magnitude()}).");
+    }
 }
+
 

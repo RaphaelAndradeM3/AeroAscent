@@ -59,12 +59,12 @@
 
 ### Testes da User Story 2 ⚠️
 
-- [ ] T012 [P] [US2] Criar testes comparativos em `tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs` comprovando a atenuação de arrasto e o ganho de alcance em níveis superiores de aerodinâmica (nível 1 vs nível 5 vs nível 10)
-- [ ] T013 [P] [US2] Criar testes no caso de uso `AtualizarFisicaVooCasoDeUsoTestes` em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/AtualizarFisicaVooCasoDeUsoTestes.cs` validando o acúmulo de maior `DistanciaPercorrida` em aeronaves com nível aerodinâmico superior
+- [X] T012 [P] [US2] Criar testes comparativos em `tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs` comprovando a atenuação de arrasto e o ganho de alcance em níveis superiores de aerodinâmica (nível 1 vs nível 5 vs nível 10)
+- [X] T013 [P] [US2] Criar testes no caso de uso `AtualizarFisicaVooCasoDeUsoTestes` em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/AtualizarFisicaVooCasoDeUsoTestes.cs` validando o acúmulo de maior `DistanciaPercorrida` em aeronaves com nível aerodinâmico superior
 
 ### Implementação da User Story 2
 
-- [ ] T014 [US2] Calibrar a integração do escalonamento de arrasto por nível de aerodinâmica no método `SimularPasso` em `src/AeroAscent.Core.Dominio/Servicos/ServicoFisicaVoo.cs` e atualizar `CalcularProximoPasso` para manter consistência entre as APIs do serviço
+- [X] T014 [US2] Calibrar a integração do escalonamento de arrasto por nível de aerodinâmica no método `SimularPasso` em `src/AeroAscent.Core.Dominio/Servicos/ServicoFisicaVoo.cs` e atualizar `CalcularProximoPasso` para manter consistência entre as APIs do serviço
 
 **Checkpoint**: User Stories 1 e 2 plenamente operacionais e integradas.
 

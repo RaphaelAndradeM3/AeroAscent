@@ -105,4 +105,37 @@ public class AtualizarFisicaVooCasoDeUsoTestes
         Assert.NotNull(voo.Resultado);
         Assert.True(voo.DistanciaPercorrida >= 250f);
     }
+
+    [Fact]
+    public void Executar_ComparandoAeronaveNivel5ComNivel1_AeronaveNivel5DevePercorrerMaiorDistancia()
+    {
+        // Arrange: Duas sessões de voo idênticas exceto pelo nível de aerodinâmica
+        var aeroNivel1 = new Aeronave(Guid.NewGuid(), 1, 1, 1, 1);
+        var aeroNivel5 = new Aeronave(Guid.NewGuid(), 1, 5, 1, 1);
+
+        var vooNivel1 = Voo.Iniciar(aeroNivel1);
+        var vooNivel5 = Voo.Iniciar(aeroNivel5);
+        vooNivel1.Decolar();
+        vooNivel5.Decolar();
+
+        var estadoInicial = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 100f, 0f),
+            new VetorVoo(0f, 0f, 25f),
+            0.0f);
+
+        // Act: Simular 50 passos de tempo
+        var estado1 = estadoInicial;
+        var estado5 = estadoInicial;
+
+        for (var i = 0; i < 50; i++)
+        {
+            estado1 = _casoDeUso.Executar(vooNivel1, estado1, ParametrosControlePiloto.Neutro, 0.02f);
+            estado5 = _casoDeUso.Executar(vooNivel5, estado5, ParametrosControlePiloto.Neutro, 0.02f);
+        }
+
+        // Assert: Aeronave nível 5 acumulou maior distância percorrida no voo
+        Assert.True(vooNivel5.DistanciaPercorrida > vooNivel1.DistanciaPercorrida,
+            $"Distância nível 5 ({vooNivel5.DistanciaPercorrida}) deve ser superior a nível 1 ({vooNivel1.DistanciaPercorrida}).");
+    }
 }
+
