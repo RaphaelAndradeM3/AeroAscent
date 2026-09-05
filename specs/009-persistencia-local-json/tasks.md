@@ -49,13 +49,13 @@
 
 ### Testes da User Story 1
 
-- [ ] T009 [P] [US1] Criar testes de unidade e integração para salvamento atômico, carregamento íntegro (roundtrip) e persistência de todas as propriedades em `tests/AeroAscent.Infraestrutura.Testes/Persistencia/RepositorioProgressoLocalJsonTestes.cs`
-- [ ] T010 [P] [US1] Criar testes unitários para validação de criação e rotação do arquivo de backup `.bak` durante o salvamento atômico em `tests/AeroAscent.Infraestrutura.Testes/Persistencia/RepositorioProgressoLocalJsonTestes.cs`
-- [ ] T011 [P] [US1] Criar testes para validação de cancelamento assíncrono via `CancellationToken` no salvamento e carregamento em `tests/AeroAscent.Infraestrutura.Testes/Persistencia/RepositorioProgressoLocalJsonTestes.cs`
+- [X] T009 [P] [US1] Criar testes de unidade e integração para salvamento atômico, carregamento íntegro (roundtrip) e persistência de todas as propriedades em `tests/AeroAscent.Infraestrutura.Testes/Persistencia/RepositorioProgressoLocalJsonTestes.cs`
+- [X] T010 [P] [US1] Criar testes unitários para validação de criação e rotação do arquivo de backup `.bak` durante o salvamento atômico em `tests/AeroAscent.Infraestrutura.Testes/Persistencia/RepositorioProgressoLocalJsonTestes.cs`
+- [X] T011 [P] [US1] Criar testes para validação de cancelamento assíncrono via `CancellationToken` no salvamento e carregamento em `tests/AeroAscent.Infraestrutura.Testes/Persistencia/RepositorioProgressoLocalJsonTestes.cs`
 
 ### Implementação da User Story 1
 
-- [ ] T012 [US1] Implementar a classe `RepositorioProgressoLocalJson` com suporte a gravação em `.tmp`, rotação `.bak`, `File.Move(..., overwrite: true)` e desserialização `System.Text.Json` em `src/AeroAscent.Infraestrutura/Persistencia/RepositorioProgressoLocalJson.cs`
+- [X] T012 [US1] Implementar a classe `RepositorioProgressoLocalJson` com suporte a gravação em `.tmp`, rotação `.bak`, `File.Move(..., overwrite: true)` e desserialização `System.Text.Json` em `src/AeroAscent.Infraestrutura/Persistencia/RepositorioProgressoLocalJson.cs`
 
 **Ponto de Verificação**: Salvamento e carregamento atômicos 100% funcionais, testados e persistidos localmente (MVP pronto).
 
