@@ -137,10 +137,10 @@
 
 **Purpose**: Validação de qualidade, documentação XML e critérios não-funcionais
 
-- [ ] T031 [P] Adicionar documentação XML completa (`/// <summary>`, `<param>`, `<returns>`) em 100% dos tipos públicos em `src/AeroAscent.Core.Dominio/`
-- [ ] T032 Executar suíte completa de testes xUnit e validar tempo total de execução inferior a 500 ms via `dotnet test`
-- [ ] T033 [P] Validar ausência de pacotes NuGet externos ou referências de interface gráfica em `src/AeroAscent.Core.Dominio/AeroAscent.Core.Dominio.csproj`
-- [ ] T034 Validar todos os 5 cenários funcionais do guia de validação rápida em `specs/001-dominio-core-aeroascent/quickstart.md`
+- [X] T031 [P] Adicionar documentação XML completa (`/// <summary>`, `<param>`, `<returns>`) em 100% dos tipos públicos em `src/AeroAscent.Core.Dominio/`
+- [X] T032 Executar suíte completa de testes xUnit e validar tempo total de execução inferior a 500 ms via `dotnet test`
+- [X] T033 [P] Validar ausência de pacotes NuGet externos ou referências de interface gráfica em `src/AeroAscent.Core.Dominio/AeroAscent.Core.Dominio.csproj`
+- [X] T034 Validar todos os 5 cenários funcionais do guia de validação rápida em `specs/001-dominio-core-aeroascent/quickstart.md`
 
 ---
 
