@@ -160,7 +160,7 @@ public class ServicoFisicaVoo : IServicoFisicaVoo
         // -------------------------------------------------------------
         // CASO 1: Dinâmica de Solo (Contato / Deslizamento com atrito)
         // -------------------------------------------------------------
-        if (estadoAtual.NoSolo || estadoAtual.Posicao.Y <= 0f)
+        if ((estadoAtual.NoSolo || estadoAtual.Posicao.Y <= 0f) && estadoAtual.Velocidade.Y <= 0f)
         {
             var desaceleracaoAtrito = COEFICIENTE_ATRITO_SOLO * ACELERACAO_GRAVIDADE;
             var vzAtual = MathF.Max(0f, estadoAtual.Velocidade.Z);

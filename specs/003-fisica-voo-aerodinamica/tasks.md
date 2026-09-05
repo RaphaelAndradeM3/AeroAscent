@@ -74,10 +74,10 @@
 
 **Purpose**: Verificação de limites de latência, conformidade com alocação zero no heap, validação do quickstart e auditoria de documentação em pt-BR.
 
-- [ ] T015 [P] Implementar benchmark de latência de 10.000 passos ($< 0.05\text{ms}$ por passo) e validação de `GC.GetAllocatedBytesForCurrentThread() == 0` em `tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs`
-- [ ] T016 [P] Implementar validação de zero alocação no heap durante a execução do caso de uso `AtualizarFisicaVooCasoDeUso` em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/AtualizarFisicaVooCasoDeUsoTestes.cs`
-- [ ] T017 Executar todos os 6 cenários funcionais do `quickstart.md` e a suíte completa de testes via `dotnet test`
-- [ ] T018 [P] Auditar documentação XML (`///`) e mensagens de erro em 100% dos tipos públicos novos e modificados, garantindo adesão estrita ao idioma Português Brasileiro (pt-BR)
+- [X] T015 [P] Implementar benchmark de latência de 10.000 passos ($< 0.05\text{ms}$ por passo) e validação de `GC.GetAllocatedBytesForCurrentThread() == 0` em `tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs`
+- [X] T016 [P] Implementar validação de zero alocação no heap durante a execução do caso de uso `AtualizarFisicaVooCasoDeUso` em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/AtualizarFisicaVooCasoDeUsoTestes.cs`
+- [X] T017 Executar todos os 6 cenários funcionais do `quickstart.md` e a suíte completa de testes via `dotnet test`
+- [X] T018 [P] Auditar documentação XML (`///`) e mensagens de erro em 100% dos tipos públicos novos e modificados, garantindo adesão estrita ao idioma Português Brasileiro (pt-BR)
 
 ---
 

@@ -137,5 +137,37 @@ public class AtualizarFisicaVooCasoDeUsoTestes
         Assert.True(vooNivel5.DistanciaPercorrida > vooNivel1.DistanciaPercorrida,
             $"Distância nível 5 ({vooNivel5.DistanciaPercorrida}) deve ser superior a nível 1 ({vooNivel1.DistanciaPercorrida}).");
     }
+
+    [Fact]
+    public void Executar_Loop1000PassosDeVoo_DeveTerZeroAlocacaoNoHeap()
+    {
+        // Arrange
+        var aero = Aeronave.CriarPadrao();
+        var voo = Voo.Iniciar(aero);
+        voo.Decolar();
+
+        var estado = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 5000f, 0f),
+            new VetorVoo(0f, 0f, 25f),
+            0.0f);
+
+        // Warm-up JIT
+        for (var i = 0; i < 100; i++)
+        {
+            estado = _casoDeUso.Executar(voo, estado, ParametrosControlePiloto.Neutro, 0.02f);
+        }
+
+        // Act
+        var memoriaAntes = GC.GetAllocatedBytesForCurrentThread();
+        for (var i = 0; i < 1000; i++)
+        {
+            estado = _casoDeUso.Executar(voo, estado, ParametrosControlePiloto.Neutro, 0.02f);
+        }
+        var memoriaDepois = GC.GetAllocatedBytesForCurrentThread();
+
+        // Assert (SC-002: Zero alocação de memória no heap)
+        Assert.Equal(0, memoriaDepois - memoriaAntes);
+    }
 }
+
 

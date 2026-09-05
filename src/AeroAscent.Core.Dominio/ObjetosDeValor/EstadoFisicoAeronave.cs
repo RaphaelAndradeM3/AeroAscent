@@ -67,14 +67,14 @@ public readonly record struct EstadoFisicoAeronave
         var yEfetivo = MathF.Max(0f, posicao.Y);
         Posicao = new VetorVoo(posicao.X, yEfetivo, posicao.Z);
 
-        // Invariante: Se no solo, velocidade vertical não pode ser negativa
+        // Invariante: Se no solo com velocidade vertical descendente, trava em 0
         var vyEfetivo = (yEfetivo <= 0f && velocidade.Y < 0f) ? 0f : velocidade.Y;
         Velocidade = new VetorVoo(velocidade.X, vyEfetivo, velocidade.Z);
 
         // Invariante: Pitch clamped nos limites operacionais do jogo arcade
         InclinacaoPitchGraus = Math.Clamp(inclinacaoPitchGraus, PITCH_MINIMO_GRAUS, PITCH_MAXIMO_GRAUS);
         ForcaResultante = forcaResultante;
-        NoSolo = noSolo || (yEfetivo <= 0f);
+        NoSolo = (noSolo || yEfetivo <= 0f) && (velocidade.Y <= 0f);
     }
 
     /// <summary>
@@ -89,7 +89,7 @@ public readonly record struct EstadoFisicoAeronave
         VetorVoo velocidadeInicial,
         float inclinacaoPitchGraus)
     {
-        var noSolo = posicaoInicial.Y <= 0f;
+        var noSolo = posicaoInicial.Y <= 0f && velocidadeInicial.Y <= 0f;
         return new EstadoFisicoAeronave(
             posicaoInicial,
             velocidadeInicial,

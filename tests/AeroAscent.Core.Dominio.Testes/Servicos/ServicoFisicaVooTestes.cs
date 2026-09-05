@@ -307,6 +307,44 @@ public class ServicoFisicaVooTestes
         Assert.True(velNivel10.Magnitude() > velNivel1.Magnitude(),
             $"Velocidade com nível 10 ({velNivel10.Magnitude()}) deve ser maior que nível 1 ({velNivel1.Magnitude()}).");
     }
+
+    [Fact]
+    public void SimularPasso_Benchmark10000Passos_DeveExecutarEmMenosDe500MilissegundosEComZeroAlocacaoNoHeap()
+    {
+        // Arrange
+        var estado = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 50f, 0f),
+            new VetorVoo(0f, 2f, 20f),
+            10.0f);
+        var controle = ParametrosControlePiloto.Neutro;
+
+        // Warm-up JIT
+        for (var i = 0; i < 100; i++)
+        {
+            estado = _servicoFisica.SimularPasso(estado, controle, 1, 0.02f);
+        }
+
+        // Medição estrita de memória alocada no heap
+        var sw = Stopwatch.StartNew();
+        var memoriaAntes = GC.GetAllocatedBytesForCurrentThread();
+
+        for (var i = 0; i < 10000; i++)
+        {
+            estado = _servicoFisica.SimularPasso(estado, controle, 1 + (i % 10), 0.02f);
+        }
+
+        var memoriaDepois = GC.GetAllocatedBytesForCurrentThread();
+        sw.Stop();
+        var bytesAlocados = memoriaDepois - memoriaAntes;
+
+        // Assert (SC-001: < 0.05ms por passo => 10.000 passos < 500ms; média arcade esperada < 0.01ms)
+        Assert.True(sw.ElapsedMilliseconds < 500,
+            $"Tempo de 10.000 passos foi {sw.ElapsedMilliseconds}ms (esperado < 500ms). Média: {sw.Elapsed.TotalMilliseconds / 10000:F4}ms por passo.");
+
+        // Assert (SC-002: GC Alloc = 0 bytes no loop contínuo de física)
+        Assert.Equal(0, bytesAlocados);
+    }
 }
+
 
 
