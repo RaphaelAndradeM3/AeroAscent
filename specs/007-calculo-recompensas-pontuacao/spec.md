@@ -7,6 +7,17 @@
 
 ---
 
+## Clarifications
+
+### Session 2026-09-05
+- Q: Como a orquestração do caso de uso FinalizarVooCasoDeUso e a persistência de progresso devem ser estruturadas na camada de Aplicação? → A: Opção A — Orquestração assíncrona com injeção de IRepositorioProgresso: FinalizarVooCasoDeUso.ExecutarAsync(Voo voo, CancellationToken ct) obtém o ProgressoJogador via repositório, credita saldo, atualiza recordes, persiste atomicamente via SalvarProgressoAsync e retorna ResumoFinalizacaoVoo.
+- Q: Como o objeto ResumoFinalizacaoVoo deve ser modelado e quais informações de recorde deve discriminar? → A: Opção A — Modelar ResumoFinalizacaoVoo como readonly record struct na stack (GC Alloc = 0 bytes), discriminando métricas (DistanciaMetros, AltitudeMaximaMetros), fontes de moedas (MoedasPorDistancia, MoedasPorAltitude, MoedasColetadas, MoedasTotalGanhas, SaldoTotalAtualizado) e flags booleanas para ambos os recordes (EhNovoRecordeDistancia e EhNovoRecordeAltitude).
+- Q: Como o sistema deve se comportar ao receber uma chamada repetida de finalização para um voo já liquidado? → A: Opção A — Retorno idempotente seguro: a entidade Voo registra PremiacaoLiquidada = true; chamadas subsequentes retornam o mesmo ResumoFinalizacaoVoo consolidado sem creditar moedas adicionais nem reincrementar o total de voos no ProgressoJogador.
+- Q: Como o caso de uso FinalizarVooCasoDeUso deve se comportar em relação ao status da sessão de Voo informada? → A: Opção A — Validação rigorosa de ciclo de vida: exige StatusVoo.Pousado para creditar moedas e atualizar recordes; se Cancelado, retorna resumo com 0 moedas ganhas e sem novos recordes; se EmPreparacao ou EmVoo, lança DominioInvalidoException.
+- Q: Como o caso de uso FinalizarVooCasoDeUso deve se comportar caso o repositório retorne nulo (primeira execução)? → A: Opção A — Criação resiliente automática: se CarregarProgressoAsync retornar null, instancia ProgressoJogador.CriarNovo(), credita as recompensas, registra os recordes e salva atomicamente via SalvarProgressoAsync.
+
+---
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Conversão de Métricas de Voo em Moedas de Recompensa (Priority: P1)
@@ -39,7 +50,9 @@ Como jogador que superou sua maior distância anterior, desejo que o jogo identi
 
 ### Edge Cases
 
-- Finalização de voo já previamente finalizado: deve rejeitar reprocessamento de recompensas para evitar duplicação indevida de saldo.
+- Finalização de voo já previamente liquidado: opera de forma estritamente idempotente via flag `PremiacaoLiquidada = true` em `Voo`, retornando o `ResumoFinalizacaoVoo` idêntico sem conceder moedas duplicadas nem reincrementar `TotalVoosRealizados`.
+- Voo com status prematuro (`EmPreparacao` ou `EmVoo`): lança `DominioInvalidoException` protegendo contra encerramentos antes do pouso da aeronave; se `Cancelado`, liquida com 0 moedas ganhas sem alteração de recordes.
+- Primeira execução sem dados salvos no repositório (`CarregarProgressoAsync` retorna `null`): instancia automaticamente `ProgressoJogador.CriarNovo()`, aplicando as recompensas do voo inicial e persistindo o novo perfil sem erros.
 - Sessão de voo sem movimentação (distância = 0): concede 0 moedas e não corrompe os dados existentes.
 
 ---
@@ -48,16 +61,19 @@ Como jogador que superou sua maior distância anterior, desejo que o jogo identi
 
 ### Functional Requirements
 
-- **FR-001**: O sistema DEVE fornecer o caso de uso `FinalizarVooCasoDeUso` orquestrando o fechamento da sessão de voo e a atualização do progresso do jogador.
+- **FR-001**: O sistema DEVE fornecer o caso de uso `FinalizarVooCasoDeUso` (`IFinalizarVooCasoDeUso`) na camada de Aplicação, recebendo a entidade `Voo` e injetando `IRepositorioProgresso` para carregar o `ProgressoJogador`, creditar a recompensa, registrar novos recordes e persistir atomicamente via `SalvarProgressoAsync`.
 - **FR-002**: O cálculo da recompensa em moedas DEVE seguir a fórmula matemática:
   $$\text{MoedasGanhas} = \lfloor \text{DistanciaEmMetros} \times 0.1 \rfloor + \lfloor \text{AltitudeMaximaEmMetros} \times 0.05 \rfloor + \text{MoedasColetadasEmVoo}$$
 - **FR-003**: O sistema DEVE creditar `MoedasGanhas` diretamente no saldo acumulado do jogador através da entidade `ProgressoJogador` ou `Oficina`.
 - **FR-004**: O sistema DEVE comparar a distância do voo com o recorde atual e atualizar o valor sempre que a nova distância for estritamente superior.
-- **FR-005**: O sistema DEVE retornar um DTO/Record `ResumoFinalizacaoVoo` contendo distância, altitude, moedas ganhas discriminadas por fonte, saldo total atualizado e booleano indicativo de novo recorde.
+- **FR-005**: O sistema DEVE retornar a struct imutável na stack `ResumoFinalizacaoVoo` (`readonly record struct`) discriminando `DistanciaMetros`, `AltitudeMaximaMetros`, `MoedasPorDistancia`, `MoedasPorAltitude`, `MoedasColetadas`, `MoedasTotalGanhas`, `SaldoTotalAtualizado`, `EhNovoRecordeDistancia` e `EhNovoRecordeAltitude`.
+- **FR-006**: O sistema DEVE garantir execução estritamente idempotente através da propriedade `PremiacaoLiquidada` na entidade `Voo`, retornando o `ResumoFinalizacaoVoo` consolidado sem creditar moedas adicionais em invocações repetidas.
+- **FR-007**: O sistema DEVE validar o status da sessão de `Voo`: processando a premiação integral apenas quando `StatusVoo.Pousado`, liquidando com 0 moedas quando `StatusVoo.Cancelado` e lançando `DominioInvalidoException` caso o voo esteja em `EmPreparacao` ou `EmVoo`.
+- **FR-008**: O sistema DEVE tratar a ausência de perfil salvo no repositório (`CarregarProgressoAsync` retornando `null`) instanciando automaticamente um novo perfil via `ProgressoJogador.CriarNovo()`, aplicando as recompensas e persistindo atomicamente.
 
 ### Key Entities
 
-- **`ResumoFinalizacaoVoo`**: Objeto de valor com o detalhamento completo dos ganhos e status de recorde.
+- **`ResumoFinalizacaoVoo`**: Struct na stack (`readonly record struct`, `GC Alloc = 0 bytes`) contendo métricas consolidadas, detalhamento das fontes de moedas, saldo final atualizado e flags booleanas para novos recordes de distância e altitude.
 - **`ProgressoJogador`**: Entidade contendo saldo acumulado, recordes e aeronave configurada.
 
 ---
