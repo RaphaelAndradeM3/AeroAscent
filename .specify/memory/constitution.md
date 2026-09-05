@@ -1,15 +1,23 @@
+<!--
+Sync Impact Report:
+- Version change: 1.0.0 → 1.1.0
+- Target Platforms & Presentation: Definido formalmente .NET MAUI (Windows e Android) em substituição a Unity
+- Modified principles: Artigo III (Engenharia de Software C# .NET e .NET MAUI), Artigo V (Checklist de Governança com validação MAUI Windows/Android)
+- Templates requiring updates: plan-template.md, spec-template.md, tasks-template.md
+-->
+
 # 📜 Constituição do Projeto: AeroAscent
 
-> **Versão:** 1.0.0  
+> **Versão:** 1.1.0  
 > **Status:** Ativo e Obrigatório  
 > **Idioma Oficial de Desenvolvimento:** Português Brasileiro (pt-BR)  
-> **Pilares:** Ética Familiar, Excelência em Engenharia C#/.NET, Clean Architecture, Performance Mobile First
+> **Pilares:** Ética Familiar, Excelência em Engenharia C#/.NET, Clean Architecture, .NET MAUI Multiplataforma (Windows e Android), Performance Mobile First
 
 ---
 
 ## 🏛️ Preâmbulo
 
-Esta Constituição estabelece os princípios fundamentais, a filosofia de produto e os padrões inegociáveis de engenharia para o desenvolvimento do **AeroAscent** (anteriormente referenciado como AeroHorizon).
+Esta Constituição estabelece os princípios fundamentais, a filosofia de produto e os padrões inegociáveis de engenharia para o desenvolvimento do **AeroAscent** (anteriormente referenciado como AeroHorizon), concebido como um jogo multiplataforma em **C# / .NET MAUI** para **Windows e Android**.
 
 Nenhuma linha de código, asset, funcionalidade ou modelo de monetização será integrado ao repositório se violar qualquer um dos artigos aqui estabelecidos.
 
@@ -37,7 +45,7 @@ Nenhuma linha de código, asset, funcionalidade ou modelo de monetização será
 
 ---
 
-## 💻 Artigo III — Engenharia de Software C# .NET e Unity
+## 💻 Artigo III — Engenharia de Software C# .NET e .NET MAUI (Windows e Android)
 
 Todo o desenvolvimento em C# deve obedecer rigorosamente às diretrizes do `csharp-dotnet-guidelines`:
 
@@ -55,25 +63,26 @@ Todo o desenvolvimento em C# deve obedecer rigorosamente às diretrizes do `csha
 
 ### 2. Clean Architecture e Domínio Desacoplado
 - **Camada de Domínio (`Core/Dominio`):**
-  - Contém as entidades de negócio (`Aeronave`, `Voo`, `Oficina`), Objetos de Valor (`Combustivel`, `Velocidade`, `Altitude`, `Moeda`), regras de cálculo e interfaces.
-  - **Zero Dependências da Engine:** O domínio é C# puro (.NET Standard / .NET Core), sem acoplamento a `UnityEngine`, `MonoBehaviour` ou bibliotecas proprietárias.
+  - Contém as entidades de negócio (`Aeronave`, `Voo`, `Oficina`, `ProgressoJogador`), Objetos de Valor (`Combustivel`, `Moeda`, `VetorVoo`, `Melhoria`, `ResultadoVoo`), regras de cálculo e interfaces.
+  - **Zero Dependências de Interface ou Frameworks de UI:** O domínio é C# puro (.NET Standard 2.1 / .NET 8), sem acoplamento a `.NET MAUI`, bibliotecas de UI ou frameworks externos.
 - **Camada de Aplicação (`Core/Aplicacao`):**
-  - Casos de uso e orquestração dos fluxos de jogo (ex: `LancarAeronaveCasoDeUso`, `ComprarMelhoriaCasoDeUso`).
+  - Casos de uso e orquestração dos fluxos de jogo (ex: `LancarAeronaveCasoDeUso`, `ComprarMelhoriaCasoDeUso`, `FinalizarVooCasoDeUso`).
 - **Camada de Infraestrutura (`Infraestrutura`):**
-  - Implementações de persistência local em JSON, adaptadores de áudio e logging estruturado.
-- **Camada de Apresentação / Unity (`Apresentacao/Unity`):**
-  - Scripts `MonoBehaviour`, Controladores de Visualização, HUD, Partículas e integração com a física de `Rigidbody` da Unity via adaptadores limpos.
+  - Implementações de persistência local em JSON via `System.Text.Json` (usando `FileSystem.AppDataDirectory` compatível com Windows e Android), adaptadores de áudio e logging estruturado.
+- **Camada de Apresentação (.NET MAUI) (`Apresentacao/MAUI`):**
+  - Interface construída com **.NET MAUI**, suportando nativamente **Windows e Android**.
+  - Renderização visual através de `GraphicsView` / `IDrawable` (ou Canvas 2D / SkiaSharp), ViewModels reativos (MVVM), HUD interativo e suporte a múltiplos modos de entrada (toque em Android, mouse/teclado em Windows).
 
 ### 3. Princípios SOLID e Domain-Driven Design (DDD)
 - **Entidades:** Classes com identidade única (`Guid Id`), métodos encapsulados de alteração de estado e invariantes protegidas.
-- **Objetos de Valor (Value Objects):** Imutáveis, modelados como `record` em C# (ex: `PosicaoVoo`, `ConsumoCombustivel`).
+- **Objetos de Valor (Value Objects):** Imutáveis, modelados como `record` em C# (ex: `Combustivel`, `Moeda`, `VetorVoo`, `Melhoria`, `ResultadoVoo`).
 - **Injeção de Dependências (DI):** Depender exclusivamente de interfaces (`IServico...`, `IRepositorio...`), nunca de classes concretas.
 - **Documentação XML:** Toda classe pública, interface e método público deve conter documentação XML completa (`<summary>`, `<param>`, `<returns>`, `<exception>`).
 
-### 4. Performance Mobile First e Gestão de Memória
-- **Alocação Zero no Loop de Execução:** Proibido instanciar objetos (`new`) ou invocar métodos que gerem lixo de memória (*Garbage Collection - GC*) dentro de `Update()`, `FixedUpdate()` ou `LateUpdate()`.
+### 4. Performance Multiplataforma e Gestão de Memória
+- **Alocação Zero no Loop de Execução e Renderização:** Proibido instanciar objetos (`new`) ou invocar métodos que gerem lixo de memória (*Garbage Collection - GC*) dentro do método de desenho contínuo (`IDrawable.Draw`), loop de física ou despacho de frames.
 - **Object Pooling:** Obrigatório para todos os elementos dinâmicos e repetitivos (moedas no ar, nuvens, partículas, marcadores de distância).
-- **Target Frame Rate:** O jogo deve rodar de forma estável a 60 FPS em dispositivos móveis medianos.
+- **Target Frame Rate:** O jogo deve rodar de forma estável a 60 FPS tanto em dispositivos Android (mobile) quanto em computadores com Windows (desktop).
 
 ---
 
@@ -81,8 +90,8 @@ Todo o desenvolvimento em C# deve obedecer rigorosamente às diretrizes do `csha
 
 1. **Assets Abertos e Éticos (CC0):**  
    Prioridade absoluta para o ecossistema de assets 2D, 3D e de interface em Domínio Público (CC0), como os criados pela plataforma **Kenney.nl**.
-2. **Estilo Visual Low Poly e Cores Vivas:**  
-   Direção de arte fundamentada em modelos *Low Poly* e sombreamento plano (*flat shading*), assegurando leveza de renderização, visual acolhedor, atemporal e consumo de bateria reduzido.
+2. **Estilo Visual Limpo e Cores Vivas:**  
+   Direção de arte fundamentada em vetores/sprites leves e formas geométricas coloridas, assegurando renderização veloz em telas de alta densidade no Android e no Windows.
 3. **Áudio e Trilha Sonora:**  
    Efeitos sonoros suaves e trilhas sonoras relaxantes que incentivem a calma e o prazer da exploração aérea.
 
@@ -93,11 +102,12 @@ Todo o desenvolvimento em C# deve obedecer rigorosamente às diretrizes do `csha
 Antes de qualquer funcionalidade ou código ser mesclado ao projeto, o desenvolvedor ou agente deve validar o seguinte checklist:
 
 - [ ] A funcionalidade preserva a política de **Zero Anúncios** e ausência de mecanismos predatórios?
-- [ ] O código respeita a **Clean Architecture** (Domínio puro e isolado de `UnityEngine`)?
+- [ ] O código respeita a **Clean Architecture** (Domínio puro e isolado de `.NET MAUI` ou frameworks visuais)?
+- [ ] A camada de apresentação é compatível e validada para **Windows e Android** via **.NET MAUI**?
 - [ ] Todos os identificadores, comentários e documentações XML estão em **Português Brasileiro (pt-BR)**?
 - [ ] Entidades usam `class` com `Guid` e Objetos de Valor usam `record` imutável?
 - [ ] Todas as dependências estão injetadas via **Interfaces**?
-- [ ] O código dentro de loops de atualização física (`Update`/`FixedUpdate`) possui **alocação de memória zero** (sem `new` ou delegates temporários)?
+- [ ] O código dentro do loop de renderização/física (`Draw`/`Tick`) possui **alocação de memória zero** (sem `new` ou delegates temporários)?
 - [ ] Itens repetitivos utilizam o padrão **Object Pool**?
 - [ ] Todos os métodos assíncronos utilizam o sufixo `Async`?
 

@@ -74,5 +74,5 @@ Como novo jogador ou em caso de arquivo corrompido, o sistema deve inicializar a
 
 ## Assumptions
 
-- O caminho base de persistência será configurável (`Application.persistentDataPath` na Unity ou diretório local em testes .NET).
+- O caminho base de persistência será configurável (`FileSystem.AppDataDirectory` no .NET MAUI para Windows/Android ou diretório customizado em testes .NET).
 - O formato do arquivo é `.json` com codificação UTF-8.

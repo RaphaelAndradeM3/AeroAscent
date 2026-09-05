@@ -25,10 +25,10 @@
 ---
 
 ## 🏛️ Clean Architecture e Separação de Camadas
-1. **Domínio (`Core/Dominio`):** C# Puro (.NET Standard). Zero dependências de `UnityEngine` ou frameworks externos.
-2. **Aplicação (`Core/Aplicacao`):** Casos de uso e orquestração. Depende apenas do Domínio.
-3. **Infraestrutura (`Infraestrutura`):** Implementações de repositórios (JSON), adaptadores externos.
-4. **Apresentação (`Apresentacao/Unity`):** `MonoBehaviour`, UI, HUD, partículas e controladores visuais.
+1. **Domínio (`Core/Dominio`):** C# Puro (.NET Standard 2.1 / .NET 8). Zero dependências de frameworks de interface (MAUI), engines gráficas ou bibliotecas externas.
+2. **Aplicação (`Core/Aplicacao`):** Casos de uso e orquestração dos fluxos de jogo. Depende exclusivamente do Domínio.
+3. **Infraestrutura (`Infraestrutura`):** Implementações de repositórios (JSON via `System.Text.Json` e `FileSystem.AppDataDirectory`), adaptadores de áudio e logging.
+4. **Apresentação (`Apresentacao/MAUI`):** Aplicação **.NET MAUI** multiplataforma (**Windows e Android**), contendo telas XAML, renderização gráfica via `GraphicsView` / `IDrawable` (ou Canvas 2D), ViewModels (MVVM) e HUD reativo.
 
 ---
 
@@ -40,7 +40,7 @@
 
 ---
 
-## ⚡ Performance Mobile First e Gestão de Memória
-- **Alocação Zero no Loop de Execução (`GC Alloc = 0 bytes`):** Proibido instanciar objetos (`new`) em `Update()`, `FixedUpdate()` ou durante o loop contínuo de física e HUD.
-- **Object Pooling:** Obrigatório para coletáveis (moedas, anéis de vento), partículas e elementos dinâmicos.
-- **Taxa de Quadros Alvo:** 60 FPS estáveis em dispositivos móveis.
+## ⚡ Performance Mobile First e Multiplataforma (Windows e Android)
+- **Alocação Zero no Loop de Execução e Renderização (`GC Alloc = 0 bytes`):** Proibido instanciar objetos (`new`) dentro do loop de desenho (`IDrawable.Draw`), atualização física contínua ou no ciclo de despacho de frames.
+- **Object Pooling:** Obrigatório para coletáveis (moedas, anéis de vento), partículas e elementos dinâmicos da simulação.
+- **Taxa de Quadros Alvo:** 60 FPS estáveis tanto em dispositivos móveis Android quanto em desktop Windows.

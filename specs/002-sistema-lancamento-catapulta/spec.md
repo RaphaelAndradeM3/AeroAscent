@@ -73,5 +73,5 @@ Como jogador, desejo que o timing do meu toque influencie a força do disparo pa
 
 ## Assumptions
 
-- A física da Unity ou simulador desacoplado receberá o vetor inicial e assumirá a continuidade da trajetória balística.
+- O motor de simulação física desacoplado receberá o vetor inicial e assumirá a continuidade da trajetória balística.
 - O ângulo da catapulta permanece constante na primeira versão, permitindo foco exclusivo na precisão de disparo do jogador.

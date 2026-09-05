@@ -4,20 +4,20 @@
 > **Versão:** 1.0.0  
 > **Status:** Aprovado para Desenvolvimento  
 > **Público Principal:** Família & Jogadores Casuais (especialmente Ruth, Sofia e Alice)  
-> **Stack Tecnológica:** Unity (C# / .NET), Clean Architecture, CC0 Assets (Kenney.nl)
+> **Stack Tecnológica:** .NET MAUI (C# / .NET 8), Windows & Android, Clean Architecture, CC0 Assets (Kenney.nl)
 
 ---
 
 ## 1. 🎯 Visão Geral do Produto
 
-**AeroAscent** é um jogo mobile de simulação e progressão casual no estilo *Flight / Glider Arcade*. O jogador comanda o lançamento de uma aeronave leve, gerencia ativamente a sustentação aerodinâmica, altitude e impulsos de combustível (*boost*), explorando paisagens geradas proceduralmente. 
+**AeroAscent** é um jogo multiplataforma (Windows e Android) de simulação e progressão casual no estilo *Flight / Glider Arcade*, desenvolvido em C# com **.NET MAUI**. O jogador comanda o lançamento de uma aeronave leve, gerencia ativamente a sustentação aerodinâmica, altitude e impulsos de combustível (*boost*), explorando paisagens geradas proceduralmente. 
 
 Ao final de cada voo, as métricas de distância percorrida, altitude máxima e itens coletados são convertidas em recursos econômicos para investir em melhorias mecânicas na **Oficina**, possibilitando voos cada vez mais longos, velozes e gratificantes.
 
 ### 1.1 Objetivos de Negócio e Filosofia
 - **Jogo 100% Livre de Anúncios:** Experiência fluida, sem compras predatórias, sem banners ou interrupções comerciais.
 - **Foco na Família:** Diversão acessível, intuitiva e acolhedora para crianças e adultos.
-- **Engenharia Robusta:** Arquitetura limpa em C# .NET que separa regras de negócio puras da camada gráfica da Unity.
+- **Engenharia Robusta:** Arquitetura limpa em C# .NET que separa regras de negócio puras da camada de apresentação visual do .NET MAUI.
 
 ---
 
@@ -54,10 +54,10 @@ Seguindo as diretrizes do `csharp-dotnet-guidelines` e a Clean Architecture:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│               Apresentação (Unity Engine)               │
-│  - Controladores MonoBehaviour (ControladorVoo)         │
-│  - Interface de Usuário / HUD (GerenciadorUI)           │
-│  - Efeitos Sonoros e Partículas                         │
+│       Apresentação (.NET MAUI - Windows / Android)      │
+│  - Páginas XAML, GraphicsView / Canvas 2D / SkiaSharp   │
+│  - ViewModels MVVM (VooViewModel, OficinaViewModel)     │
+│  - Efeitos Sonoros, HUD e Entrada (Touch / Teclado)     │
 └────────────────────────────┬────────────────────────────┘
                              │
 ┌────────────────────────────▼────────────────────────────┐
@@ -152,12 +152,12 @@ Seguindo as diretrizes do `csharp-dotnet-guidelines` e a Clean Architecture:
 
 | Identificador | Categoria | Especificação |
 |---|---|---|
-| **RNF-01** | **Performance** | O jogo deve manter **60 FPS** estáveis em dispositivos móveis intermediários (Android/iOS). |
-| **RNF-02** | **Alocação de Memória** | **Zero alocação de lixo (GC Alloc = 0 bytes)** durante o loop de voo ativo (`Update` / `FixedUpdate`). |
+| **RNF-01** | **Performance** | O jogo deve manter **60 FPS** estáveis tanto em dispositivos móveis Android quanto em desktop Windows via .NET MAUI. |
+| **RNF-02** | **Alocação de Memória** | **Zero alocação de lixo (GC Alloc = 0 bytes)** durante o loop de voo ativo e desenho contínuo (`IDrawable.Draw`). |
 | **RNF-03** | **Padrão de Pooling** | Utilização obrigatória de `ObjectPool<T>` para moedas, anéis de vento, nuvens e partículas visuais. |
 | **RNF-04** | **Código Limpo** | Conformidade estrita com o `csharp-dotnet-guidelines` (Clean Architecture, DDD, SOLID, 100% pt-BR). |
 | **RNF-05** | **Privacidade e Offline** | O jogo não requer conexão com a internet para nenhuma funcionalidade central e não coleta dados de telemetria de crianças. |
-| **RNF-06** | **Tamanho do App** | O pacote final deve ser leve (< 80 MB) aproveitando modelos *Low Poly* otimizados e texturas compartilhadas. |
+| **RNF-06** | **Tamanho do App** | O pacote final deve ser leve (< 80 MB) aproveitando assets e sprites otimizados para Windows e Android. |
 | **RNF-07** | **Tratamento de Erros** | Exceções de domínio tratadas com classes customizadas (`SaldoInsuficienteException`, `MelhoriaNivelMaximoException`) sem crash na UI. |
 
 ---
