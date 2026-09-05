@@ -105,11 +105,11 @@
 
 **Propósito**: Validação dos critérios de sucesso mensuráveis, benchmarks de alocação zero, limites de latência e documentação técnica.
 
-- [ ] T021 [P] Criar teste automatizado de benchmark de 10.000 iterações de pooling com validação de `GC.GetAllocatedBytesForCurrentThread() == 0` (SC-001) em `tests/AeroAscent.Core.Dominio.Testes/Comum/GerenciadorPoolObjetosTestes.cs`
-- [ ] T022 [P] Criar teste automatizado de benchmark de latência com detecção de proximidade em tela em menos de 0.1ms por frame (SC-002) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarColetaveisVooCasoDeUsoTestes.cs`
-- [ ] T023 [P] Criar testes para casos de borda (múltiplas moedas no mesmo passo, pool vazio com expansão elástica e aeronave em solo) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarColetaveisVooCasoDeUsoTestes.cs`
-- [ ] T024 Executar suíte completa de testes automatizados com `dotnet test AeroAscent.slnx` garantindo 100% de sucesso e zero regressões em `tests/`
-- [ ] T025 Revisar documentação XML (`///`) de todas as novas classes, métodos, structs e propriedades públicas em pt-BR conforme GEMINI.md
+- [x] T021 [P] Criar teste automatizado de benchmark de 10.000 iterações de pooling com validação de `GC.GetAllocatedBytesForCurrentThread() == 0` (SC-001) em `tests/AeroAscent.Core.Dominio.Testes/Comum/GerenciadorPoolObjetosTestes.cs`
+- [x] T022 [P] Criar teste automatizado de benchmark de latência com detecção de proximidade em tela em menos de 0.1ms por frame (SC-002) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarColetaveisVooCasoDeUsoTestes.cs`
+- [x] T023 [P] Criar testes para casos de borda (múltiplas moedas no mesmo passo, pool vazio com expansão elástica e aeronave em solo) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarColetaveisVooCasoDeUsoTestes.cs`
+- [x] T024 Executar suíte completa de testes automatizados com `dotnet test AeroAscent.slnx` garantindo 100% de sucesso e zero regressões em `tests/`
+- [x] T025 Revisar documentação XML (`///`) de todas as novas classes, métodos, structs e propriedades públicas em pt-BR conforme GEMINI.md
 
 ---
 

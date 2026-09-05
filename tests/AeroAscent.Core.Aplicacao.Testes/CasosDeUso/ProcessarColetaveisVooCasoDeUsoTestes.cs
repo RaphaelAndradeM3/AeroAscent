@@ -323,5 +323,163 @@ public class ProcessarColetaveisVooCasoDeUsoTestes
             Assert.True(item.Posicao.Z >= 280f, $"Item remanescente em Z={item.Posicao.Z} deve ser >= 280m (SC-003)");
         }
     }
+
+    [Fact]
+    public void Benchmark_DeteccaoDeProximidadeEmTela_DeveExecutarEmMenosDePontoUmMilissegundoPorFrame_SC002()
+    {
+        // Arrange: Popula 50 coletáveis ativos simulando carga cheia de tela
+        var voo = Voo.Iniciar(Aeronave.CriarPadrao());
+        voo.Decolar();
+
+        var coletaveisAtivos = new List<Coletavel>(50);
+        for (var i = 0; i < 40; i++)
+        {
+            var moeda = Coletavel.CriarMoeda(new VetorVoo(0f, 20f + i, 100f + i * 2));
+            moeda.Ativar(moeda.Posicao);
+            coletaveisAtivos.Add(moeda);
+        }
+        for (var i = 0; i < 10; i++)
+        {
+            var anel = Coletavel.CriarAnelVento(new VetorVoo(0f, 30f + i, 150f + i * 5));
+            anel.Ativar(anel.Posicao);
+            coletaveisAtivos.Add(anel);
+        }
+
+        var estado = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 20f, 50f),
+            new VetorVoo(0f, 0f, 20f),
+            0f);
+
+        // Warm-up do JIT
+        for (var i = 0; i < 100; i++)
+        {
+            _casoDeUso.Executar(voo, estado, coletaveisAtivos, _poolMoedas, _poolAneis);
+        }
+
+        // Act: Medição de 2.000 iterações de frame
+        const int iteracoes = 2_000;
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+        for (var i = 0; i < iteracoes; i++)
+        {
+            _casoDeUso.Executar(voo, estado, coletaveisAtivos, _poolMoedas, _poolAneis);
+        }
+        sw.Stop();
+
+        var tempoMedioMilissegundos = (double)sw.ElapsedMilliseconds / iteracoes;
+
+        // Assert: SC-002 processamento em menos de 0.1ms por frame
+        Assert.True(tempoMedioMilissegundos < 0.1,
+            $"Tempo médio por frame ({tempoMedioMilissegundos:F4}ms) excedeu o limite de 0.1ms (SC-002).");
+    }
+
+    [Fact]
+    public void Executar_ComMultiplasMoedasNoMesmoPasso_DeveColetarTodasSemPerda()
+    {
+        // Arrange: 3 moedas na mesma vizinhança da aeronave
+        var voo = Voo.Iniciar(Aeronave.CriarPadrao());
+        voo.Decolar();
+
+        var m1 = _poolMoedas.Obter();
+        m1.Ativar(new VetorVoo(0f, 20f, 50f));
+        var m2 = _poolMoedas.Obter();
+        m2.Ativar(new VetorVoo(0f, 20.5f, 50.2f));
+        var m3 = _poolMoedas.Obter();
+        m3.Ativar(new VetorVoo(0f, 19.8f, 49.9f));
+
+        var coletaveisAtivos = new List<Coletavel> { m1, m2, m3 };
+        var estado = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 20f, 50f),
+            new VetorVoo(0f, 0f, 15f),
+            0f);
+
+        // Act
+        var resultado = _casoDeUso.Executar(voo, estado, coletaveisAtivos, _poolMoedas, _poolAneis);
+
+        // Assert
+        Assert.Equal(3, resultado.MoedasColetadasNoPasso);
+        Assert.Equal(3, voo.MoedasColetadas);
+        Assert.Empty(coletaveisAtivos);
+        Assert.True(m1.Coletado && m2.Coletado && m3.Coletado);
+    }
+
+    [Fact]
+    public void Executar_QuandoAeronaveNoSolo_NaoDeveColetarNemAplicarImpulso()
+    {
+        // Arrange: Moeda colocada exatamente na posição da aeronave
+        var voo = Voo.Iniciar(Aeronave.CriarPadrao());
+        voo.Decolar();
+
+        var moeda = _poolMoedas.Obter();
+        moeda.Ativar(new VetorVoo(0f, 0f, 0f));
+        var coletaveisAtivos = new List<Coletavel> { moeda };
+
+        // Aeronave no solo (altitude = 0 e noSolo = true)
+        var estadoNoSolo = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 0f, 0f),
+            new VetorVoo(0f, 0f, 0f),
+            0f);
+
+        // Act
+        var resultado = _casoDeUso.Executar(voo, estadoNoSolo, coletaveisAtivos, _poolMoedas, _poolAneis);
+
+        // Assert
+        Assert.Equal(0, resultado.MoedasColetadasNoPasso);
+        Assert.False(resultado.RecebeuImpulsoVento);
+        Assert.Equal(0, voo.MoedasColetadas);
+        Assert.True(moeda.Ativo);
+        Assert.False(moeda.Coletado);
+    }
+
+    [Fact]
+    public void Executar_QuandoVooNaoEstiverEmAndamento_DeveRetornarNeutro()
+    {
+        // Arrange: Voo ainda em AguardandoLancamento
+        var voo = Voo.Iniciar(Aeronave.CriarPadrao());
+        var moeda = _poolMoedas.Obter();
+        moeda.Ativar(new VetorVoo(0f, 20f, 50f));
+        var coletaveisAtivos = new List<Coletavel> { moeda };
+
+        var estado = EstadoFisicoAeronave.Criar(
+            new VetorVoo(0f, 20f, 50f),
+            new VetorVoo(0f, 0f, 15f),
+            0f,
+            VetorVoo.Zero,
+            noSolo: false);
+
+        // Act
+        var resultado = _casoDeUso.Executar(voo, estado, coletaveisAtivos, _poolMoedas, _poolAneis);
+
+        // Assert
+        Assert.Equal(0, resultado.MoedasColetadasNoPasso);
+        Assert.False(resultado.RecebeuImpulsoVento);
+        Assert.True(moeda.Ativo);
+    }
+
+    [Fact]
+    public void Executar_ComPoolInicialMenorQueDemanda_DeveExpandirElasticamente()
+    {
+        // Arrange: Pool com apenas 1 moeda inicialmente
+        var poolReduzido = new GerenciadorPoolObjetos<Coletavel>(
+            () => Coletavel.CriarMoeda(VetorVoo.Zero),
+            capacidadeInicial: 1);
+
+        var servicoProcedural = new AeroAscent.Core.Dominio.Servicos.ServicoGeracaoProceduralColetaveis(42);
+        var casoDeUso = new ProcessarColetaveisVooCasoDeUso(servicoProcedural);
+        var voo = Voo.Iniciar(Aeronave.CriarPadrao());
+        voo.Decolar();
+        var coletaveisAtivos = new List<Coletavel>();
+
+        var estado = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 20f, 0f),
+            new VetorVoo(0f, 0f, 20f),
+            0f);
+
+        // Act: Demanda mais que 1 item na janela
+        var resultado = casoDeUso.Executar(voo, estado, coletaveisAtivos, poolReduzido, _poolAneis);
+
+        // Assert: Expandiu a capacidade total sem lançar erro
+        Assert.True(poolReduzido.CapacidadeTotal > 1);
+        Assert.NotEmpty(coletaveisAtivos);
+    }
 }
 

@@ -125,4 +125,37 @@ public class GerenciadorPoolObjetosTestes
         Assert.Equal(0, pool.DisponiveisEmEstoque);
         Assert.Equal(0, pool.EmUso);
     }
+
+    [Fact]
+    public void Benchmark_DezMilIteracoesDePooling_DeveGarantirZeroAlocacaoNoHeap_SC001()
+    {
+        // Arrange
+        var pool = new GerenciadorPoolObjetos<Coletavel>(
+            capacidadeInicial: 50,
+            fabrica: () => Coletavel.CriarMoeda(VetorVoo.Zero),
+            aoObter: c => c.Ativar(c.Posicao),
+            aoLiberar: c => c.Desativar());
+
+        // Warm-up do JIT e pools
+        var itemWarmup = pool.Obter();
+        pool.Liberar(itemWarmup);
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        // Act
+        var bytesAntes = GC.GetAllocatedBytesForCurrentThread();
+
+        for (var i = 0; i < 10_000; i++)
+        {
+            var item = pool.Obter();
+            pool.Liberar(item);
+        }
+
+        var bytesDepois = GC.GetAllocatedBytesForCurrentThread();
+        var bytesAlocados = bytesDepois - bytesAntes;
+
+        // Assert: SC-001 estritamente zero alocação no heap
+        Assert.Equal(0, bytesAlocados);
+    }
 }
