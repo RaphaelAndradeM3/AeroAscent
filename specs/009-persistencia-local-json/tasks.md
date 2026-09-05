@@ -17,10 +17,10 @@
 
 **Objetivo**: Criação dos projetos C# `AeroAscent.Infraestrutura` e `AeroAscent.Infraestrutura.Testes`, vinculação na solução `AeroAscent.slnx` e validação da compilação inicial.
 
-- [ ] T001 Criar o projeto de infraestrutura `AeroAscent.Infraestrutura.csproj` com suporte a `netstandard2.1` e `net8.0` em `src/AeroAscent.Infraestrutura/AeroAscent.Infraestrutura.csproj`
-- [ ] T002 Criar o projeto de testes unitários `AeroAscent.Infraestrutura.Testes.csproj` em `tests/AeroAscent.Infraestrutura.Testes/AeroAscent.Infraestrutura.Testes.csproj`
-- [ ] T003 Adicionar os projetos `AeroAscent.Infraestrutura` e `AeroAscent.Infraestrutura.Testes` à solução `AeroAscent.slnx`
-- [ ] T004 Validar integridade e compilação limpa da solução com `dotnet build AeroAscent.slnx`
+- [X] T001 Criar o projeto de infraestrutura `AeroAscent.Infraestrutura.csproj` com suporte a `netstandard2.1` e `net8.0` em `src/AeroAscent.Infraestrutura/AeroAscent.Infraestrutura.csproj`
+- [X] T002 Criar o projeto de testes unitários `AeroAscent.Infraestrutura.Testes.csproj` em `tests/AeroAscent.Infraestrutura.Testes/AeroAscent.Infraestrutura.Testes.csproj`
+- [X] T003 Adicionar os projetos `AeroAscent.Infraestrutura` e `AeroAscent.Infraestrutura.Testes` à solução `AeroAscent.slnx`
+- [X] T004 Validar integridade e compilação limpa da solução com `dotnet build AeroAscent.slnx`
 
 **Ponto de Verificação**: Solução compilando limpa com os novos projetos de infraestrutura e testes integrados.
 
