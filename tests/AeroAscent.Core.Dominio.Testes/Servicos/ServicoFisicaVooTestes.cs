@@ -229,12 +229,12 @@ public class ServicoFisicaVooTestes
     }
 
     [Fact]
-    public void SimularPasso_NoSoloAbaixoDoLimiar05_DevePararCompletamente()
+    public void SimularPasso_NoSoloAbaixoDoLimiarCanonico015_DevePararCompletamente()
     {
-        // Arrange: aeronave no solo com velocidade abaixo de 0.5 m/s
+        // Arrange: aeronave no solo com velocidade horizontal abaixo de 0.15 m/s
         var estadoNoSolo = EstadoFisicoAeronave.Criar(
             new VetorVoo(0f, 0f, 150f),
-            new VetorVoo(0f, 0f, 0.4f),
+            new VetorVoo(0f, 0f, 0.14f),
             0.0f,
             VetorVoo.Zero,
             true);
@@ -242,9 +242,29 @@ public class ServicoFisicaVooTestes
         // Act
         var proximo = _servicoFisica.SimularPasso(estadoNoSolo, ParametrosControlePiloto.Neutro, 1, 0.02f);
 
-        // Assert
+        // Assert: parada cinemática imediata abaixo de 0.15 m/s
         Assert.True(proximo.NoSolo);
         Assert.Equal(0f, proximo.Velocidade.Z);
+    }
+
+    [Fact]
+    public void SimularPasso_NoSoloAcimaDoLimiarCanonico015_NaoDevePararImediatamente()
+    {
+        // Arrange: aeronave no solo com velocidade horizontal acima de 0.15 m/s (0.40 m/s)
+        var estadoNoSolo = EstadoFisicoAeronave.Criar(
+            new VetorVoo(0f, 0f, 150f),
+            new VetorVoo(0f, 0f, 0.40f),
+            0.0f,
+            VetorVoo.Zero,
+            true);
+
+        // Act: em 0.02s o atrito desacelera ~0.059 m/s, resultando em ~0.341 m/s > 0.15 m/s
+        var proximo = _servicoFisica.SimularPasso(estadoNoSolo, ParametrosControlePiloto.Neutro, 1, 0.02f);
+
+        // Assert: não deve congelar ainda pois continua acima de 0.15 m/s
+        Assert.True(proximo.NoSolo);
+        Assert.True(proximo.Velocidade.Z > 0.15f);
+        Assert.True(proximo.Velocidade.Z < 0.40f);
     }
 
     [Fact]
@@ -263,6 +283,203 @@ public class ServicoFisicaVooTestes
         Assert.True(proximo.NoSolo);
         Assert.Equal(0f, proximo.Posicao.Y);
         Assert.Equal(0f, proximo.Velocidade.Y);
+    }
+
+    [Fact]
+    public void SimularPasso_DeslizandoNoSoloComPitchPositivo_DeveNivelarSuavementePitchA15GrausPorSegundo()
+    {
+        // Arrange: aeronave deslizando no solo com pitch positivo de 30°
+        var estadoNoSolo = EstadoFisicoAeronave.Criar(
+            new VetorVoo(0f, 0f, 100f),
+            new VetorVoo(0f, 0f, 10f),
+            30.0f,
+            VetorVoo.Zero,
+            true);
+
+        // Act: dt = 0.5s -> redução de 15°/s * 0.5s = 7.5° -> novo pitch = 22.5°
+        var proximo = _servicoFisica.SimularPasso(estadoNoSolo, ParametrosControlePiloto.Neutro, 1, 0.5f);
+
+        // Assert
+        Assert.True(proximo.NoSolo);
+        Assert.Equal(22.5f, proximo.InclinacaoPitchGraus, 2);
+    }
+
+    [Fact]
+    public void SimularPasso_DeslizandoNoSoloComPitchNegativo_DeveNivelarSuavementePitchParaZero()
+    {
+        // Arrange: aeronave deslizando no solo com pitch negativo de -10°
+        var estadoNoSolo = EstadoFisicoAeronave.Criar(
+            new VetorVoo(0f, 0f, 100f),
+            new VetorVoo(0f, 0f, 10f),
+            -10.0f,
+            VetorVoo.Zero,
+            true);
+
+        // Act: dt = 0.5s -> incremento de 15°/s * 0.5s = 7.5° -> novo pitch = -2.5°
+        var proximo = _servicoFisica.SimularPasso(estadoNoSolo, ParametrosControlePiloto.Neutro, 1, 0.5f);
+
+        // Assert
+        Assert.True(proximo.NoSolo);
+        Assert.Equal(-2.5f, proximo.InclinacaoPitchGraus, 2);
+    }
+
+    [Fact]
+    public void SimularPasso_DeslizandoNoSoloPitchPequeno_DeveCravarEmZeroGraus()
+    {
+        // Arrange: pitch pequeno de 5°, passo de 0.5s (redução teórica de 7.5° superaria 0°)
+        var estadoNoSolo = EstadoFisicoAeronave.Criar(
+            new VetorVoo(0f, 0f, 100f),
+            new VetorVoo(0f, 0f, 10f),
+            5.0f,
+            VetorVoo.Zero,
+            true);
+
+        // Act
+        var proximo = _servicoFisica.SimularPasso(estadoNoSolo, ParametrosControlePiloto.Neutro, 1, 0.5f);
+
+        // Assert: crava exatamente em 0°
+        Assert.True(proximo.NoSolo);
+        Assert.Equal(0f, proximo.InclinacaoPitchGraus);
+    }
+
+    [Fact]
+    public void SimularPasso_AposParadaTotal_DeveManterCongelamentoCinematicoAbsoluto()
+    {
+        // Arrange: aeronave parada no solo
+        var estadoParado = EstadoFisicoAeronave.Criar(
+            new VetorVoo(0f, 0f, 250f),
+            VetorVoo.Zero,
+            0.0f,
+            VetorVoo.Zero,
+            true);
+
+        // Act: simular múltiplos passos com comandos ativos de subida e boost
+        var controleTentativa = new ParametrosControlePiloto(1.0f, 30f, true);
+        var estado = estadoParado;
+        for (var i = 0; i < 20; i++)
+        {
+            estado = _servicoFisica.SimularPasso(estado, controleTentativa, 5, 5, 0.05f, 0.05f);
+        }
+
+        // Assert: imutabilidade cinemática e bloqueio total de controles
+        Assert.True(estado.NoSolo);
+        Assert.Equal(250f, estado.Posicao.Z);
+        Assert.Equal(0f, estado.Posicao.Y);
+        Assert.Equal(0f, estado.Velocidade.Z);
+        Assert.Equal(0f, estado.Velocidade.Y);
+        Assert.Equal(0f, estado.InclinacaoPitchGraus);
+        Assert.False(estado.Propulsor.EstaAtivo);
+        Assert.Equal(0f, estado.Propulsor.EmpuxoNewtons);
+    }
+
+    [Fact]
+    public void SimularVooAteParada_CenarioIndependenteUS1_DevePararSuavementeSemTranspassarSolo()
+    {
+        // Arrange: Cenario de teste independente da US1:
+        // Y = 0.5m, Vy = -3.0 m/s, Vz = 10.0 m/s, pitch = 5.0°
+        var estado = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 0.5f, 50f),
+            new VetorVoo(0f, -3.0f, 10.0f),
+            5.0f);
+
+        var controle = ParametrosControlePiloto.Neutro;
+        var dt = 0.02f;
+        var iteracoesMaximas = 300; // 6 segundos de simulação
+
+        var tocouSolo = false;
+
+        // Act
+        for (var i = 0; i < iteracoesMaximas; i++)
+        {
+            estado = _servicoFisica.SimularPasso(estado, controle, 1, dt);
+
+            // Invariante: Y nunca pode ser negativo (SC-001)
+            Assert.True(estado.Posicao.Y >= 0f, $"Altitude Y ({estado.Posicao.Y}) não pode ser negativa!");
+
+            if (estado.NoSolo)
+            {
+                tocouSolo = true;
+                Assert.Equal(0f, estado.Posicao.Y);
+                Assert.Equal(0f, estado.Velocidade.Y);
+            }
+
+            if (estado.NoSolo && estado.Velocidade.Z == 0f)
+            {
+                break;
+            }
+        }
+
+        // Assert
+        Assert.True(tocouSolo, "A aeronave deveria ter tocado o solo.");
+        Assert.True(estado.NoSolo, "O estado final deve ser no solo.");
+        Assert.Equal(0f, estado.Velocidade.Z);
+        Assert.Equal(0f, estado.InclinacaoPitchGraus);
+        Assert.True(estado.Posicao.Z > 50f, "A aeronave deve ter deslizado para frente antes de parar.");
+    }
+
+    [Fact]
+    public void SimularPasso_QuedaEmMergulhoSevero_DeveAbsorverVerticalmenteSemPenetracaoDeSolo()
+    {
+        // Arrange: mergulho vertical severo (-80 m/s) com pitch negativo (-60°)
+        var estadoMergulho = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 0.5f, 100f),
+            new VetorVoo(0f, -80.0f, 5.0f),
+            -60.0f);
+
+        // Act
+        var proximo = _servicoFisica.SimularPasso(estadoMergulho, ParametrosControlePiloto.Neutro, 1, 0.02f);
+
+        // Assert: absorção total vertical sem penetração
+        Assert.True(proximo.NoSolo);
+        Assert.Equal(0f, proximo.Posicao.Y);
+        Assert.Equal(0f, proximo.Velocidade.Y);
+        Assert.True(proximo.InclinacaoPitchGraus > -60.0f, "Pitch deve iniciar nivelamento em direção a 0°.");
+    }
+
+    [Fact]
+    public void SimularPasso_NoSoloComCombustivelRestanteETentativaDeBoost_DeveManterPropulsorInativo()
+    {
+        // Arrange: aeronave deslizando no solo com combustível (15 de 20 litros)
+        var propulsorComCombustivel = EstadoPropulsor.CriarInativo(15f, 20f, 5f);
+        var estadoNoSolo = new EstadoFisicoAeronave(
+            new VetorVoo(0f, 0f, 100f),
+            new VetorVoo(0f, 0f, 8.0f),
+            0.0f,
+            VetorVoo.Zero,
+            true,
+            propulsorComCombustivel);
+
+        var controleComBoost = new ParametrosControlePiloto(0f, 30f, true);
+
+        // Act: tenta acionar boost por 0.05s
+        var proximo = _servicoFisica.SimularPasso(estadoNoSolo, controleComBoost, 1, 5, 0.05f, 0.05f);
+
+        // Assert: propulsor deve permanecer inativo e combustível não deve ser consumido
+        Assert.True(proximo.NoSolo);
+        Assert.False(proximo.Propulsor.EstaAtivo);
+        Assert.Equal(0f, proximo.Propulsor.EmpuxoNewtons);
+        Assert.Equal(15f, proximo.Propulsor.CombustivelRestante);
+    }
+
+    [Fact]
+    public void SimularPasso_NoSoloComComandoDePitch_DeveIgnorarComandoENivelarParaZero()
+    {
+        // Arrange: aeronave no solo com pitch = 20°, comando tentando puxar nariz para cima (+1.0)
+        var estadoNoSolo = EstadoFisicoAeronave.Criar(
+            new VetorVoo(0f, 0f, 100f),
+            new VetorVoo(0f, 0f, 5.0f),
+            20.0f,
+            VetorVoo.Zero,
+            true);
+
+        var comandoPuxarParaCima = new ParametrosControlePiloto(1.0f, 30f, false);
+
+        // Act: 0.5s de simulação no solo
+        var proximo = _servicoFisica.SimularPasso(estadoNoSolo, comandoPuxarParaCima, 1, 0.5f);
+
+        // Assert: comando ignorado, pitch nivelou 15°/s * 0.5s = 7.5° -> 12.5°
+        Assert.True(proximo.NoSolo);
+        Assert.Equal(12.5f, proximo.InclinacaoPitchGraus, 2);
     }
 
     [Fact]

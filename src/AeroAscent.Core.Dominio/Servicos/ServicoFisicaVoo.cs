@@ -83,9 +83,14 @@ public class ServicoFisicaVoo : IServicoFisicaVoo
     public const float COEFICIENTE_ATRITO_SOLO = 0.3f;
 
     /// <summary>
-    /// Limiar de velocidade horizontal de avanço abaixo do qual a aeronave para completamente no solo (0.5 m/s).
+    /// Limiar canônico de velocidade horizontal de avanço abaixo do qual a aeronave para completamente no solo (0.15 m/s).
     /// </summary>
-    public const float VELOCIDADE_LIMIAR_PARADA_SOLO = 0.5f;
+    public const float VELOCIDADE_LIMIAR_PARADA_SOLO = 0.15f;
+
+    /// <summary>
+    /// Taxa de nivelamento suave da inclinação de arfagem (pitch) em direção a 0° durante o deslizamento no solo (15.0°/s).
+    /// </summary>
+    public const float TAXA_NIVELAMENTO_PITCH_SOLO_GRAUS_POR_SEGUNDO = 15.0f;
 
     /// <summary>
     /// Taxa de torque restaurador para autoestabilização direcional ao soltar comandos (graus por segundo normalizado).
@@ -204,14 +209,29 @@ public class ServicoFisicaVoo : IServicoFisicaVoo
             }
 
             var novaPosicaoZSolo = estadoAtual.Posicao.Z + novaVzSolo * deltaTempoSegundos;
-            var novoPitchSolo = Math.Max(0f, estadoAtual.InclinacaoPitchGraus - 10f * deltaTempoSegundos);
+
+            float novoPitchSolo;
+            if (estadoAtual.InclinacaoPitchGraus > 0f)
+            {
+                novoPitchSolo = MathF.Max(0f, estadoAtual.InclinacaoPitchGraus - TAXA_NIVELAMENTO_PITCH_SOLO_GRAUS_POR_SEGUNDO * deltaTempoSegundos);
+            }
+            else if (estadoAtual.InclinacaoPitchGraus < 0f)
+            {
+                novoPitchSolo = MathF.Min(0f, estadoAtual.InclinacaoPitchGraus + TAXA_NIVELAMENTO_PITCH_SOLO_GRAUS_POR_SEGUNDO * deltaTempoSegundos);
+            }
+            else
+            {
+                novoPitchSolo = 0f;
+            }
 
             var forcaAtritoZ = novaVzSolo > 0f ? -(COEFICIENTE_ATRITO_SOLO * MASSA_REFERENCIA_KG * ACELERACAO_GRAVIDADE) : 0f;
             var forcaResultanteSolo = new VetorVoo(0f, 0f, forcaAtritoZ);
 
-            var propulsorInativoSolo = EstadoPropulsor.CriarInativo(
+            var propulsorInativoSolo = new EstadoPropulsor(
+                false,
+                0f,
                 estadoAtual.Propulsor.CombustivelRestante,
-                estadoAtual.Propulsor.CombustivelRestante,
+                estadoAtual.Propulsor.PercentualRestante,
                 estadoAtual.Propulsor.TaxaConsumoPorSegundo);
 
             return new EstadoFisicoAeronave(
@@ -354,16 +374,41 @@ public class ServicoFisicaVoo : IServicoFisicaVoo
         // 5. Detecção e resposta de colisão com o solo no final do passo
         if (novaPosY <= 0f)
         {
-            var propulsorSolo = EstadoPropulsor.CriarInativo(
+            var vzFinalSolo = MathF.Max(0f, novaVz);
+            if (vzFinalSolo < VELOCIDADE_LIMIAR_PARADA_SOLO)
+            {
+                vzFinalSolo = 0f;
+            }
+
+            float pitchFinalSolo;
+            if (novoPitch > 0f)
+            {
+                pitchFinalSolo = MathF.Max(0f, novoPitch - TAXA_NIVELAMENTO_PITCH_SOLO_GRAUS_POR_SEGUNDO * deltaTempoSegundos);
+            }
+            else if (novoPitch < 0f)
+            {
+                pitchFinalSolo = MathF.Min(0f, novoPitch + TAXA_NIVELAMENTO_PITCH_SOLO_GRAUS_POR_SEGUNDO * deltaTempoSegundos);
+            }
+            else
+            {
+                pitchFinalSolo = 0f;
+            }
+
+            var forcaAtritoFinalSolo = vzFinalSolo > 0f ? -(COEFICIENTE_ATRITO_SOLO * MASSA_REFERENCIA_KG * ACELERACAO_GRAVIDADE) : 0f;
+            var forcaImpactoSolo = new VetorVoo(0f, 0f, forcaAtritoFinalSolo);
+
+            var propulsorSolo = new EstadoPropulsor(
+                false,
+                0f,
                 estadoAtual.Propulsor.CombustivelRestante,
-                20f,
-                5f);
+                estadoAtual.Propulsor.PercentualRestante,
+                estadoAtual.Propulsor.TaxaConsumoPorSegundo);
 
             return new EstadoFisicoAeronave(
                 new VetorVoo(0f, 0f, novaPosZ),
-                new VetorVoo(0f, 0f, MathF.Max(0f, novaVz)),
-                Math.Max(0f, novoPitch),
-                forcaTotal,
+                new VetorVoo(0f, 0f, vzFinalSolo),
+                pitchFinalSolo,
+                forcaImpactoSolo,
                 true,
                 propulsorSolo);
         }
