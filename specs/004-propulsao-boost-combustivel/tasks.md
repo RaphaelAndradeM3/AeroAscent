@@ -91,11 +91,11 @@
 
 **Propósito**: Validação dos requisitos de qualidade, critérios de sucesso mensuráveis, casos de borda e documentação técnica.
 
-- [ ] T021 [P] Criar teste automatizado de queima fracionária com asserção de erro temporal de corte $< 1\text{ms}$ (SC-001) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/AtualizarFisicaVooCasoDeUsoTestes.cs`
-- [ ] T022 [P] Criar teste de benchmark de 10.000 passos com validação de `GC.GetAllocatedBytesForCurrentThread() == 0` (SC-002) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/AtualizarFisicaVooCasoDeUsoTestes.cs`
-- [ ] T023 [P] Criar testes cobrindo bloqueio de boost na catapulta (`EmPreparacao`), no solo (`NoSolo = true`), em status `Pousado` e pulsos intermitentes em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/AtualizarFisicaVooCasoDeUsoTestes.cs`
-- [ ] T024 Executar suíte completa de testes automatizados com `dotnet test AeroAscent.slnx` garantindo 100% de sucesso e zero regressões (SC-003) em `tests/`
-- [ ] T025 Revisar documentação XML (`///`) de todas as novas classes, métodos, structs e propriedades públicas em pt-BR conforme GEMINI.md
+- [x] T021 [P] Criar teste automatizado de queima fracionária com asserção de erro temporal de corte $< 1\text{ms}$ (SC-001) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/AtualizarFisicaVooCasoDeUsoTestes.cs`
+- [x] T022 [P] Criar teste de benchmark de 10.000 passos com validação de `GC.GetAllocatedBytesForCurrentThread() == 0` (SC-002) em `tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs`
+- [x] T023 [P] Criar testes cobrindo bloqueio de boost na catapulta (`EmPreparacao`), no solo (`NoSolo = true`), em status `Pousado` e pulsos intermitentes em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/AtualizarFisicaVooCasoDeUsoTestes.cs`
+- [x] T024 Executar suíte completa de testes automatizados com `dotnet test AeroAscent.slnx` garantindo 100% de sucesso e zero regressões (SC-003) em `tests/`
+- [x] T025 Revisar documentação XML (`///`) de todas as novas classes, métodos, structs e propriedades públicas em pt-BR conforme GEMINI.md
 
 ---
 

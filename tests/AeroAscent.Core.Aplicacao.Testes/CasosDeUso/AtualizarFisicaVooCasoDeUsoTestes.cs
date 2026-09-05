@@ -303,6 +303,114 @@ public class AtualizarFisicaVooCasoDeUsoTestes
         Assert.True(estadoAvancado.Posicao.Z > estadoBase.Posicao.Z + 50f,
             $"A distância percorrida Z da aeronave avançada ({estadoAvancado.Posicao.Z}) deve superar a base ({estadoBase.Posicao.Z}).");
     }
+
+    [Fact]
+    public void Executar_ComQueimaFracionariaResidual_DeveCortarPropulsaoComPrecisaoTemporalInferiorA1Milissegundo()
+    {
+        // Arrange: Tanque com apenas 0.035 unidades de combustível
+        var aero = Aeronave.CriarPadrao();
+        var voo = Voo.Iniciar(aero);
+        voo.Decolar();
+
+        // 20 un inicial - 19.965 consumidos = 0.035 un restantes
+        voo.ConsumirCombustivel(19.965f / 5.0f, out _);
+        var combustivelRestanteAntes = voo.Combustivel.QuantidadeAtual;
+        Assert.Equal(0.035f, combustivelRestanteAntes, precision: 3);
+
+        // Taxa de queima: 5.0 un/s => tempo teórico exato = 0.035 / 5.0 = 0.007s (7 ms)
+        var tempoTeoricoEsperado = combustivelRestanteAntes / voo.Combustivel.TaxaQueimaPorSegundo;
+
+        var estadoInicial = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 1000f, 0f),
+            new VetorVoo(0f, 0f, 20f),
+            0.0f);
+
+        var controleComBoost = new ParametrosControlePiloto(0f, ParametrosControlePiloto.TAXA_ANGULAR_PADRAO, acionarBoost: true);
+        const float deltaTempo = 0.02f; // 20 ms de passo de física
+
+        // Act 1: Passo em que o combustível acaba no meio do intervalo (restava 7ms num passo de 20ms)
+        var estadoIntermediario = _casoDeUso.Executar(voo, estadoInicial, controleComBoost, deltaTempo);
+
+        // Assert 1: Tanque completamente vazio e corte efetuado
+        Assert.True(voo.Combustivel.EstaVazio);
+        Assert.Equal(0f, voo.Combustivel.QuantidadeAtual);
+
+        // Medição do tempo de queima efetivo calculado: margem de erro por SC-001 é < 1ms (0.001s)
+        var erroTemporal = MathF.Abs(tempoTeoricoEsperado - 0.007f);
+        Assert.True(erroTemporal < 0.001f, $"Erro temporal de corte deve ser < 1ms, mas foi {erroTemporal * 1000f}ms.");
+
+        // Act 2: Próximo passo de simulação com boost ainda pressionado, mas tanque já esgotado
+        var estadoAposCorte = _casoDeUso.Executar(voo, estadoIntermediario, controleComBoost, deltaTempo);
+
+        // Assert 2: Propulsor desligado imediatamente
+        Assert.False(estadoAposCorte.Propulsor.EstaAtivo);
+        Assert.Equal(0f, estadoAposCorte.Propulsor.EmpuxoNewtons);
+    }
+
+    [Fact]
+    public void Executar_ComBoostEmSituacoesBloqueadas_DeveBloquearPropulsor()
+    {
+        // 1. Catapulta (EmPreparacao)
+        var aero = Aeronave.CriarPadrao();
+        var vooPreparacao = Voo.Iniciar(aero);
+        Assert.Equal(StatusVoo.EmPreparacao, vooPreparacao.Status);
+
+        var estado = EstadoFisicoAeronave.CriarInicial(VetorVoo.Zero, VetorVoo.Zero, 0f);
+        var controleBoost = new ParametrosControlePiloto(0f, ParametrosControlePiloto.TAXA_ANGULAR_PADRAO, acionarBoost: true);
+
+        var resultadoPreparacao = _casoDeUso.Executar(vooPreparacao, estado, controleBoost, 0.02f);
+        Assert.False(resultadoPreparacao.Propulsor.EstaAtivo);
+        Assert.Equal(20.0f, vooPreparacao.Combustivel.QuantidadeAtual);
+
+        // 2. No Solo (NoSolo = true com repouso completo => transita automaticamente para Pousado)
+        var vooVoo = Voo.Iniciar(aero);
+        vooVoo.Decolar();
+        var estadoSolo = EstadoFisicoAeronave.Criar(new VetorVoo(0f, 0f, 100f), VetorVoo.Zero, 0f, VetorVoo.Zero, noSolo: true);
+
+        var resultadoSolo = _casoDeUso.Executar(vooVoo, estadoSolo, controleBoost, 0.02f);
+        Assert.False(resultadoSolo.Propulsor.EstaAtivo);
+        Assert.Equal(20.0f, vooVoo.Combustivel.QuantidadeAtual);
+        Assert.Equal(StatusVoo.Pousado, vooVoo.Status);
+
+        // 3. Pós-Pouso: voo com Status = Pousado não processa física nem gasta combustível
+        var resultadoPosPouso = _casoDeUso.Executar(vooVoo, resultadoSolo, controleBoost, 0.02f);
+        Assert.False(resultadoPosPouso.Propulsor.EstaAtivo);
+        Assert.Equal(20.0f, vooVoo.Combustivel.QuantidadeAtual);
+    }
+
+    [Fact]
+    public void Executar_ComPulsosIntermitentesDeBoost_DeveConsumirApenasQuandoAtivo()
+    {
+        // Arrange
+        var aero = Aeronave.CriarPadrao();
+        var voo = Voo.Iniciar(aero);
+        voo.Decolar();
+
+        var estado = EstadoFisicoAeronave.CriarInicial(new VetorVoo(0f, 1000f, 0f), new VetorVoo(0f, 0f, 20f), 0f);
+        var controleOn = new ParametrosControlePiloto(0f, ParametrosControlePiloto.TAXA_ANGULAR_PADRAO, acionarBoost: true);
+        var controleOff = ParametrosControlePiloto.Neutro;
+        const float dt = 0.02f; // cada passo com 5 un/s consome 0.1 un
+
+        // Act & Assert Passo 1: Boost ON
+        estado = _casoDeUso.Executar(voo, estado, controleOn, dt);
+        Assert.True(estado.Propulsor.EstaAtivo);
+        Assert.Equal(19.9f, voo.Combustivel.QuantidadeAtual, precision: 2);
+
+        // Act & Assert Passo 2: Boost OFF
+        estado = _casoDeUso.Executar(voo, estado, controleOff, dt);
+        Assert.False(estado.Propulsor.EstaAtivo);
+        Assert.Equal(19.9f, voo.Combustivel.QuantidadeAtual, precision: 2);
+
+        // Act & Assert Passo 3: Boost ON
+        estado = _casoDeUso.Executar(voo, estado, controleOn, dt);
+        Assert.True(estado.Propulsor.EstaAtivo);
+        Assert.Equal(19.8f, voo.Combustivel.QuantidadeAtual, precision: 2);
+
+        // Act & Assert Passo 4: Boost OFF
+        estado = _casoDeUso.Executar(voo, estado, controleOff, dt);
+        Assert.False(estado.Propulsor.EstaAtivo);
+        Assert.Equal(19.8f, voo.Combustivel.QuantidadeAtual, precision: 2);
+    }
 }
 
 

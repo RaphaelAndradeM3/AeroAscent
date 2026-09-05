@@ -410,6 +410,43 @@ public class ServicoFisicaVooTestes
         Assert.True(estadoComBoost.Velocidade.Z > estadoSemBoost.Velocidade.Z,
             "Empuxo com pitch 30° deve adicionar velocidade horizontal (Z).");
     }
+
+    [Fact]
+    public void SimularPasso_ComBoostAtivoContinuo_NaoDeveAlocarMemoriaNoHeap()
+    {
+        // Arrange
+        var estado = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 1000f, 0f),
+            new VetorVoo(0f, 0f, 30f),
+            15.0f);
+
+        var controle = new ParametrosControlePiloto(0f, ParametrosControlePiloto.TAXA_ANGULAR_PADRAO, acionarBoost: true);
+
+        // Warm-up JIT
+        for (var i = 0; i < 100; i++)
+        {
+            estado = _servicoFisica.SimularPasso(estado, controle, 3, 5, 0.02f, 0.02f);
+        }
+
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        // Medição estrita de memória alocada no heap
+        var memoriaAntes = GC.GetAllocatedBytesForCurrentThread();
+
+        // Act: 10.000 iterações com boost ativo e cálculos trigonométricos de empuxo
+        for (var i = 0; i < 10000; i++)
+        {
+            estado = _servicoFisica.SimularPasso(estado, controle, 3, 5, 0.02f, 0.02f);
+        }
+
+        var memoriaDepois = GC.GetAllocatedBytesForCurrentThread();
+        var bytesAlocados = memoriaDepois - memoriaAntes;
+
+        // Assert (SC-002: GC Alloc = 0 bytes no loop contínuo de simulação física)
+        Assert.Equal(0, bytesAlocados);
+    }
 }
 
 
