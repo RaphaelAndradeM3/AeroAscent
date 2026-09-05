@@ -30,11 +30,11 @@
 
 **⚠️ CRÍTICO**: Nenhuma implementação de história de usuário pode começar sem concluir esta fase.
 
-- [ ] T003 [P] Criar o objeto de valor na stack `ParametrosPouso` (`readonly record struct`) em `src/AeroAscent.Core.Dominio/ObjetosDeValor/ParametrosPouso.cs`
-- [ ] T004 [P] Criar o objeto de valor na stack `ResultadoFimVoo` (`readonly record struct`) em `src/AeroAscent.Core.Dominio/ObjetosDeValor/ResultadoFimVoo.cs`
-- [ ] T005 [P] Criar a interface de contrato `IPublicadorEventosVoo` em `src/AeroAscent.Core.Dominio/Contratos/IPublicadorEventosVoo.cs`
-- [ ] T006 [P] Criar a interface de contrato `IProcessarPousoFimVooCasoDeUso` em `src/AeroAscent.Core.Aplicacao/Contratos/IProcessarPousoFimVooCasoDeUso.cs`
-- [ ] T007 [P] Criar testes unitários para `ParametrosPouso` e `ResultadoFimVoo` em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ParametrosPousoTestes.cs` e `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ResultadoFimVooTestes.cs`
+- [x] T003 [P] Criar o objeto de valor na stack `ParametrosPouso` (`readonly record struct`) em `src/AeroAscent.Core.Dominio/ObjetosDeValor/ParametrosPouso.cs`
+- [x] T004 [P] Criar o objeto de valor na stack `ResultadoFimVoo` (`readonly record struct`) em `src/AeroAscent.Core.Dominio/ObjetosDeValor/ResultadoFimVoo.cs`
+- [x] T005 [P] Criar a interface de contrato `IPublicadorEventosVoo` em `src/AeroAscent.Core.Dominio/Contratos/IPublicadorEventosVoo.cs`
+- [x] T006 [P] Criar a interface de contrato `IProcessarPousoFimVooCasoDeUso` em `src/AeroAscent.Core.Aplicacao/Contratos/IProcessarPousoFimVooCasoDeUso.cs`
+- [x] T007 [P] Criar testes unitários para `ParametrosPouso` e `ResultadoFimVoo` em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ParametrosPousoTestes.cs` e `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ResultadoFimVooTestes.cs`
 
 **Ponto de Verificação**: Estruturas de dados na stack e contratos de aplicação prontos para as histórias de usuário.
 
