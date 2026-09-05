@@ -87,9 +87,9 @@
 
 **Purpose**: Verificações transversais, documentação XML integral, conformidade com os critérios de sucesso e validação de ponta a ponta.
 
-- [ ] T015 [P] Adicionar documentação XML completa (///) em 100% das classes, métodos, propriedades e structs públicas em src/AeroAscent.Core.Aplicacao/ e novos tipos em src/AeroAscent.Core.Dominio/
-- [ ] T016 Implementar testes de aceitação automatizados para os 5 cenários funcionais do guia em tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/CenariosQuickstartLancamentoTestes.cs baseados em specs/002-sistema-lancamento-catapulta/quickstart.md
-- [ ] T017 Executar suíte completa dotnet test --configuration Release e comprovar aprovação de 100% dos testes com tempo unitário vetorial inferior a 100ms e suíte global inferior a 200ms conforme critério SC-001
+- [X] T015 [P] Adicionar documentação XML completa (///) em 100% das classes, métodos, propriedades e structs públicas em src/AeroAscent.Core.Aplicacao/ e novos tipos em src/AeroAscent.Core.Dominio/
+- [X] T016 Implementar testes de aceitação automatizados para os 5 cenários funcionais do guia em tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/CenariosQuickstartLancamentoTestes.cs baseados em specs/002-sistema-lancamento-catapulta/quickstart.md
+- [X] T017 Executar suíte completa dotnet test --configuration Release e comprovar aprovação de 100% dos testes com tempo unitário vetorial inferior a 100ms e suíte global inferior a 200ms conforme critério SC-001
 
 ---
 
