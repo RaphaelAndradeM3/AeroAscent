@@ -49,14 +49,14 @@
 
 ### Testes da User Story 1
 
-- [ ] T009 [P] [US1] Criar testes unitários para a entidade `Coletavel` (moeda, raio 1.5m, colisão O(1) sem raiz quadrada e desativação) em `tests/AeroAscent.Core.Dominio.Testes/Entidades/ColetavelTestes.cs`
-- [ ] T010 [P] [US1] Criar testes unitários para `GerenciadorPoolObjetos<Coletavel>` (obtenção, liberação e estoque) em `tests/AeroAscent.Core.Dominio.Testes/Comum/GerenciadorPoolObjetosTestes.cs`
+- [x] T009 [P] [US1] Criar testes unitários para a entidade `Coletavel` (moeda, raio 1.5m, colisão O(1) sem raiz quadrada e desativação) em `tests/AeroAscent.Core.Dominio.Testes/Entidades/ColetavelTestes.cs`
+- [x] T010 [P] [US1] Criar testes unitários para `GerenciadorPoolObjetos<Coletavel>` (obtenção, liberação e estoque) em `tests/AeroAscent.Core.Dominio.Testes/Comum/GerenciadorPoolObjetosTestes.cs`
 
 ### Implementação da User Story 1
 
-- [ ] T011 [US1] Implementar a entidade `Coletavel` com métodos `Ativar`, `Desativar`, `MarcarColetado` e `VerificarColisao` em `src/AeroAscent.Core.Dominio/Entidades/Coletavel.cs`
-- [ ] T012 [US1] Implementar o caso de uso `ProcessarColetaveisVooCasoDeUso` com suporte à coleta de moedas, pontuação em `Voo` e liberação no pool em `src/AeroAscent.Core.Aplicacao/CasosDeUso/ProcessarColetaveisVooCasoDeUso.cs`
-- [ ] T013 [US1] Criar testes de integração validando coleta de moeda e incremento no saldo de `Voo` via caso de uso em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarColetaveisVooCasoDeUsoTestes.cs`
+- [x] T011 [US1] Implementar a entidade `Coletavel` com métodos `Ativar`, `Desativar`, `MarcarColetado` e `VerificarColisao` em `src/AeroAscent.Core.Dominio/Entidades/Coletavel.cs`
+- [x] T012 [US1] Implementar o caso de uso `ProcessarColetaveisVooCasoDeUso` com suporte à coleta de moedas, pontuação em `Voo` e liberação no pool em `src/AeroAscent.Core.Aplicacao/CasosDeUso/ProcessarColetaveisVooCasoDeUso.cs`
+- [x] T013 [US1] Criar testes de integração validando coleta de moeda e incremento no saldo de `Voo` via caso de uso em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarColetaveisVooCasoDeUsoTestes.cs`
 
 **Ponto de Verificação**: User Story 1 (MVP) plenamente funcional e testável de forma independente.
 
