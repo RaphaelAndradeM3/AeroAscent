@@ -19,10 +19,10 @@
 
 **Purpose**: Criação da solução e configuração dos projetos C# para Clean Architecture
 
-- [ ] T001 Criar solução `AeroAscent.sln` e estrutura de diretórios `src/` e `tests/` na raiz do repositório
-- [ ] T002 Criar projeto de biblioteca de classes C# (.NET Standard 2.1 / .NET 8) em `src/AeroAscent.Core.Dominio/AeroAscent.Core.Dominio.csproj`
-- [ ] T003 [P] Criar projeto de testes unitários xUnit em `tests/AeroAscent.Core.Dominio.Testes/AeroAscent.Core.Dominio.Testes.csproj`
-- [ ] T004 Adicionar referência de projeto do teste para o domínio e vincular ambos os projetos à solução `AeroAscent.sln`
+- [X] T001 Criar solução `AeroAscent.sln` e estrutura de diretórios `src/` e `tests/` na raiz do repositório
+- [X] T002 Criar projeto de biblioteca de classes C# (.NET Standard 2.1 / .NET 8) em `src/AeroAscent.Core.Dominio/AeroAscent.Core.Dominio.csproj`
+- [X] T003 [P] Criar projeto de testes unitários xUnit em `tests/AeroAscent.Core.Dominio.Testes/AeroAscent.Core.Dominio.Testes.csproj`
+- [X] T004 Adicionar referência de projeto do teste para o domínio e vincular ambos os projetos à solução `AeroAscent.sln`
 
 ---
 
