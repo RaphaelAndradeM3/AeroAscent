@@ -192,4 +192,61 @@ public class VooTestes
         Assert.Equal(5.0f, voo.Combustivel.TaxaQueimaPorSegundo, precision: 2);
         Assert.False(voo.Combustivel.EstaVazio);
     }
+
+    [Fact]
+    public void CriarSessaoVoo_DeveInicializarPremiacaoLiquidadaComoFalse()
+    {
+        // Arrange & Act
+        var voo = Voo.Iniciar(Aeronave.CriarPadrao());
+
+        // Assert
+        Assert.False(voo.PremiacaoLiquidada);
+    }
+
+    [Fact]
+    public void MarcarPremiacaoLiquidada_QuandoPousado_DeveMarcarComoTrue()
+    {
+        // Arrange
+        var voo = Voo.Iniciar(Aeronave.CriarPadrao());
+        voo.Decolar();
+        voo.AtualizarMetricas(100f, 20f, 2);
+        voo.Pousar();
+
+        // Act
+        voo.MarcarPremiacaoLiquidada();
+
+        // Assert
+        Assert.True(voo.PremiacaoLiquidada);
+    }
+
+    [Fact]
+    public void MarcarPremiacaoLiquidada_QuandoCancelado_DeveMarcarComoTrue()
+    {
+        // Arrange
+        var voo = Voo.Iniciar(Aeronave.CriarPadrao());
+        voo.Cancelar();
+
+        // Act
+        voo.MarcarPremiacaoLiquidada();
+
+        // Assert
+        Assert.True(voo.PremiacaoLiquidada);
+    }
+
+    [Fact]
+    public void MarcarPremiacaoLiquidada_QuandoEmPreparacaoOuEmVoo_DeveLancarDominioInvalidoException()
+    {
+        // Arrange 1: EmPreparacao
+        var vooEmPreparacao = Voo.Iniciar(Aeronave.CriarPadrao());
+
+        // Act & Assert 1
+        Assert.Throws<DominioInvalidoException>(() => vooEmPreparacao.MarcarPremiacaoLiquidada());
+
+        // Arrange 2: EmVoo
+        var vooEmVoo = Voo.Iniciar(Aeronave.CriarPadrao());
+        vooEmVoo.Decolar();
+
+        // Act & Assert 2
+        Assert.Throws<DominioInvalidoException>(() => vooEmVoo.MarcarPremiacaoLiquidada());
+    }
 }

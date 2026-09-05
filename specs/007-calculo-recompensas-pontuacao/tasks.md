@@ -30,11 +30,11 @@
 
 **⚠️ CRÍTICO**: Nenhuma implementação de história de usuário pode começar sem concluir esta fase.
 
-- [ ] T003 [P] Criar o objeto de valor na stack `ResumoFinalizacaoVoo` (`readonly record struct`) em `src/AeroAscent.Core.Dominio/ObjetosDeValor/ResumoFinalizacaoVoo.cs`
-- [ ] T004 [P] Criar testes unitários para a struct `ResumoFinalizacaoVoo` em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ResumoFinalizacaoVooTestes.cs`
-- [ ] T005 [P] Criar a interface de contrato `IFinalizarVooCasoDeUso` em `src/AeroAscent.Core.Aplicacao/Contratos/IFinalizarVooCasoDeUso.cs`
-- [ ] T006 Adicionar a propriedade `PremiacaoLiquidada` e o método `MarcarPremiacaoLiquidada()` na entidade `Voo` em `src/AeroAscent.Core.Dominio/Entidades/Voo.cs`
-- [ ] T007 [P] Criar testes unitários para a propriedade e travamento de `PremiacaoLiquidada` em `tests/AeroAscent.Core.Dominio.Testes/Entidades/VooTestes.cs`
+- [X] T003 [P] Criar o objeto de valor na stack `ResumoFinalizacaoVoo` (`readonly record struct`) em `src/AeroAscent.Core.Dominio/ObjetosDeValor/ResumoFinalizacaoVoo.cs`
+- [X] T004 [P] Criar testes unitários para a struct `ResumoFinalizacaoVoo` em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ResumoFinalizacaoVooTestes.cs`
+- [X] T005 [P] Criar a interface de contrato `IFinalizarVooCasoDeUso` em `src/AeroAscent.Core.Aplicacao/Contratos/IFinalizarVooCasoDeUso.cs`
+- [X] T006 Adicionar a propriedade `PremiacaoLiquidada` e o método `MarcarPremiacaoLiquidada()` na entidade `Voo` em `src/AeroAscent.Core.Dominio/Entidades/Voo.cs`
+- [X] T007 [P] Criar testes unitários para a propriedade e travamento de `PremiacaoLiquidada` em `tests/AeroAscent.Core.Dominio.Testes/Entidades/VooTestes.cs`
 
 **Ponto de Verificação**: Estruturas de dados de extrato e contratos de aplicação prontos para orquestrar a finalização de voo.
 
