@@ -8,8 +8,8 @@
 
 **Objetivo**: Preparação das pastas de apresentação na camada de Aplicação e na suíte de testes automatizados.
 
-- [ ] T001 Estruturar diretórios de contratos e apresentadores em `src/AeroAscent.Core.Aplicacao/Contratos/` e `src/AeroAscent.Core.Aplicacao/Apresentadores/`
-- [ ] T002 Estruturar diretório de testes de apresentação em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/`
+- [X] T001 Estruturar diretórios de contratos e apresentadores em `src/AeroAscent.Core.Aplicacao/Contratos/` e `src/AeroAscent.Core.Aplicacao/Apresentadores/`
+- [X] T002 Estruturar diretório de testes de apresentação em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/`
 
 ---
 
