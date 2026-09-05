@@ -49,7 +49,7 @@ Como jogador, desejo que o timing do meu toque influencie a força do disparo pa
 
 ### Edge Cases
 
-- Tentativa de lançar aeronave já em voo ou finalizada deve ser ignorada ou rejeitada com `DominioInvalidoException`.
+- Tentativa de lançar aeronave já em voo ou finalizada: no nível de Domínio, `Voo.Decolar()` lança `DominioInvalidoException`; no nível de Aplicação, o caso de uso `LancarAeronaveCasoDeUso` encapsula a operação retornando `ResultadoLancamento.CriarFalha(...)` de forma segura para a interface gráfica.
 - Parâmetro de precisão menor que 0 ou maior que 1 deve ser normalizado no intervalo fechado [0.10, 1.0], aplicando o piso mínimo protetivo de 0.10f caso o jogador erre completamente o timing.
 - Ângulo de lançamento fixo ou configurável deve permanecer dentro dos limites físicos válidos (ex: entre 15° e 60°).
 
@@ -78,7 +78,7 @@ Como jogador, desejo que o timing do meu toque influencie a força do disparo pa
 
 ### Measurable Outcomes
 
-- **SC-001**: 100% dos testes unitários de cálculo vetorial de lançamento executados com precisão matemática em menos de 100ms.
+- **SC-001**: 100% dos testes unitários de cálculo vetorial de lançamento executados com precisão matemática em menos de 100ms, e a suíte completa de testes da solução executada em menos de 200ms.
 - **SC-002**: Resposta instantânea da transição de estado da catapulta para voo em menos de 16ms (1 frame a 60 FPS).
 - **SC-003**: Aumento linear e consistente de velocidade inicial comprovado a cada nível de catapulta.
 

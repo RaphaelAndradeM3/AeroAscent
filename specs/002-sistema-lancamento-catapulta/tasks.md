@@ -50,7 +50,7 @@
 > **NOTE: Escreva estes testes PRIMEIRO e confirme que FALHAM antes da implementação.**
 
 - [ ] T007 [P] [US1] Criar testes unitários para o cálculo de impulso vetorial tridimensional e escalonamento por nível em tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs
-- [ ] T008 [P] [US1] Criar testes unitários para a orquestração do caso de uso de lançamento, transição de voo e bloqueio de lançamento duplo em tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/LancarAeronaveCasoDeUsoTestes.cs
+- [ ] T008 [P] [US1] Criar testes unitários para a orquestração do caso de uso de lançamento, transição de voo, integridade de combustível inalterado (FR-005) e bloqueio de lançamento duplo em tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/LancarAeronaveCasoDeUsoTestes.cs
 
 ### Implementation for User Story 1
 
@@ -89,7 +89,7 @@
 
 - [ ] T015 [P] Adicionar documentação XML completa (///) em 100% das classes, métodos, propriedades e structs públicas em src/AeroAscent.Core.Aplicacao/ e novos tipos em src/AeroAscent.Core.Dominio/
 - [ ] T016 Implementar testes de aceitação automatizados para os 5 cenários funcionais do guia em tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/CenariosQuickstartLancamentoTestes.cs baseados em specs/002-sistema-lancamento-catapulta/quickstart.md
-- [ ] T017 Executar suíte completa dotnet test --configuration Release e comprovar aprovação de 100% dos testes em tempo inferior a 200 milissegundos conforme critério SC-001
+- [ ] T017 Executar suíte completa dotnet test --configuration Release e comprovar aprovação de 100% dos testes com tempo unitário vetorial inferior a 100ms e suíte global inferior a 200ms conforme critério SC-001
 
 ---
 
