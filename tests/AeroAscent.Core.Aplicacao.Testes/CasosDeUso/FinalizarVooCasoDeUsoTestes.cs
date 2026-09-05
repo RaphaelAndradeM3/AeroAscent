@@ -1,6 +1,7 @@
 namespace AeroAscent.Core.Aplicacao.Testes.CasosDeUso;
 
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using AeroAscent.Core.Aplicacao.CasosDeUso;
 using AeroAscent.Core.Aplicacao.Testes.Fixtures;
@@ -282,5 +283,120 @@ public class FinalizarVooCasoDeUsoTestes
         Assert.Equal(96, _repositorioMock.ProgressoArmazenado.SaldoMoedas.Quantidade);
         Assert.Equal(4, _repositorioMock.ProgressoArmazenado.TotalVoosRealizados);
         Assert.True(voo.PremiacaoLiquidada);
+    }
+
+    [Fact]
+    public async Task ExecutarAsync_IdempotenciaSC003_ChamadasRepetidasNaoDuplicamSaldoNemIncrementamVoos()
+    {
+        // Arrange
+        var progresso = ProgressoJogador.CriarNovo();
+        progresso.CreditarMoedas(new Moeda(100));
+        _repositorioMock.ProgressoArmazenado = progresso;
+
+        var voo = Voo.Iniciar(progresso.Aeronave);
+        voo.Decolar();
+        voo.AtualizarMetricas(250f, 80f, 5); // 25 + 4 + 5 = 34 moedas
+        voo.Pousar();
+
+        // Act 1: Primeira finalização
+        var resumo1 = await _casoDeUso.ExecutarAsync(voo);
+
+        // Assert 1: Concessão regular
+        Assert.Equal(34, resumo1.MoedasTotalGanhas.Quantidade);
+        Assert.Equal(134, resumo1.SaldoTotalAtualizado.Quantidade);
+        Assert.Equal(134, _repositorioMock.ProgressoArmazenado.SaldoMoedas.Quantidade);
+        Assert.Equal(1, _repositorioMock.ProgressoArmazenado.TotalVoosRealizados);
+        Assert.Equal(1, _repositorioMock.QuantidadeChamadasSalvar);
+
+        // Act 2: Segunda finalização para o mesmo voo já liquidado
+        var resumo2 = await _casoDeUso.ExecutarAsync(voo);
+
+        // Assert 2: Garantia estrita de idempotência (SC-003)
+        Assert.Equal(34, resumo2.MoedasTotalGanhas.Quantidade);
+        Assert.Equal(134, resumo2.SaldoTotalAtualizado.Quantidade); // Permanece 134, sem duplicação
+        Assert.Equal(134, _repositorioMock.ProgressoArmazenado.SaldoMoedas.Quantidade);
+        Assert.Equal(1, _repositorioMock.ProgressoArmazenado.TotalVoosRealizados); // Permanece 1
+        Assert.Equal(1, _repositorioMock.QuantidadeChamadasSalvar); // Não regravou no repositório
+        Assert.False(resumo2.EhNovoRecordeDistancia);
+        Assert.False(resumo2.EhNovoRecordeAltitude);
+    }
+
+    [Fact]
+    public async Task ExecutarAsync_StatusEmPreparacao_DeveLancarDominioInvalidoException()
+    {
+        // Arrange
+        var voo = Voo.Iniciar(Aeronave.CriarPadrao());
+
+        // Act & Assert
+        await Assert.ThrowsAsync<DominioInvalidoException>(() => _casoDeUso.ExecutarAsync(voo));
+    }
+
+    [Fact]
+    public async Task ExecutarAsync_StatusEmVoo_DeveLancarDominioInvalidoException()
+    {
+        // Arrange
+        var voo = Voo.Iniciar(Aeronave.CriarPadrao());
+        voo.Decolar();
+
+        // Act & Assert
+        await Assert.ThrowsAsync<DominioInvalidoException>(() => _casoDeUso.ExecutarAsync(voo));
+    }
+
+    [Fact]
+    public async Task ExecutarAsync_StatusCancelado_DeveRetornarExtratoComZeroMoedasESemRecordes()
+    {
+        // Arrange
+        var progresso = ProgressoJogador.CriarNovo();
+        progresso.CreditarMoedas(new Moeda(200));
+        _repositorioMock.ProgressoArmazenado = progresso;
+
+        var voo = Voo.Iniciar(progresso.Aeronave);
+        voo.Cancelar();
+
+        // Act
+        var resumo = await _casoDeUso.ExecutarAsync(voo);
+
+        // Assert
+        Assert.Equal(0, resumo.MoedasTotalGanhas.Quantidade);
+        Assert.Equal(200, resumo.SaldoTotalAtualizado.Quantidade);
+        Assert.False(resumo.EhNovoRecordeDistancia);
+        Assert.False(resumo.EhNovoRecordeAltitude);
+        Assert.True(voo.PremiacaoLiquidada);
+        Assert.Equal(0, _repositorioMock.QuantidadeChamadasSalvar); // Cancelado não altera perfil
+    }
+
+    [Fact]
+    public async Task ExecutarAsync_BenchmarkSC002_TempoDeExecucaoMedioDeveSerMenorQueDoisMilissegundos()
+    {
+        // Arrange: Preparação e aquecimento (warmup)
+        var progresso = ProgressoJogador.CriarNovo();
+        _repositorioMock.ProgressoArmazenado = progresso;
+
+        for (int i = 0; i < 10; i++)
+        {
+            var vooWarmup = Voo.Iniciar(progresso.Aeronave);
+            vooWarmup.Decolar();
+            vooWarmup.AtualizarMetricas(100f, 20f, 1);
+            vooWarmup.Pousar();
+            await _casoDeUso.ExecutarAsync(vooWarmup);
+        }
+
+        const int iteracoes = 100;
+        var stopwatch = Stopwatch.StartNew();
+
+        for (int i = 0; i < iteracoes; i++)
+        {
+            var vooTeste = Voo.Iniciar(progresso.Aeronave);
+            vooTeste.Decolar();
+            vooTeste.AtualizarMetricas(100f + i, 20f + i, 1);
+            vooTeste.Pousar();
+            await _casoDeUso.ExecutarAsync(vooTeste);
+        }
+
+        stopwatch.Stop();
+        var tempoMedioMs = (double)stopwatch.ElapsedMilliseconds / iteracoes;
+
+        // Assert: SC-002 exige tempo total de execução < 2ms
+        Assert.True(tempoMedioMs < 2.0, $"O tempo médio por execução foi de {tempoMedioMs:F3}ms, excedendo o limite de 2.0ms.");
     }
 }

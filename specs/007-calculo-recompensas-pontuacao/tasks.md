@@ -84,11 +84,11 @@
 
 **Objetivo**: Validação dos critérios de sucesso mensuráveis, garantia de idempotência (SC-003), validação estrita de ciclo de vida do voo, benchmarks de performance (SC-002) e revisão de documentação.
 
-- [ ] T016 [P] Criar testes automatizados de idempotência comprovando que invocações repetidas de `FinalizarVooCasoDeUso.ExecutarAsync` para o mesmo voo não duplicam saldo nem contagem de voos (SC-003) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
-- [ ] T017 [P] Criar testes automatizados para validação do status da sessão de voo (concessão de 0 moedas quando `StatusVoo.Cancelado` e lançamento de `DominioInvalidoException` se `EmPreparacao` ou `EmVoo`) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
-- [ ] T018 [P] Criar teste automatizado de benchmark comprovando tempo total de execução do caso de uso inferior a 2 milissegundos (SC-002) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
-- [ ] T019 Executar suíte completa de testes automatizados com `dotnet test AeroAscent.slnx` garantindo 100% de sucesso e zero regressões em `tests/`
-- [ ] T020 Revisar documentação XML (`///`) de todas as novas classes, métodos, structs e propriedades públicas em pt-BR conforme GEMINI.md
+- [X] T016 [P] Criar testes automatizados de idempotência comprovando que invocações repetidas de `FinalizarVooCasoDeUso.ExecutarAsync` para o mesmo voo não duplicam saldo nem contagem de voos (SC-003) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
+- [X] T017 [P] Criar testes automatizados para validação do status da sessão de voo (concessão de 0 moedas quando `StatusVoo.Cancelado` e lançamento de `DominioInvalidoException` se `EmPreparacao` ou `EmVoo`) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
+- [X] T018 [P] Criar teste automatizado de benchmark comprovando tempo total de execução do caso de uso inferior a 2 milissegundos (SC-002) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
+- [X] T019 Executar suíte completa de testes automatizados com `dotnet test AeroAscent.slnx` garantindo 100% de sucesso e zero regressões em `tests/`
+- [X] T020 Revisar documentação XML (`///`) de todas as novas classes, métodos, structs e propriedades públicas em pt-BR conforme GEMINI.md
 
 ---
 

@@ -102,4 +102,4 @@ tests/
 - [x] Finalizar plano arquitetural em `plan.md`.
 
 ### Fase 2: Implementação e Tarefas (`tasks.md`)
-- [ ] Gerar tarefas de implementação através do `/speckit-tasks 007-calculo-recompensas-pontuacao`.
+- [x] Gerar tarefas de implementação através do `/speckit-tasks 007-calculo-recompensas-pontuacao`.
