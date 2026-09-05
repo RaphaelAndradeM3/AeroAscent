@@ -17,8 +17,8 @@
 
 **Objetivo**: Preparação e validação do ambiente de compilação e criação/adequação de fixtures de testes de aplicação para persistência do progresso.
 
-- [ ] T001 Validar integridade da solução e compilação do projeto com `dotnet build AeroAscent.slnx`
-- [ ] T002 [P] Validar e estender a fixture de repositório em memória `ProgressoRepositorioMock` para suporte à oficina em `tests/AeroAscent.Core.Aplicacao.Testes/Fixtures/ProgressoRepositorioMock.cs`
+- [X] T001 Validar integridade da solução e compilação do projeto com `dotnet build AeroAscent.slnx`
+- [X] T002 [P] Validar e estender a fixture de repositório em memória `ProgressoRepositorioMock` para suporte à oficina em `tests/AeroAscent.Core.Aplicacao.Testes/Fixtures/ProgressoRepositorioMock.cs`
 
 **Ponto de Verificação**: Ambiente compilando limpo e mocks prontos para simular leituras e gravações do `ProgressoJogador`.
 
