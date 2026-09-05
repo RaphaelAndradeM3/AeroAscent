@@ -49,13 +49,13 @@
 
 > **NOTE: Escreva estes testes PRIMEIRO e confirme que FALHAM antes da implementação.**
 
-- [ ] T007 [P] [US1] Criar testes unitários para o cálculo de impulso vetorial tridimensional e escalonamento por nível em tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs
-- [ ] T008 [P] [US1] Criar testes unitários para a orquestração do caso de uso de lançamento, transição de voo, integridade de combustível inalterado (FR-005) e bloqueio de lançamento duplo em tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/LancarAeronaveCasoDeUsoTestes.cs
+- [X] T007 [P] [US1] Criar testes unitários para o cálculo de impulso vetorial tridimensional e escalonamento por nível em tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs
+- [X] T008 [P] [US1] Criar testes unitários para a orquestração do caso de uso de lançamento, transição de voo, integridade de combustível inalterado (FR-005) e bloqueio de lançamento duplo em tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/LancarAeronaveCasoDeUsoTestes.cs
 
 ### Implementation for User Story 1
 
-- [ ] T009 [US1] Implementar serviço de domínio ServicoFisicaVoo com cálculo de impulso 3D em 35 graus e escalonamento linear em src/AeroAscent.Core.Dominio/Servicos/ServicoFisicaVoo.cs (depende de T007)
-- [ ] T010 [US1] Implementar caso de uso LancarAeronaveCasoDeUso orquestrando validação, cálculo de impulso, transição para EmVoo e retorno de ResultadoLancamento em src/AeroAscent.Core.Aplicacao/CasosDeUso/LancarAeronaveCasoDeUso.cs (depende de T006, T008, T009)
+- [X] T009 [US1] Implementar serviço de domínio ServicoFisicaVoo com cálculo de impulso 3D em 35 graus e escalonamento linear em src/AeroAscent.Core.Dominio/Servicos/ServicoFisicaVoo.cs (depende de T007)
+- [X] T010 [US1] Implementar caso de uso LancarAeronaveCasoDeUso orquestrando validação, cálculo de impulso, transição para EmVoo e retorno de ResultadoLancamento em src/AeroAscent.Core.Aplicacao/CasosDeUso/LancarAeronaveCasoDeUso.cs (depende de T006, T008, T009)
 
 **Checkpoint**: Neste estágio, a User Story 1 (MVP) estará 100% funcional e testável de forma independente.
 
