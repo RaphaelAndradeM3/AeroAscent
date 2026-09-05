@@ -106,12 +106,12 @@
 **Independent Test**: Testar cálculo de custos por nível, evolução de componentes com saldo suficiente, bloqueio com `SaldoInsuficienteException` e bloqueio no nível 10 com `MelhoriaNivelMaximoException`.
 
 ### Tests for User Story 4
-- [ ] T025 [P] [US4] Criar testes unitários para cálculo de custo e multiplicador de `Melhoria` em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/MelhoriaTestes.cs`
-- [ ] T026 [P] [US4] Criar testes unitários para catálogo, compra de upgrades e validação de teto na `Oficina` em `tests/AeroAscent.Core.Dominio.Testes/Entidades/OficinaTestes.cs`
+- [X] T025 [P] [US4] Criar testes unitários para cálculo de custo e multiplicador de `Melhoria` em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/MelhoriaTestes.cs`
+- [X] T026 [P] [US4] Criar testes unitários para catálogo, compra de upgrades e validação de teto na `Oficina` em `tests/AeroAscent.Core.Dominio.Testes/Entidades/OficinaTestes.cs`
 
 ### Implementation for User Story 4
-- [ ] T027 [P] [US4] Implementar Objeto de Valor `Melhoria` com dados de nível, custo base e eficácia em `src/AeroAscent.Core.Dominio/ObjetosDeValor/Melhoria.cs`
-- [ ] T028 [US4] Implementar entidade `Oficina` com catálogo de peças, fórmula exponencial e evolução de aeronave em `src/AeroAscent.Core.Dominio/Entidades/Oficina.cs`
+- [X] T027 [P] [US4] Implementar Objeto de Valor `Melhoria` com dados de nível, custo base e eficácia em `src/AeroAscent.Core.Dominio/ObjetosDeValor/Melhoria.cs`
+- [X] T028 [US4] Implementar entidade `Oficina` com catálogo de peças, fórmula exponencial e evolução de aeronave em `src/AeroAscent.Core.Dominio/Entidades/Oficina.cs`
 
 **Checkpoint**: Loop completo de voo, pouso, recompensas e melhorias na oficina coberto pelo domínio.
 
