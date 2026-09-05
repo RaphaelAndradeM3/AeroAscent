@@ -31,9 +31,9 @@
 
 **⚠️ CRITICAL**: Nenhuma implementação de história de usuário pode começar sem a conclusão desta fase.
 
-- [ ] T004 [P] Implementar Objeto de Valor ParametrosLancamento como readonly record struct com precisão, ângulo e piso protetivo em src/AeroAscent.Core.Dominio/ObjetosDeValor/ParametrosLancamento.cs
-- [ ] T005 [P] Implementar Objeto de Valor ResultadoLancamento como record imutável com métodos de fábrica em src/AeroAscent.Core.Dominio/ObjetosDeValor/ResultadoLancamento.cs
-- [ ] T006 [P] Implementar contrato de caso de uso ILancarAeronaveCasoDeUso em src/AeroAscent.Core.Aplicacao/Contratos/ILancarAeronaveCasoDeUso.cs
+- [X] T004 [P] Implementar Objeto de Valor ParametrosLancamento como readonly record struct com precisão, ângulo e piso protetivo em src/AeroAscent.Core.Dominio/ObjetosDeValor/ParametrosLancamento.cs
+- [X] T005 [P] Implementar Objeto de Valor ResultadoLancamento como record imutável com métodos de fábrica em src/AeroAscent.Core.Dominio/ObjetosDeValor/ResultadoLancamento.cs
+- [X] T006 [P] Implementar contrato de caso de uso ILancarAeronaveCasoDeUso em src/AeroAscent.Core.Aplicacao/Contratos/ILancarAeronaveCasoDeUso.cs
 
 **Checkpoint**: Base fundamental concluída — o desenvolvimento das histórias de usuário pode prosseguir.
 
