@@ -68,13 +68,13 @@
 
 ### Testes da User Story 2
 
-- [ ] T012 [P] [US2] Criar testes unitários para consulta do catálogo com custos exponenciais calibrados e flag `PodeComprar` baseada no saldo em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ConsultarOficinaCasoDeUsoTestes.cs`
-- [ ] T013 [P] [US2] Criar testes unitários para sinalização declarativa de componentes no nível máximo (`CustoProximoNivel = null`, `PodeComprar = false`, `EstaNoNivelMaximo = true`) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ConsultarOficinaCasoDeUsoTestes.cs`
+- [X] T012 [P] [US2] Criar testes unitários para consulta do catálogo com custos exponenciais calibrados e flag `PodeComprar` baseada no saldo em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ConsultarOficinaCasoDeUsoTestes.cs`
+- [X] T013 [P] [US2] Criar testes unitários para sinalização declarativa de componentes no nível máximo (`CustoProximoNivel = null`, `PodeComprar = false`, `EstaNoNivelMaximo = true`) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ConsultarOficinaCasoDeUsoTestes.cs`
 
 ### Implementação da User Story 2
 
-- [ ] T014 [US2] Implementar o caso de uso `ConsultarOficinaCasoDeUso` com injeção de `IRepositorioProgresso`, projeção de DTOs e identificação de teto máximo em `src/AeroAscent.Core.Aplicacao/CasosDeUso/ConsultarOficinaCasoDeUso.cs`
-- [ ] T015 [US2] Criar testes de integração ponta a ponta simulando consulta inicial $\to$ compra de melhoria $\to$ nova consulta com níveis e custos atualizados em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ConsultarOficinaCasoDeUsoTestes.cs`
+- [X] T014 [US2] Implementar o caso de uso `ConsultarOficinaCasoDeUso` com injeção de `IRepositorioProgresso`, projeção de DTOs e identificação de teto máximo em `src/AeroAscent.Core.Aplicacao/CasosDeUso/ConsultarOficinaCasoDeUso.cs`
+- [X] T015 [US2] Criar testes de integração ponta a ponta simulando consulta inicial $\to$ compra de melhoria $\to$ nova consulta com níveis e custos atualizados em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ConsultarOficinaCasoDeUsoTestes.cs`
 
 **Ponto de Verificação**: Consulta de catálogo e cálculo exponencial integrados ao fluxo de compra e exibição.
 
