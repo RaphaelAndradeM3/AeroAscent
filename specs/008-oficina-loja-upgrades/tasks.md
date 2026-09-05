@@ -30,11 +30,11 @@
 
 **⚠️ CRÍTICO**: Nenhuma implementação de história de usuário pode começar sem concluir esta fase.
 
-- [ ] T003 [P] Criar o objeto de valor na stack `ResultadoCompraMelhoria` (`readonly record struct`) em `src/AeroAscent.Core.Dominio/ObjetosDeValor/ResultadoCompraMelhoria.cs`
-- [ ] T004 [P] Criar testes unitários para a struct `ResultadoCompraMelhoria` em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ResultadoCompraMelhoriaTestes.cs`
-- [ ] T005 [P] Criar o DTO `ItemOficinaDTO` (`readonly record struct`) em `src/AeroAscent.Core.Aplicacao/DTOs/ItemOficinaDTO.cs`
-- [ ] T006 [P] Criar a interface de contrato `IComprarMelhoriaCasoDeUso` em `src/AeroAscent.Core.Aplicacao/Contratos/IComprarMelhoriaCasoDeUso.cs`
-- [ ] T007 [P] Criar a interface de contrato `IConsultarOficinaCasoDeUso` em `src/AeroAscent.Core.Aplicacao/Contratos/IConsultarOficinaCasoDeUso.cs`
+- [X] T003 [P] Criar o objeto de valor na stack `ResultadoCompraMelhoria` (`readonly record struct`) em `src/AeroAscent.Core.Dominio/ObjetosDeValor/ResultadoCompraMelhoria.cs`
+- [X] T004 [P] Criar testes unitários para a struct `ResultadoCompraMelhoria` em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ResultadoCompraMelhoriaTestes.cs`
+- [X] T005 [P] Criar o DTO `ItemOficinaDTO` (`readonly record struct`) em `src/AeroAscent.Core.Aplicacao/DTOs/ItemOficinaDTO.cs`
+- [X] T006 [P] Criar a interface de contrato `IComprarMelhoriaCasoDeUso` em `src/AeroAscent.Core.Aplicacao/Contratos/IComprarMelhoriaCasoDeUso.cs`
+- [X] T007 [P] Criar a interface de contrato `IConsultarOficinaCasoDeUso` em `src/AeroAscent.Core.Aplicacao/Contratos/IConsultarOficinaCasoDeUso.cs`
 
 **Ponto de Verificação**: Estruturas de dados de transferência e contratos de interface prontos para a camada de aplicação.
 
