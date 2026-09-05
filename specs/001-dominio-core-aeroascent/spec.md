@@ -2,7 +2,7 @@
 
 **Feature Branch**: `001-dominio-core-aeroascent`  
 **Created**: 2026-09-04  
-**Status**: Ready for Planning  
+**Status**: Ready for Implementation  
 **Input**: User description: "001 - Camada de Domínio C# Puro (.NET Standard), Entidades (Aeronave, Voo, Oficina), Value Objects (Combustivel, Moeda, VetorVoo) e Interfaces Base."
 
 ---
@@ -30,7 +30,7 @@ Como jogador iniciando o jogo, o sistema deve instanciar uma aeronave configurad
 
 **Acceptance Scenarios**:
 1. **Given** que uma nova sessão de jogo é criada sem dados anteriores, **When** a aeronave padrão for instanciada, **Then** ela deve possuir `Id` válido, nível de motor 1, aerodinâmica nível 1, tanque nível 1 e catapulta nível 1.
-2. **Given** uma aeronave existente, **When** for solicitada a alteração de um nível para um valor menor que 1, **Then** o domínio deve lançar uma exceção de validação (`ArgumentOutOfRangeException` ou `DominioInvalidoException`) e impedir a alteração de estado.
+2. **Given** uma aeronave existente, **When** for solicitada a alteração de um nível para um valor menor que 1, **Then** o domínio deve lançar a exceção `DominioInvalidoException` e impedir a alteração de estado.
 
 ---
 
@@ -100,7 +100,7 @@ Como jogador, desejo que meu progresso global (aeronave configurada, saldo total
 - Registro de distância ou altitude negativa deve ser rejeitado pelas invariantes do domínio.
 - Operações aritméticas com `Moeda` que possam causar overflow numérico devem ser protegidas.
 - Tentativa de elevar qualquer nível de melhoria acima do limite máximo 10 deve lançar `MelhoriaNivelMaximoException`.
-- Tentativa de definir qualquer nível de melhoria inferior a 1 deve lançar `ArgumentOutOfRangeException`.
+- Tentativa de definir qualquer nível de melhoria inferior a 1 deve lançar `DominioInvalidoException`.
 
 ---
 
@@ -112,7 +112,7 @@ Como jogador, desejo que meu progresso global (aeronave configurada, saldo total
 - **FR-002**: O sistema DEVE definir a entidade `Voo` contendo `Id`, referência à `Aeronave`, `StatusVoo` (`EmPreparacao`, `EmVoo`, `Pousado`, `Cancelado`), distância percorrida, altitude máxima, moedas coletadas na sessão e método de finalização que gera o Objeto de Valor `ResultadoVoo`.
 - **FR-003**: O sistema DEVE implementar o Objeto de Valor `Moeda` como `record` imutável, com métodos de adição, subtração e validação contra valores negativos.
 - **FR-004**: O sistema DEVE implementar o Objeto de Valor `Combustivel` como `record` imutável com capacidade máxima, quantidade atual, taxa de queima e cálculo de percentual restante.
-- **FR-005**: O sistema DEVE implementar o Objeto de Valor `VetorVoo` como `record` ou `readonly record struct` imutável tridimensional composto por `float X`, `float Y` e `float Z`, oferecendo operações vetoriais imutáveis (soma, subtração, multiplicação por escalar, magnitude e normalização) com zero acoplamento ao `UnityEngine.Vector3`.
+- **FR-005**: O sistema DEVE implementar o Objeto de Valor `VetorVoo` como `readonly record struct` imutável tridimensional composto por `float X`, `float Y` e `float Z`, oferecendo operações vetoriais imutáveis (soma, subtração, multiplicação por escalar, magnitude e normalização) com zero acoplamento ao `UnityEngine.Vector3`.
 - **FR-006**: O sistema DEVE definir a interface `IRepositorioProgresso` contendo os métodos `SalvarProgressoAsync(ProgressoJogador progresso, CancellationToken cancelamento)` e `CarregarProgressoAsync(CancellationToken cancelamento)`, além da entidade agregada `ProgressoJogador` (contendo `Guid Id`, `Aeronave`, `Moeda` saldo total, e recordes de distância/altitude) e os contratos de serviços do domínio (`IServicoFisicaVoo`, `IServicoEconomia`).
 - **FR-007**: Todo o código desta camada DEVE estar em Português Brasileiro (pt-BR) e possuir zero referências a `UnityEngine` ou `MonoBehaviour`.
 - **FR-008**: O sistema DEVE implementar a entidade `Oficina` em C# puro (.NET Standard) com identificador `Guid Id`, responsável por gerenciar as regras de evolução e catálogo de `Melhoria`, calculando custos exponenciais, validando o teto de nível 10 com `MelhoriaNivelMaximoException` e aplicando atualizações de nível na `Aeronave`.

@@ -14,8 +14,8 @@ Esta feature estabelece a espinha dorsal de engenharia e regras de negócio do *
 
 ## Technical Context
 
-**Language/Version**: C# 12 / .NET 8 (`net8.0`)  
-**Primary Dependencies**: Zero dependências de pacotes externos na biblioteca de Domínio (somente BCL do .NET 8). No projeto de testes: `xunit` (v2.x) e `Microsoft.NET.Test.Sdk`.  
+**Language/Version**: C# 12 / .NET Standard 2.1 & .NET 8 (`netstandard2.1;net8.0`)  
+**Primary Dependencies**: Zero dependências de pacotes externos na biblioteca de Domínio (somente BCL do .NET Standard 2.1 / .NET 8). No projeto de testes: `xunit` (v2.x) e `Microsoft.NET.Test.Sdk`.  
 **Storage**: N/A na camada de domínio puro. A persistência é desacoplada através do contrato `IRepositorioProgresso` (implementada posteriormente pela camada de Infraestrutura com JSON via `FileSystem.AppDataDirectory`).  
 **Testing**: xUnit 2.x executado via CLI `dotnet test`.  
 **Target Platform**: Multiplataforma (Windows e Android via Unity Engine / C# puro em .NET Standard 2.1 e .NET 8).  
