@@ -48,13 +48,13 @@
 
 ### Testes da User Story 1
 
-- [ ] T008 [P] [US1] Criar testes unitários para resposta física no solo (absorção $Y=0, V_y=0$, desaceleração por atrito $\mu \cdot g$ e nivelamento suave de pitch) em `tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs`
-- [ ] T009 [P] [US1] Criar testes unitários para o limiar canônico de parada ($V_z < 0.15\text{ m/s} \to V_z = 0$) e congelamento cinemático em `tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs`
+- [x] T008 [P] [US1] Criar testes unitários para resposta física no solo (absorção $Y=0, V_y=0$, desaceleração por atrito $\mu \cdot g$ e nivelamento suave de pitch) em `tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs`
+- [x] T009 [P] [US1] Criar testes unitários para o limiar canônico de parada ($V_z < 0.15\text{ m/s} \to V_z = 0$) e congelamento cinemático em `tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs`
 
 ### Implementação da User Story 1
 
-- [ ] T010 [US1] Atualizar `ServicoFisicaVoo.cs` com a constante canônica `VELOCIDADE_LIMIAR_PARADA_SOLO = 0.15f;`, taxa de nivelamento de pitch no solo e corte de boost quando `NoSolo == true` em `src/AeroAscent.Core.Dominio/Servicos/ServicoFisicaVoo.cs`
-- [ ] T011 [US1] Criar testes para casos de borda de queda em mergulho severo (sem penetração de solo) e corte de queima de combustível no solo em `tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs`
+- [x] T010 [US1] Atualizar `ServicoFisicaVoo.cs` com a constante canônica `VELOCIDADE_LIMIAR_PARADA_SOLO = 0.15f;`, taxa de nivelamento de pitch no solo e corte de boost quando `NoSolo == true` em `src/AeroAscent.Core.Dominio/Servicos/ServicoFisicaVoo.cs`
+- [x] T011 [US1] Criar testes para casos de borda de queda em mergulho severo (sem penetração de solo) e corte de queima de combustível no solo em `tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs`
 
 **Ponto de Verificação**: Física de pouso, deslizamento e parada suave no solo 100% testada e funcional.
 
