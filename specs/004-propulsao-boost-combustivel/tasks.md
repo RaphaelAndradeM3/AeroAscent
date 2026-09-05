@@ -75,13 +75,13 @@
 
 ### Testes da User Story 2
 
-- [ ] T017 [P] [US2] Criar testes unitários para escalonamento da força de empuxo por nível de motor em `tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs`
-- [ ] T018 [P] [US2] Criar testes unitários para escalonamento da capacidade volumétrica do tanque por nível em `tests/AeroAscent.Core.Dominio.Testes/Entidades/VooTestes.cs`
+- [x] T017 [P] [US2] Criar testes unitários para escalonamento da força de empuxo por nível de motor em `tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoFisicaVooTestes.cs`
+- [x] T018 [P] [US2] Criar testes unitários para escalonamento da capacidade volumétrica do tanque por nível em `tests/AeroAscent.Core.Dominio.Testes/Entidades/VooTestes.cs`
 
 ### Implementação da User Story 2
 
-- [ ] T019 [US2] Atualizar o método fábrica `Voo.Iniciar` para inicializar `Combustivel` com capacidade calculada por $20.0 \times (1 + (\text{NivelTanque}-1) \times 0.25)$ em `src/AeroAscent.Core.Dominio/Entidades/Voo.cs`
-- [ ] T020 [US2] Criar testes de integração validando o escalonamento conjunto de aceleração e duração de boost via caso de uso em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/AtualizarFisicaVooCasoDeUsoTestes.cs`
+- [x] T019 [US2] Atualizar o método fábrica `Voo.Iniciar` para inicializar `Combustivel` com capacidade calculada por $20.0 \times (1 + (\text{NivelTanque}-1) \times 0.25)$ em `src/AeroAscent.Core.Dominio/Entidades/Voo.cs`
+- [x] T020 [US2] Criar testes de integração validando o escalonamento conjunto de aceleração e duração de boost via caso de uso em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/AtualizarFisicaVooCasoDeUsoTestes.cs`
 
 **Ponto de Verificação**: User Stories 1 e 2 plenamente operacionais e integradas.
 

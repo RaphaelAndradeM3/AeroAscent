@@ -143,4 +143,25 @@ public class VooTestes
         Assert.Throws<DominioInvalidoException>(() => voo.Pousar());
         Assert.Throws<DominioInvalidoException>(() => voo.Cancelar());
     }
+
+    [Theory]
+    [InlineData(1, 20.0f)]
+    [InlineData(2, 25.0f)]
+    [InlineData(3, 30.0f)]
+    [InlineData(5, 40.0f)]
+    [InlineData(10, 65.0f)]
+    public void Iniciar_ComNiveisDiferentesDeTanque_DeveInicializarCombustivelComCapacidadeEscalonada(int nivelTanque, float capacidadeEsperada)
+    {
+        // Arrange
+        var aeronave = new Aeronave(Guid.NewGuid(), nivelMotor: 1, nivelAerodinamica: 1, nivelTanqueCombustivel: nivelTanque, nivelCatapulta: 1);
+
+        // Act
+        var voo = Voo.Iniciar(aeronave);
+
+        // Assert
+        Assert.Equal(capacidadeEsperada, voo.Combustivel.CapacidadeMaxima, precision: 2);
+        Assert.Equal(capacidadeEsperada, voo.Combustivel.QuantidadeAtual, precision: 2);
+        Assert.Equal(5.0f, voo.Combustivel.TaxaQueimaPorSegundo, precision: 2);
+        Assert.False(voo.Combustivel.EstaVazio);
+    }
 }

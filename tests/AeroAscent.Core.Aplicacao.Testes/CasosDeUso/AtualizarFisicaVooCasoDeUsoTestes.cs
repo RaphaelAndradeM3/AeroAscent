@@ -257,6 +257,52 @@ public class AtualizarFisicaVooCasoDeUsoTestes
         Assert.False(estadoFinal.Propulsor.EstaAtivo);
         Assert.Equal(combustivelInicial, voo.Combustivel.QuantidadeAtual);
     }
+
+    [Fact]
+    public void Executar_ComUpgradesAvancadosDeMotorETanque_DevePermitirMaiorTempoDeQueimaEGanhoSuperiorDeVelocidadeEDistancia()
+    {
+        // Arrange
+        var aeroBase = new Aeronave(Guid.NewGuid(), nivelMotor: 1, nivelAerodinamica: 1, nivelTanqueCombustivel: 1, nivelCatapulta: 1);
+        var aeroAvancada = new Aeronave(Guid.NewGuid(), nivelMotor: 5, nivelAerodinamica: 1, nivelTanqueCombustivel: 5, nivelCatapulta: 1);
+
+        var vooBase = Voo.Iniciar(aeroBase);
+        vooBase.Decolar();
+
+        var vooAvancado = Voo.Iniciar(aeroAvancada);
+        vooAvancado.Decolar();
+
+        var estadoBase = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 1000f, 0f),
+            new VetorVoo(0f, 0f, 20f),
+            0.0f);
+        var estadoAvancado = estadoBase;
+
+        var controleBoost = new ParametrosControlePiloto(0f, ParametrosControlePiloto.TAXA_ANGULAR_PADRAO, acionarBoost: true);
+        const float deltaTempo = 0.02f;
+
+        // Act: Simula 250 passos = 5.0 segundos (no segundo 4.0 a base esgota seu tanque de 20 un)
+        for (var i = 0; i < 250; i++)
+        {
+            estadoBase = _casoDeUso.Executar(vooBase, estadoBase, controleBoost, deltaTempo);
+            estadoAvancado = _casoDeUso.Executar(vooAvancado, estadoAvancado, controleBoost, deltaTempo);
+        }
+
+        // Assert no segundo 5.0:
+        // Base esgotada (20 un / 5 un/s = 4.0s)
+        Assert.True(vooBase.Combustivel.EstaVazio);
+        Assert.False(estadoBase.Propulsor.EstaAtivo);
+
+        // Avançada ainda queimando (40 un / 5 un/s = 8.0s) -> aos 5.0s consumiu 25 un, restam 15 un
+        Assert.False(vooAvancado.Combustivel.EstaVazio);
+        Assert.True(estadoAvancado.Propulsor.EstaAtivo);
+        Assert.Equal(15.0f, vooAvancado.Combustivel.QuantidadeAtual, precision: 1);
+
+        // Velocidade e distância com motor 5 + tanque 5 devem superar expressivamente a base
+        Assert.True(estadoAvancado.Velocidade.Z > estadoBase.Velocidade.Z + 30f,
+            $"A velocidade Z da aeronave avançada ({estadoAvancado.Velocidade.Z}) deve ser muito superior à base ({estadoBase.Velocidade.Z}).");
+        Assert.True(estadoAvancado.Posicao.Z > estadoBase.Posicao.Z + 50f,
+            $"A distância percorrida Z da aeronave avançada ({estadoAvancado.Posicao.Z}) deve superar a base ({estadoBase.Posicao.Z}).");
+    }
 }
 
 
