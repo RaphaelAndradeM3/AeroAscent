@@ -69,13 +69,13 @@
 
 ### Testes da User Story 2
 
-- [ ] T013 [P] [US2] Criar testes de primeira execução comprovando retorno de `null` quando o arquivo JSON não existir em `tests/AeroAscent.Infraestrutura.Testes/Persistencia/RepositorioProgressoLocalJsonTestes.cs`
-- [ ] T014 [P] [US2] Criar testes de recuperação automática a partir do arquivo `.bak` quando o arquivo principal estiver com JSON mutilado ou corrompido em `tests/AeroAscent.Infraestrutura.Testes/Persistencia/RepositorioProgressoLocalJsonTestes.cs`
-- [ ] T015 [P] [US2] Criar testes para isolamento de arquivo corrompido com renomeação para `.corrompido_[timestamp]` quando não houver backup recuperável em `tests/AeroAscent.Infraestrutura.Testes/Persistencia/RepositorioProgressoLocalJsonTestes.cs`
+- [X] T013 [P] [US2] Criar testes de primeira execução comprovando retorno de `null` quando o arquivo JSON não existir em `tests/AeroAscent.Infraestrutura.Testes/Persistencia/RepositorioProgressoLocalJsonTestes.cs`
+- [X] T014 [P] [US2] Criar testes de recuperação automática a partir do arquivo `.bak` quando o arquivo principal estiver com JSON mutilado ou corrompido em `tests/AeroAscent.Infraestrutura.Testes/Persistencia/RepositorioProgressoLocalJsonTestes.cs`
+- [X] T015 [P] [US2] Criar testes para isolamento de arquivo corrompido com renomeação para `.corrompido_[timestamp]` quando não houver backup recuperável em `tests/AeroAscent.Infraestrutura.Testes/Persistencia/RepositorioProgressoLocalJsonTestes.cs`
 
 ### Implementação da User Story 2
 
-- [ ] T016 [US2] Implementar na classe `RepositorioProgressoLocalJson` a lógica de recuperação por `.bak`, isolamento de arquivos corrompidos e tratamento resiliente de leitura em `src/AeroAscent.Infraestrutura/Persistencia/RepositorioProgressoLocalJson.cs`
+- [X] T016 [US2] Implementar na classe `RepositorioProgressoLocalJson` a lógica de recuperação por `.bak`, isolamento de arquivos corrompidos e tratamento resiliente de leitura em `src/AeroAscent.Infraestrutura/Persistencia/RepositorioProgressoLocalJson.cs`
 
 **Ponto de Verificação**: Sistema imune a travamentos por corrupção e resiliente na primeira execução.
 

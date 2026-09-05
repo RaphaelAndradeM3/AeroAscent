@@ -187,6 +187,23 @@ public class RepositorioProgressoLocalJsonTestes : IDisposable
     }
 
     [Fact]
+    public async Task CarregarProgressoAsync_QuandoPrincipalEBackupCorrompidos_DeveIsolarPrincipalERetornarNulo()
+    {
+        // Arrange - Criar principal e backup danificados
+        await File.WriteAllTextAsync(_configuracao.CaminhoCompletoPrincipal, "{ JSON_PRINCIPAL_CORROMPIDO }");
+        await File.WriteAllTextAsync(_configuracao.CaminhoCompletoBackup, "{ JSON_BACKUP_CORROMPIDO }");
+
+        // Act
+        var resultado = await _repositorio.CarregarProgressoAsync();
+
+        // Assert - Não deve travar nem lançar exceção, deve isolar o arquivo e retornar nulo
+        Assert.Null(resultado);
+        Assert.False(File.Exists(_configuracao.CaminhoCompletoPrincipal));
+        var arquivosCorrompidos = Directory.GetFiles(_diretorioTeste, "*corrompido*");
+        Assert.NotEmpty(arquivosCorrompidos);
+    }
+
+    [Fact]
     public async Task SalvarProgressoAsync_DeveExecutarEmMenosDe15Milissegundos_SC001()
     {
         // Arrange
