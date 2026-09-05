@@ -210,4 +210,118 @@ public class ProcessarColetaveisVooCasoDeUsoTestes
         Assert.True(resultado.EstadoFisicoAtualizado.Velocidade.Y > 4.5f);
         Assert.True(resultado.EstadoFisicoAtualizado.Velocidade.Z > 8.0f);
     }
+
+    [Fact]
+    public void Executar_ComColetaveisDeixadosParaTras_DeveReciclarAutomaticamenteSC003()
+    {
+        // Arrange
+        var aero = Aeronave.CriarPadrao();
+        var voo = Voo.Iniciar(aero);
+        voo.Decolar();
+
+        var moedaLongeAtras = _poolMoedas.Obter();
+        moedaLongeAtras.Ativar(new VetorVoo(0f, 15f, 100f)); // Z = 100m
+
+        var anelAtras = _poolAneis.Obter();
+        anelAtras.Ativar(new VetorVoo(0f, 25f, 120f)); // Z = 120m
+
+        var moedaValida = _poolMoedas.Obter();
+        moedaValida.Ativar(new VetorVoo(0f, 20f, 140f)); // Z = 140m
+
+        var coletaveisAtivos = new List<Coletavel> { moedaLongeAtras, anelAtras, moedaValida };
+
+        // Aeronave em Z = 150m. Limite de reciclagem: Z < 150 - 20 = 130m.
+        // Z = 100m e Z = 120m devem ser reciclados. Z = 140m deve continuar ativo.
+        var estadoAeronave = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 20f, 150f),
+            new VetorVoo(0f, 0f, 20f),
+            0f);
+
+        var estoqueMoedasAntes = _poolMoedas.DisponiveisEmEstoque;
+        var estoqueAneisAntes = _poolAneis.DisponiveisEmEstoque;
+
+        // Act
+        var resultado = _casoDeUso.Executar(voo, estadoAeronave, coletaveisAtivos, _poolMoedas, _poolAneis);
+
+        // Assert
+        Assert.False(moedaLongeAtras.Ativo);
+        Assert.False(anelAtras.Ativo);
+        Assert.DoesNotContain(moedaLongeAtras, coletaveisAtivos);
+        Assert.DoesNotContain(anelAtras, coletaveisAtivos);
+        Assert.Contains(moedaValida, coletaveisAtivos);
+        Assert.True(moedaValida.Ativo);
+
+        // Verifica devolução ao estoque dos pools
+        Assert.True(_poolMoedas.DisponiveisEmEstoque > estoqueMoedasAntes);
+        Assert.True(_poolAneis.DisponiveisEmEstoque > estoqueAneisAntes);
+    }
+
+    [Fact]
+    public void Executar_ComServicoGeracaoProceduralInjetado_DeveAtualizarJanelaESpawnarNovosItens()
+    {
+        // Arrange
+        var servicoGeracao = new AeroAscent.Core.Dominio.Servicos.ServicoGeracaoProceduralColetaveis(42);
+        var casoDeUsoComProcedural = new ProcessarColetaveisVooCasoDeUso(servicoGeracao);
+        var aero = Aeronave.CriarPadrao();
+        var voo = Voo.Iniciar(aero);
+        voo.Decolar();
+        var coletaveisAtivos = new List<Coletavel>();
+
+        // Aeronave em Z = 50m
+        var estadoAeronave = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 20f, 50f),
+            new VetorVoo(0f, 0f, 25f),
+            0f);
+
+        // Act
+        var resultado = casoDeUsoComProcedural.Executar(voo, estadoAeronave, coletaveisAtivos, _poolMoedas, _poolAneis);
+
+        // Assert
+        Assert.NotEmpty(coletaveisAtivos);
+        foreach (var item in coletaveisAtivos)
+        {
+            Assert.True(item.Posicao.Z >= 50f + 30f, $"Item em Z={item.Posicao.Z} deve estar à frente da janela mínima (+30m)");
+            Assert.True(item.Posicao.Z <= 50f + 150f, $"Item em Z={item.Posicao.Z} deve estar dentro da janela máxima (+150m)");
+            Assert.True(item.Ativo);
+        }
+    }
+
+    [Fact]
+    public void Executar_DuranteSimulacaoContinuaDeVoo_DeveReciclarEGerarProceduralmenteSemFalhas()
+    {
+        // Arrange
+        var servicoGeracao = new AeroAscent.Core.Dominio.Servicos.ServicoGeracaoProceduralColetaveis(100);
+        var casoDeUso = new ProcessarColetaveisVooCasoDeUso(servicoGeracao);
+        var aero = Aeronave.CriarPadrao();
+        var voo = Voo.Iniciar(aero);
+        voo.Decolar();
+        var coletaveisAtivos = new List<Coletavel>();
+
+        var estado = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 20f, 0f),
+            new VetorVoo(0f, 0f, 20f),
+            0f);
+
+        // Act: Simula avanço contínuo de 0 a 300 metros
+        for (var z = 0f; z <= 300f; z += 20f)
+        {
+            estado = estado.ComAtualizacao(
+                new VetorVoo(0f, 20f, z),
+                estado.Velocidade,
+                estado.InclinacaoPitchGraus,
+                estado.ForcaResultante,
+                novoNoSolo: false,
+                novoPropulsor: estado.Propulsor);
+
+            casoDeUso.Executar(voo, estado, coletaveisAtivos, _poolMoedas, _poolAneis);
+        }
+
+        // Assert: Todos os itens remanescentes devem estar após Z = 300 - 20 = 280m
+        Assert.NotEmpty(coletaveisAtivos);
+        foreach (var item in coletaveisAtivos)
+        {
+            Assert.True(item.Posicao.Z >= 280f, $"Item remanescente em Z={item.Posicao.Z} deve ser >= 280m (SC-003)");
+        }
+    }
 }
+

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using AeroAscent.Core.Aplicacao.Contratos;
 using AeroAscent.Core.Dominio.Comum;
+using AeroAscent.Core.Dominio.Contratos;
 using AeroAscent.Core.Dominio.Entidades;
 using AeroAscent.Core.Dominio.Enums;
 using AeroAscent.Core.Dominio.Excecoes;
@@ -24,6 +25,22 @@ public class ProcessarColetaveisVooCasoDeUso : IProcessarColetaveisVooCasoDeUso
     /// Raio de colisão padrão da fuselagem da aeronave em metros (0.5m).
     /// </summary>
     public const float RAIO_COLISAO_AERONAVE_METROS = 0.5f;
+
+    /// <summary>
+    /// Distância atrás da aeronave a partir da qual qualquer coletável deve ser reciclado automaticamente (20.0m).
+    /// </summary>
+    public const float DISTANCIA_RECICLAGEM_TRASEIRA_METROS = 20.0f;
+
+    private readonly IServicoGeracaoProceduralColetaveis? _servicoGeracao;
+
+    /// <summary>
+    /// Inicializa uma nova instância do caso de uso, opcionalmente injetando o serviço de geração procedural.
+    /// </summary>
+    /// <param name="servicoGeracao">Serviço de geração procedural (opcional).</param>
+    public ProcessarColetaveisVooCasoDeUso(IServicoGeracaoProceduralColetaveis? servicoGeracao = null)
+    {
+        _servicoGeracao = servicoGeracao;
+    }
 
     /// <inheritdoc />
     public ResultadoProcessamentoColetaveis Executar(
@@ -59,11 +76,38 @@ public class ProcessarColetaveisVooCasoDeUso : IProcessarColetaveisVooCasoDeUso
             return ResultadoProcessamentoColetaveis.CriarNeutro(estadoAtual);
         }
 
+        // 1. Atualiza janela procedural e recicla itens deixados para trás (SC-003)
+        if (_servicoGeracao != null)
+        {
+            _servicoGeracao.AtualizarJanela(estadoAtual.Posicao.Z, poolMoedas, poolAneis, coletaveisAtivos);
+        }
+        else
+        {
+            var limiteTraseiro = estadoAtual.Posicao.Z - DISTANCIA_RECICLAGEM_TRASEIRA_METROS;
+            for (var i = coletaveisAtivos.Count - 1; i >= 0; i--)
+            {
+                var coletavel = coletaveisAtivos[i];
+                if (coletavel != null && coletavel.Posicao.Z < limiteTraseiro)
+                {
+                    coletavel.Desativar();
+                    coletaveisAtivos.RemoveAt(i);
+                    if (coletavel.Tipo == TipoColetavel.Moeda)
+                    {
+                        poolMoedas.Liberar(coletavel);
+                    }
+                    else if (coletavel.Tipo == TipoColetavel.AnelVento)
+                    {
+                        poolAneis.Liberar(coletavel);
+                    }
+                }
+            }
+        }
+
         var moedasColetadas = 0;
         var recebeuImpulsoVento = false;
         var impulsoTotal = VetorVoo.Zero;
 
-        // Itera de trás para frente para permitir remoção segura da lista de ativos em O(1)
+        // 2. Itera de trás para frente para permitir remoção segura da lista de ativos em O(1)
         for (var i = coletaveisAtivos.Count - 1; i >= 0; i--)
         {
             var coletavel = coletaveisAtivos[i];

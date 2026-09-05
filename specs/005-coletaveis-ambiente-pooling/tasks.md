@@ -89,13 +89,13 @@
 
 ### Testes da User Story 3
 
-- [ ] T017 [P] [US3] Criar testes unitários para `ServicoGeracaoProceduralColetaveis` validando janelas de spawn, faixas de altitude e determinismo em `tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoGeracaoProceduralColetaveisTestes.cs`
+- [x] T017 [P] [US3] Criar testes unitários para `ServicoGeracaoProceduralColetaveis` validando janelas de spawn, faixas de altitude e determinismo em `tests/AeroAscent.Core.Dominio.Testes/Servicos/ServicoGeracaoProceduralColetaveisTestes.cs`
 
 ### Implementação da User Story 3
 
-- [ ] T018 [US3] Implementar o serviço `ServicoGeracaoProceduralColetaveis` com spawn e reciclagem em janela dinâmica em `src/AeroAscent.Core.Dominio/Servicos/ServicoGeracaoProceduralColetaveis.cs`
-- [ ] T019 [US3] Integrar a geração e reciclagem automática no fluxo de simulação do caso de uso em `src/AeroAscent.Core.Aplicacao/CasosDeUso/ProcessarColetaveisVooCasoDeUso.cs`
-- [ ] T020 [US3] Criar testes de integração para geração procedural contínua e reciclagem traseira (SC-003) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarColetaveisVooCasoDeUsoTestes.cs`
+- [x] T018 [US3] Implementar o serviço `ServicoGeracaoProceduralColetaveis` com spawn e reciclagem em janela dinâmica em `src/AeroAscent.Core.Dominio/Servicos/ServicoGeracaoProceduralColetaveis.cs`
+- [x] T019 [US3] Integrar a geração e reciclagem automática no fluxo de simulação do caso de uso em `src/AeroAscent.Core.Aplicacao/CasosDeUso/ProcessarColetaveisVooCasoDeUso.cs`
+- [x] T020 [US3] Criar testes de integração para geração procedural contínua e reciclagem traseira (SC-003) em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarColetaveisVooCasoDeUsoTestes.cs`
 
 **Ponto de Verificação**: Geração procedural, janelas dinâmicas e pooling 100% integrados.
 
