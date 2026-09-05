@@ -26,6 +26,21 @@ public interface IServicoFisicaVoo
     VetorVoo CalcularProximoPasso(VetorVoo velocidadeAtual, float inclinacaoGraus, int nivelAerodinamica, float deltaTempoSegundos);
 
     /// <summary>
+    /// Simula um passo cinemático completo da aeronave integrando forças de sustentação, arrasto, gravidade,
+    /// controle de arfagem/pitch e dinâmica de solo, retornando um novo EstadoFisicoAeronave na stack.
+    /// </summary>
+    /// <param name="estadoAtual">Estado físico anterior da aeronave.</param>
+    /// <param name="controle">Comandos de controle do piloto.</param>
+    /// <param name="nivelAerodinamica">Nível da melhoria de aerodinâmica (1 a 10).</param>
+    /// <param name="deltaTempoSegundos">Intervalo de tempo transcorrido (dt).</param>
+    /// <returns>Novo EstadoFisicoAeronave atualizado com alocação zero no heap.</returns>
+    EstadoFisicoAeronave SimularPasso(
+        EstadoFisicoAeronave estadoAtual,
+        ParametrosControlePiloto controle,
+        int nivelAerodinamica,
+        float deltaTempoSegundos);
+
+    /// <summary>
     /// Aplica empuxo frontal gerado pelo consumo de combustível do propulsor (boost).
     /// </summary>
     /// <param name="velocidadeAtual">Vetor de velocidade antes da propulsão.</param>

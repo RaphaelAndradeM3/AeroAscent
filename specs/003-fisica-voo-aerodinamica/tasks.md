@@ -10,8 +10,8 @@
 
 **Purpose**: Preparação do ambiente de trabalho e sincronização de contratos de interface
 
-- [ ] T001 Sincronizar e validar compilação da solução AeroAscent na branch `003-fisica-voo-aerodinamica` via `dotnet build AeroAscent.sln`
-- [ ] T002 [P] Atualizar contrato de domínio `IServicoFisicaVoo` com o método `SimularPasso` em `src/AeroAscent.Core.Dominio/Contratos/IServicoFisicaVoo.cs` e adicionar contrato de aplicação `IAtualizarFisicaVooCasoDeUso` em `src/AeroAscent.Core.Aplicacao/Contratos/IAtualizarFisicaVooCasoDeUso.cs`
+- [X] T001 Sincronizar e validar compilação da solução AeroAscent na branch `003-fisica-voo-aerodinamica` via `dotnet build AeroAscent.sln`
+- [X] T002 [P] Atualizar contrato de domínio `IServicoFisicaVoo` com o método `SimularPasso` em `src/AeroAscent.Core.Dominio/Contratos/IServicoFisicaVoo.cs` e adicionar contrato de aplicação `IAtualizarFisicaVooCasoDeUso` em `src/AeroAscent.Core.Aplicacao/Contratos/IAtualizarFisicaVooCasoDeUso.cs`
 
 ---
 
