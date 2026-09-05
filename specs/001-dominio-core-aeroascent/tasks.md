@@ -68,14 +68,14 @@
 **Independent Test**: Testar aritmética segura de moedas (bloqueando saldos negativos), queima imutável de combustível e operações vetoriais puras 3D com `VetorVoo` na stack.
 
 ### Tests for User Story 3
-- [ ] T015 [P] [US3] Criar testes unitários para `Moeda` (adição, subtração protegida e operadores) em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/MoedaTestes.cs`
-- [ ] T016 [P] [US3] Criar testes unitários para `Combustivel` (capacidade, consumo imutável e percentual) em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/CombustivelTestes.cs`
-- [ ] T017 [P] [US3] Criar testes unitários para `VetorVoo` (álgebra vetorial 3D, magnitude e normalização) em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/VetorVooTestes.cs`
+- [X] T015 [P] [US3] Criar testes unitários para `Moeda` (adição, subtração protegida e operadores) em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/MoedaTestes.cs`
+- [X] T016 [P] [US3] Criar testes unitários para `Combustivel` (capacidade, consumo imutável e percentual) em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/CombustivelTestes.cs`
+- [X] T017 [P] [US3] Criar testes unitários para `VetorVoo` (álgebra vetorial 3D, magnitude e normalização) em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/VetorVooTestes.cs`
 
 ### Implementation for User Story 3
-- [ ] T018 [P] [US3] Implementar Objeto de Valor `Moeda` como `record` imutável com `checked` arithmetic em `src/AeroAscent.Core.Dominio/ObjetosDeValor/Moeda.cs`
-- [ ] T019 [P] [US3] Implementar Objeto de Valor `Combustivel` como `record` imutável com métodos de consumo em `src/AeroAscent.Core.Dominio/ObjetosDeValor/Combustivel.cs`
-- [ ] T020 [P] [US3] Implementar Objeto de Valor `VetorVoo` como `readonly record struct` 3D com zero alocação no heap em `src/AeroAscent.Core.Dominio/ObjetosDeValor/VetorVoo.cs`
+- [X] T018 [P] [US3] Implementar Objeto de Valor `Moeda` como `record` imutável com `checked` arithmetic em `src/AeroAscent.Core.Dominio/ObjetosDeValor/Moeda.cs`
+- [X] T019 [P] [US3] Implementar Objeto de Valor `Combustivel` como `record` imutável com métodos de consumo em `src/AeroAscent.Core.Dominio/ObjetosDeValor/Combustivel.cs`
+- [X] T020 [P] [US3] Implementar Objeto de Valor `VetorVoo` como `readonly record struct` 3D com zero alocação no heap em `src/AeroAscent.Core.Dominio/ObjetosDeValor/VetorVoo.cs`
 
 **Checkpoint**: Todos os objetos de valor atômicos implementados, testados e prontos para compor as entidades de voo, oficina e persistência.
 
