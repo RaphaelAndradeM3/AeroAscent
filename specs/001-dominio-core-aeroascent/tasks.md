@@ -88,12 +88,12 @@
 **Independent Test**: Testar transições de status da sessão de `Voo`, atualização de altitude máxima e distância, cálculo da fórmula de moedas ao pousar e bloqueio de dados após pouso/cancelamento.
 
 ### Tests for User Story 2
-- [ ] T021 [P] [US2] Criar testes unitários para a fórmula canônica de cálculo de recompensas do `ResultadoVoo` em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ResultadoVooTestes.cs`
-- [ ] T022 [P] [US2] Criar testes unitários para máquina de estados, transições e encerramento de `Voo` em `tests/AeroAscent.Core.Dominio.Testes/Entidades/VooTestes.cs`
+- [X] T021 [P] [US2] Criar testes unitários para a fórmula canônica de cálculo de recompensas do `ResultadoVoo` em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ResultadoVooTestes.cs`
+- [X] T022 [P] [US2] Criar testes unitários para máquina de estados, transições e encerramento de `Voo` em `tests/AeroAscent.Core.Dominio.Testes/Entidades/VooTestes.cs`
 
 ### Implementation for User Story 2
-- [ ] T023 [P] [US2] Implementar Objeto de Valor `ResultadoVoo` com a fórmula canônica de premiação em `src/AeroAscent.Core.Dominio/ObjetosDeValor/ResultadoVoo.cs`
-- [ ] T024 [US2] Implementar entidade `Voo` com máquina de estados, registro de métricas e geração de encerramento em `src/AeroAscent.Core.Dominio/Entidades/Voo.cs`
+- [X] T023 [P] [US2] Implementar Objeto de Valor `ResultadoVoo` com a fórmula canônica de premiação em `src/AeroAscent.Core.Dominio/ObjetosDeValor/ResultadoVoo.cs`
+- [X] T024 [US2] Implementar entidade `Voo` com máquina de estados, registro de métricas e geração de encerramento em `src/AeroAscent.Core.Dominio/Entidades/Voo.cs`
 
 **Checkpoint**: User Stories 1, 2 e 3 funcionando e testadas de forma independente e integrada.
 
