@@ -48,13 +48,13 @@
 
 ### Testes da User Story 1
 
-- [ ] T008 [P] [US1] Criar testes unitários para compra bem-sucedida de melhoria com saldo suficiente e persistência no repositório em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ComprarMelhoriaCasoDeUsoTestes.cs`
-- [ ] T009 [P] [US1] Criar testes unitários para rejeição de compra por saldo insuficiente lançando `SaldoInsuficienteException` e mantendo saldo inalterado em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ComprarMelhoriaCasoDeUsoTestes.cs`
+- [X] T008 [P] [US1] Criar testes unitários para compra bem-sucedida de melhoria com saldo suficiente e persistência no repositório em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ComprarMelhoriaCasoDeUsoTestes.cs`
+- [X] T009 [P] [US1] Criar testes unitários para rejeição de compra por saldo insuficiente lançando `SaldoInsuficienteException` e mantendo saldo inalterado em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ComprarMelhoriaCasoDeUsoTestes.cs`
 
 ### Implementação da User Story 1
 
-- [ ] T010 [US1] Implementar o caso de uso `ComprarMelhoriaCasoDeUso` com injeção de `IRepositorioProgresso`, validação de saldo e persistência atômica em `src/AeroAscent.Core.Aplicacao/CasosDeUso/ComprarMelhoriaCasoDeUso.cs`
-- [ ] T011 [US1] Criar testes unitários para bloqueio no teto máximo com `MelhoriaNivelMaximoException` ao tentar comprar componente no nível 10 em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ComprarMelhoriaCasoDeUsoTestes.cs`
+- [X] T010 [US1] Implementar o caso de uso `ComprarMelhoriaCasoDeUso` com injeção de `IRepositorioProgresso`, validação de saldo e persistência atômica em `src/AeroAscent.Core.Aplicacao/CasosDeUso/ComprarMelhoriaCasoDeUso.cs`
+- [X] T011 [US1] Criar testes unitários para bloqueio no teto máximo com `MelhoriaNivelMaximoException` ao tentar comprar componente no nível 10 em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ComprarMelhoriaCasoDeUsoTestes.cs`
 
 **Ponto de Verificação**: Transação de compra de upgrades 100% funcional, testada e persistida atomicamente (MVP pronto).
 
