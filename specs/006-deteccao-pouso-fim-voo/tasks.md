@@ -68,13 +68,13 @@
 
 ### Testes da User Story 2
 
-- [ ] T012 [P] [US2] Criar testes unitários para transição de `StatusVoo.Pousado` e consolidação de métricas finais em `tests/AeroAscent.Core.Dominio.Testes/Entidades/VooTestes.cs`
-- [ ] T013 [P] [US2] Criar testes unitários para o caso de uso `ProcessarPousoFimVooCasoDeUso` com validação de parada, atualização de métricas e despacho ao publicador em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarPousoFimVooCasoDeUsoTestes.cs`
+- [x] T012 [P] [US2] Criar testes unitários para transição de `StatusVoo.Pousado` e consolidação de métricas finais em `tests/AeroAscent.Core.Dominio.Testes/Entidades/VooTestes.cs`
+- [x] T013 [P] [US2] Criar testes unitários para o caso de uso `ProcessarPousoFimVooCasoDeUso` com validação de parada, atualização de métricas e despacho ao publicador em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarPousoFimVooCasoDeUsoTestes.cs`
 
 ### Implementação da User Story 2
 
-- [ ] T014 [US2] Implementar o caso de uso `ProcessarPousoFimVooCasoDeUso` na camada de Aplicação em `src/AeroAscent.Core.Aplicacao/CasosDeUso/ProcessarPousoFimVooCasoDeUso.cs`
-- [ ] T015 [US2] Criar testes de integração ponta a ponta simulando voo, toque no solo, deslizamento até parar e emissão do evento em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarPousoFimVooCasoDeUsoTestes.cs`
+- [x] T014 [US2] Implementar o caso de uso `ProcessarPousoFimVooCasoDeUso` na camada de Aplicação em `src/AeroAscent.Core.Aplicacao/CasosDeUso/ProcessarPousoFimVooCasoDeUso.cs`
+- [x] T015 [US2] Criar testes de integração ponta a ponta simulando voo, toque no solo, deslizamento até parar e emissão do evento em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarPousoFimVooCasoDeUsoTestes.cs`
 
 **Ponto de Verificação**: User Stories 1 e 2 funcionando de forma totalmente integrada.
 

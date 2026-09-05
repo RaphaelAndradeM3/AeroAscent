@@ -144,6 +144,34 @@ public class VooTestes
         Assert.Throws<DominioInvalidoException>(() => voo.Cancelar());
     }
 
+    [Fact]
+    public void Pousar_DeveConsolidarMetricasFinaisETravarEstado()
+    {
+        // Arrange
+        var voo = Voo.Iniciar(Aeronave.CriarPadrao());
+        voo.Decolar();
+        voo.AtualizarMetricas(350f, 120f, 25);
+
+        // Act
+        var resultado = voo.Pousar();
+
+        // Assert: métricas travadas exatamente nos valores consolidados
+        Assert.Equal(StatusVoo.Pousado, voo.Status);
+        Assert.Equal(350f, voo.DistanciaPercorrida);
+        Assert.Equal(120f, voo.AltitudeMaxima);
+        Assert.Equal(25, voo.MoedasColetadas);
+        Assert.NotNull(voo.Resultado);
+        Assert.Equal(350f, resultado.DistanciaMetros);
+        Assert.Equal(120f, resultado.AltitudeMaximaMetros);
+        Assert.Equal(25, resultado.MoedasColetadas);
+
+        // Tentativas subsequentes de consumo de combustível ou atualização retornam 0 ou lançam exceção
+        var tempoQueima = voo.ConsumirCombustivel(0.1f, out var efetivo);
+        Assert.Equal(0f, tempoQueima);
+        Assert.Equal(0f, efetivo);
+        Assert.Throws<DominioInvalidoException>(() => voo.AtualizarMetricas(400f, 150f, 5));
+    }
+
     [Theory]
     [InlineData(1, 20.0f)]
     [InlineData(2, 25.0f)]
