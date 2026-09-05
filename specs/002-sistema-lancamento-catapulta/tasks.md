@@ -19,9 +19,9 @@
 
 **Purpose**: Criação do projeto de Aplicação da Clean Architecture e seu respectivo projeto de testes na solução.
 
-- [ ] T001 Criar projeto de biblioteca de classes em src/AeroAscent.Core.Aplicacao/AeroAscent.Core.Aplicacao.csproj configurado para netstandard2.1 e net8.0 com referência ao projeto src/AeroAscent.Core.Dominio/AeroAscent.Core.Dominio.csproj
-- [ ] T002 [P] Criar projeto de testes unitários em tests/AeroAscent.Core.Aplicacao.Testes/AeroAscent.Core.Aplicacao.Testes.csproj em net8.0 com pacotes xUnit, xunit.runner.visualstudio, Microsoft.NET.Test.Sdk e referências a AeroAscent.Core.Aplicacao e AeroAscent.Core.Dominio
-- [ ] T003 Adicionar os projetos AeroAscent.Core.Aplicacao e AeroAscent.Core.Aplicacao.Testes ao arquivo de solução AeroAscent.slnx e validar compilação
+- [X] T001 Criar projeto de biblioteca de classes em src/AeroAscent.Core.Aplicacao/AeroAscent.Core.Aplicacao.csproj configurado para netstandard2.1 e net8.0 com referência ao projeto src/AeroAscent.Core.Dominio/AeroAscent.Core.Dominio.csproj
+- [X] T002 [P] Criar projeto de testes unitários em tests/AeroAscent.Core.Aplicacao.Testes/AeroAscent.Core.Aplicacao.Testes.csproj em net8.0 com pacotes xUnit, xunit.runner.visualstudio, Microsoft.NET.Test.Sdk e referências a AeroAscent.Core.Aplicacao e AeroAscent.Core.Dominio
+- [X] T003 Adicionar os projetos AeroAscent.Core.Aplicacao e AeroAscent.Core.Aplicacao.Testes ao arquivo de solução AeroAscent.slnx e validar compilação
 
 ---
 
