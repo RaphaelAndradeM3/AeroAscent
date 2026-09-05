@@ -51,6 +51,11 @@ public class Voo
     public Combustivel Combustivel { get; private set; }
 
     /// <summary>
+    /// Indica se a premiação financeira e os recordes deste voo já foram liquidados no progresso do jogador.
+    /// </summary>
+    public bool PremiacaoLiquidada { get; private set; }
+
+    /// <summary>
     /// Construtor privado para controle estrito via método de fábrica Iniciar.
     /// </summary>
     private Voo(Guid id, Aeronave aeronave)
@@ -62,6 +67,7 @@ public class Voo
         AltitudeMaxima = 0f;
         MoedasColetadas = 0;
         Resultado = null;
+        PremiacaoLiquidada = false;
         var capacidadeTanque = 20.0f * (1.0f + (aeronave.NivelTanqueCombustivel - 1) * 0.25f);
         Combustivel = Combustivel.CriarCheio(capacidadeTanque, 5.0f);
     }
@@ -179,5 +185,20 @@ public class Voo
 
         Status = StatusVoo.Cancelado;
         Resultado = null;
+    }
+
+    /// <summary>
+    /// Marca a premiação financeira e os recordes deste voo como liquidados no progresso do jogador,
+    /// garantindo a idempotência de invocações subsequentes de encerramento.
+    /// </summary>
+    /// <exception cref="DominioInvalidoException">Lançada caso o voo não esteja em status 'Pousado' ou 'Cancelado'.</exception>
+    public void MarcarPremiacaoLiquidada()
+    {
+        if (Status != StatusVoo.Pousado && Status != StatusVoo.Cancelado)
+        {
+            throw new DominioInvalidoException(nameof(Status), $"Apenas voos concluídos em 'Pousado' ou 'Cancelado' podem ter a premiação liquidada. Status atual: {Status}.");
+        }
+
+        PremiacaoLiquidada = true;
     }
 }
