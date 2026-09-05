@@ -19,8 +19,8 @@
 
 **Propósito**: Preparação do ambiente de testes e estruturas compartilhadas da Feature 005.
 
-- [ ] T001 Validar a integridade da solução e compilação de todas as camadas em `AeroAscent.slnx`
-- [ ] T002 [P] Criar fixtures e utilitários de teste de coletáveis e pooling em `tests/AeroAscent.Core.Dominio.Testes/Fixtures/ColetaveisTestFixture.cs`
+- [x] T001 Validar a integridade da solução e compilação de todas as camadas em `AeroAscent.slnx`
+- [x] T002 [P] Criar fixtures e utilitários de teste de coletáveis e pooling em `tests/AeroAscent.Core.Dominio.Testes/Fixtures/ColetaveisTestFixture.cs`
 
 ---
 
