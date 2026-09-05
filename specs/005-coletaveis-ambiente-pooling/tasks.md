@@ -70,12 +70,12 @@
 
 ### Testes da User Story 2
 
-- [ ] T014 [P] [US2] Criar testes unitários para `Coletavel.CriarAnelVento` com raio de 3.5m e injeção do vetor de impulso em `tests/AeroAscent.Core.Dominio.Testes/Entidades/ColetavelTestes.cs`
+- [x] T014 [P] [US2] Criar testes unitários para `Coletavel.CriarAnelVento` com raio de 3.5m e injeção do vetor de impulso em `tests/AeroAscent.Core.Dominio.Testes/Entidades/ColetavelTestes.cs`
 
 ### Implementação da User Story 2
 
-- [ ] T015 [US2] Atualizar o caso de uso `ProcessarColetaveisVooCasoDeUso` para aplicar o impulso de $+10.0\text{ m/s}$ na direção de velocidade da aeronave em `src/AeroAscent.Core.Aplicacao/CasosDeUso/ProcessarColetaveisVooCasoDeUso.cs`
-- [ ] T016 [US2] Criar testes de integração para passagem pelo anel com acréscimo de $+10.0\text{ m/s}$ e preservação de combustível em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarColetaveisVooCasoDeUsoTestes.cs`
+- [x] T015 [US2] Atualizar o caso de uso `ProcessarColetaveisVooCasoDeUso` para aplicar o impulso de $+10.0\text{ m/s}$ na direção de velocidade da aeronave em `src/AeroAscent.Core.Aplicacao/CasosDeUso/ProcessarColetaveisVooCasoDeUso.cs`
+- [x] T016 [US2] Criar testes de integração para passagem pelo anel com acréscimo de $+10.0\text{ m/s}$ e preservação de combustível em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/ProcessarColetaveisVooCasoDeUsoTestes.cs`
 
 **Ponto de Verificação**: User Stories 1 e 2 funcionando de forma integrada.
 

@@ -144,4 +144,40 @@ public class ColetavelTestes
         moeda.MarcarColetado();
         Assert.False(moeda.VerificarColisao(posicaoAeronave));
     }
+
+    [Fact]
+    public void CriarAnelVento_ComPosicaoValida_DeveInicializarComTipoAnelERaio3Ponto5()
+    {
+        // Arrange
+        var posicao = new VetorVoo(0f, 40f, 200f);
+
+        // Act
+        var anel = Coletavel.CriarAnelVento(posicao);
+
+        // Assert
+        Assert.NotEqual(Guid.Empty, anel.Id);
+        Assert.Equal(TipoColetavel.AnelVento, anel.Tipo);
+        Assert.Equal(Coletavel.RAIO_PADRAO_ANEL_VENTO_METROS, anel.RaioColetaMetros);
+        Assert.Equal(3.5f, anel.RaioColetaMetros);
+        Assert.Equal(200f, anel.Posicao.Z);
+        Assert.Equal(40f, anel.Posicao.Y);
+        Assert.False(anel.Ativo);
+        Assert.False(anel.Coletado);
+    }
+
+    [Fact]
+    public void VerificarColisao_AnelVento_ComRaioEstendido_DeveDetectarAte4MetrosDeDistancia()
+    {
+        // Arrange: Raio anel 3.5m + raio fuselagem 0.5m = 4.0m de tolerância
+        var anel = Coletavel.CriarAnelVento(new VetorVoo(0f, 50f, 150f));
+        anel.Ativar(new VetorVoo(0f, 50f, 150f));
+
+        // Act & Assert 1: Aeronave a 3.0m de distância no eixo Y -> colisão confirmada
+        var aeronaveProxima = new VetorVoo(0f, 53.0f, 150f);
+        Assert.True(anel.VerificarColisao(aeronaveProxima, raioAeronaveMetros: 0.5f));
+
+        // Act & Assert 2: Aeronave a 4.5m de distância -> fora de alcance
+        var aeronaveDistante = new VetorVoo(0f, 54.5f, 150f);
+        Assert.False(anel.VerificarColisao(aeronaveDistante, raioAeronaveMetros: 0.5f));
+    }
 }

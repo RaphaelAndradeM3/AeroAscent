@@ -146,4 +146,68 @@ public class ProcessarColetaveisVooCasoDeUsoTestes
         Assert.Equal(0, voo.MoedasColetadas);
         Assert.Single(coletaveisAtivos);
     }
+
+    [Fact]
+    public void Executar_AtravessandoAnelVento_DeveAplicarImpulsoDe10MetrosPorSegundoSemConsumirCombustivel()
+    {
+        // Arrange
+        var aero = Aeronave.CriarPadrao();
+        var voo = Voo.Iniciar(aero);
+        voo.Decolar();
+        var combustivelInicial = voo.Combustivel.QuantidadeAtual;
+
+        var anel = _poolAneis.Obter();
+        anel.Ativar(new VetorVoo(0f, 30f, 80f));
+        var coletaveisAtivos = new List<Coletavel> { anel };
+
+        // Aeronave voando a 15 m/s horizontal no mesmo ponto do anel
+        var estadoAeronave = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 30f, 80f),
+            new VetorVoo(0f, 0f, 15.0f),
+            0f);
+
+        // Act
+        var resultado = _casoDeUso.Executar(voo, estadoAeronave, coletaveisAtivos, _poolMoedas, _poolAneis);
+
+        // Assert
+        Assert.True(resultado.RecebeuImpulsoVento);
+        Assert.Equal(0, resultado.MoedasColetadasNoPasso);
+        Assert.Equal(10.0f, resultado.ImpulsoAplicado.Z, precision: 2);
+        Assert.Equal(0f, resultado.ImpulsoAplicado.Y, precision: 2);
+        Assert.Equal(25.0f, resultado.EstadoFisicoAtualizado.Velocidade.Z, precision: 2); // 15 + 10 = 25 m/s
+        Assert.Equal(combustivelInicial, voo.Combustivel.QuantidadeAtual); // Combustível intacto
+        Assert.Empty(coletaveisAtivos);
+        Assert.Equal(10, _poolAneis.DisponiveisEmEstoque); // Devolvido ao pool
+    }
+
+    [Fact]
+    public void Executar_AtravessandoAnelComVelocidadeBaixa_DeveProjetarImpulsoNoPitchDoNariz()
+    {
+        // Arrange
+        var aero = Aeronave.CriarPadrao();
+        var voo = Voo.Iniciar(aero);
+        voo.Decolar();
+
+        var anel = _poolAneis.Obter();
+        anel.Ativar(new VetorVoo(0f, 30f, 80f));
+        var coletaveisAtivos = new List<Coletavel> { anel };
+
+        // Aeronave quase parada (0.1 m/s) com pitch apontado 30 graus para cima
+        var estadoAeronave = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 30f, 80f),
+            new VetorVoo(0f, 0f, 0.1f),
+            inclinacaoPitchGraus: 30.0f);
+
+        // Act
+        var resultado = _casoDeUso.Executar(voo, estadoAeronave, coletaveisAtivos, _poolMoedas, _poolAneis);
+
+        // Assert
+        Assert.True(resultado.RecebeuImpulsoVento);
+        // sin(30°) = 0.5 -> 10 * 0.5 = 5.0 m/s em Y
+        Assert.Equal(5.0f, resultado.ImpulsoAplicado.Y, precision: 1);
+        // cos(30°) = 0.866 -> 10 * 0.866 = 8.66 m/s em Z
+        Assert.Equal(8.66f, resultado.ImpulsoAplicado.Z, precision: 1);
+        Assert.True(resultado.EstadoFisicoAtualizado.Velocidade.Y > 4.5f);
+        Assert.True(resultado.EstadoFisicoAtualizado.Velocidade.Z > 8.0f);
+    }
 }
