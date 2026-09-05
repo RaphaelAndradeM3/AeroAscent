@@ -51,17 +51,17 @@
 
 ### Testes da User Story 1
 
-- [ ] T009 [P] [US1] Criar testes unitários para `EstadoPropulsor` (criação ativo/inativo, invariantes e limites) em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/EstadoPropulsorTestes.cs`
-- [ ] T010 [P] [US1] Criar testes unitários para `Combustivel.ConsumirFracionario` cobrindo queima normal e queima residual em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/CombustivelTestes.cs`
-- [ ] T011 [P] [US1] Criar testes unitários para `ParametrosControlePiloto` validando a flag `AcionarBoost` em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ParametrosControlePilotoTestes.cs`
+- [x] T009 [P] [US1] Criar testes unitários para `EstadoPropulsor` (criação ativo/inativo, invariantes e limites) em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/EstadoPropulsorTestes.cs`
+- [x] T010 [P] [US1] Criar testes unitários para `Combustivel.ConsumirFracionario` cobrindo queima normal e queima residual em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/CombustivelTestes.cs`
+- [x] T011 [P] [US1] Criar testes unitários para `ParametrosControlePiloto` validando a flag `AcionarBoost` em `tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ParametrosControlePilotoTestes.cs`
 
 ### Implementação da User Story 1
 
-- [ ] T012 [US1] Implementar o método `ConsumirCombustivel` com validação estrita de status `EmVoo` na entidade `Voo` em `src/AeroAscent.Core.Dominio/Entidades/Voo.cs`
-- [ ] T013 [US1] Implementar os métodos `CalcularEmpuxoMotor`, `AplicarPropulsaoMotor` e decomposição trigonométrica no pitch em `src/AeroAscent.Core.Dominio/Servicos/ServicoFisicaVoo.cs`
-- [ ] T014 [US1] Implementar a sobrecarga de `SimularPasso` integrando forças aerodinâmicas e empuxo de queima fracionária em `src/AeroAscent.Core.Dominio/Servicos/ServicoFisicaVoo.cs`
-- [ ] T015 [US1] Integrar o consumo de combustível e a simulação de boost no caso de uso `AtualizarFisicaVooCasoDeUso` em `src/AeroAscent.Core.Aplicacao/CasosDeUso/AtualizarFisicaVooCasoDeUso.cs`
-- [ ] T016 [US1] Criar testes de integração cobrindo o acionamento de boost, queima e corte por esgotamento em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/AtualizarFisicaVooCasoDeUsoTestes.cs`
+- [x] T012 [US1] Implementar o método `ConsumirCombustivel` com validação estrita de status `EmVoo` na entidade `Voo` em `src/AeroAscent.Core.Dominio/Entidades/Voo.cs`
+- [x] T013 [US1] Implementar os métodos `CalcularEmpuxoMotor`, `AplicarPropulsaoMotor` e decomposição trigonométrica no pitch em `src/AeroAscent.Core.Dominio/Servicos/ServicoFisicaVoo.cs`
+- [x] T014 [US1] Implementar a sobrecarga de `SimularPasso` integrando forças aerodinâmicas e empuxo de queima fracionária em `src/AeroAscent.Core.Dominio/Servicos/ServicoFisicaVoo.cs`
+- [x] T015 [US1] Integrar o consumo de combustível e a simulação de boost no caso de uso `AtualizarFisicaVooCasoDeUso` em `src/AeroAscent.Core.Aplicacao/CasosDeUso/AtualizarFisicaVooCasoDeUso.cs`
+- [x] T016 [US1] Criar testes de integração cobrindo o acionamento de boost, queima e corte por esgotamento em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/AtualizarFisicaVooCasoDeUsoTestes.cs`
 
 **Ponto de Verificação**: User Story 1 (MVP) 100% funcional e testável de forma independente.
 

@@ -5,7 +5,7 @@ using AeroAscent.Core.Dominio.ObjetosDeValor;
 using Xunit;
 
 /// <summary>
-/// Testes unitários para o Objeto de Valor ParametrosControlePiloto.
+/// Testes unitários para o Objeto de Valor ParametrosControlePiloto cobrindo pitch, zona morta e boost.
 /// </summary>
 public class ParametrosControlePilotoTestes
 {
@@ -13,12 +13,23 @@ public class ParametrosControlePilotoTestes
     public void Criar_ComParametrosValidos_DeveInstanciarCorretamente()
     {
         // Arrange & Act
-        var controle = ParametrosControlePiloto.Criar(0.5f, 50.0f);
+        var controle = ParametrosControlePiloto.Criar(0.5f, 50.0f, true);
 
         // Assert
         Assert.Equal(0.5f, controle.IntensidadePitch);
         Assert.Equal(50.0f, controle.TaxaVariacaoAngularGrausPorSegundo);
+        Assert.True(controle.AcionarBoost);
         Assert.True(controle.TemComandoAtivo);
+    }
+
+    [Fact]
+    public void Criar_SemEspecificarBoost_DeveSerInativoPorPadrao()
+    {
+        // Arrange & Act
+        var controle = ParametrosControlePiloto.Criar(0.5f);
+
+        // Assert
+        Assert.False(controle.AcionarBoost);
     }
 
     [Fact]
@@ -68,7 +79,7 @@ public class ParametrosControlePilotoTestes
     }
 
     [Fact]
-    public void Neutro_DeveConterIntensidadeZeroETaxaPadrao()
+    public void Neutro_DeveConterIntensidadeZeroETaxaPadraoEBoostFalso()
     {
         // Arrange & Act
         var neutro = ParametrosControlePiloto.Neutro;
@@ -76,6 +87,7 @@ public class ParametrosControlePilotoTestes
         // Assert
         Assert.Equal(0f, neutro.IntensidadePitch);
         Assert.Equal(ParametrosControlePiloto.TAXA_ANGULAR_PADRAO, neutro.TaxaVariacaoAngularGrausPorSegundo);
+        Assert.False(neutro.AcionarBoost);
         Assert.False(neutro.TemComandoAtivo);
     }
 }

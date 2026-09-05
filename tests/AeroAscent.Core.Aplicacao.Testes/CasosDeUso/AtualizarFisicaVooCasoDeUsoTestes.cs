@@ -168,6 +168,95 @@ public class AtualizarFisicaVooCasoDeUsoTestes
         // Assert (SC-002: Zero alocação de memória no heap)
         Assert.Equal(0, memoriaDepois - memoriaAntes);
     }
+
+    [Fact]
+    public void Executar_ComAcionarBoostEmVoo_DeveConsumirCombustivelEAcelerarAeronave()
+    {
+        // Arrange
+        var aero = Aeronave.CriarPadrao(); // Nível 1: tanque 20 un, motor 120 N
+        var voo = Voo.Iniciar(aero);
+        voo.Decolar();
+
+        var estadoInicial = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 1000f, 0f),
+            new VetorVoo(0f, 0f, 20f),
+            0.0f);
+
+        var controleComBoost = new ParametrosControlePiloto(0f, ParametrosControlePiloto.TAXA_ANGULAR_PADRAO, acionarBoost: true);
+        var controleSemBoost = ParametrosControlePiloto.Neutro;
+
+        var estadoComBoost = estadoInicial;
+        var estadoSemBoost = estadoInicial;
+
+        var vooSemBoost = Voo.Iniciar(aero);
+        vooSemBoost.Decolar();
+
+        // Act: 100 passos de 0.02s = 2.0 segundos de boost
+        for (var i = 0; i < 100; i++)
+        {
+            estadoComBoost = _casoDeUso.Executar(voo, estadoComBoost, controleComBoost, 0.02f);
+            estadoSemBoost = _casoDeUso.Executar(vooSemBoost, estadoSemBoost, controleSemBoost, 0.02f);
+        }
+
+        // Assert
+        Assert.True(estadoComBoost.Propulsor.EstaAtivo);
+        Assert.Equal(10.0f, voo.Combustivel.QuantidadeAtual, precision: 2); // 20 - (2.0s * 5.0 un/s) = 10.0
+        Assert.Equal(0.5f, voo.Combustivel.PercentualRestante, precision: 2);
+        Assert.True(estadoComBoost.Velocidade.Z > estadoSemBoost.Velocidade.Z + 15f,
+            $"A velocidade com boost ({estadoComBoost.Velocidade.Z}) deve ser expressivamente maior que sem boost ({estadoSemBoost.Velocidade.Z}).");
+    }
+
+    [Fact]
+    public void Executar_ComTanqueZerado_NaoDeveAtivarBoostNemGerarEmpuxoExtra()
+    {
+        // Arrange: Esgotar combustível previamente
+        var aero = Aeronave.CriarPadrao();
+        var voo = Voo.Iniciar(aero);
+        voo.Decolar();
+        voo.ConsumirCombustivel(10.0f, out _); // 10s x 5 un/s esgota tanque de 20 un
+        Assert.True(voo.Combustivel.EstaVazio);
+
+        var estadoInicial = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 1000f, 0f),
+            new VetorVoo(0f, 0f, 20f),
+            0.0f);
+
+        var controleComBoost = new ParametrosControlePiloto(0f, ParametrosControlePiloto.TAXA_ANGULAR_PADRAO, acionarBoost: true);
+
+        // Act
+        var estadoFinal = _casoDeUso.Executar(voo, estadoInicial, controleComBoost, 0.02f);
+
+        // Assert
+        Assert.False(estadoFinal.Propulsor.EstaAtivo);
+        Assert.Equal(0f, estadoFinal.Propulsor.EmpuxoNewtons);
+        Assert.Equal(0f, voo.Combustivel.QuantidadeAtual);
+    }
+
+    [Fact]
+    public void Executar_ComAeronaveNoSolo_NaoDeveConsumirCombustivelMesmoComBoostPressionado()
+    {
+        // Arrange: Aeronave em repouso no solo
+        var aero = Aeronave.CriarPadrao();
+        var voo = Voo.Iniciar(aero);
+        voo.Decolar();
+
+        var estadoSolo = EstadoFisicoAeronave.Criar(
+            new VetorVoo(0f, 0f, 100f),
+            VetorVoo.Zero,
+            0f,
+            VetorVoo.Zero,
+            true);
+
+        var combustivelInicial = voo.Combustivel.QuantidadeAtual;
+        var controleComBoost = new ParametrosControlePiloto(0f, ParametrosControlePiloto.TAXA_ANGULAR_PADRAO, acionarBoost: true);
+
+        // Act
+        var estadoFinal = _casoDeUso.Executar(voo, estadoSolo, controleComBoost, 0.02f);
+
+        // Assert
+        Assert.False(estadoFinal.Propulsor.EstaAtivo);
+        Assert.Equal(combustivelInicial, voo.Combustivel.QuantidadeAtual);
+    }
 }
 
 
