@@ -85,10 +85,10 @@
 
 **Objetivo**: Controle de concorrência assíncrona (`SemaphoreSlim`), benchmark de performance $< 15\text{ms}$ (SC-001), validação de estresse (SC-002) e revisão de documentação.
 
-- [ ] T017 [P] Criar testes de estresse de concorrência assíncrona comprovando exclusão mútua segura via `SemaphoreSlim(1, 1)` sem colisão de I/O (SC-002) em `tests/AeroAscent.Infraestrutura.Testes/Persistencia/RepositorioProgressoConcorrenciaTestes.cs`
-- [ ] T018 [P] Criar teste automatizado de benchmark comprovando latência de salvamento assíncrono inferior a 15 milissegundos (SC-001) em `tests/AeroAscent.Infraestrutura.Testes/Persistencia/RepositorioProgressoLocalJsonTestes.cs`
-- [ ] T019 Executar suíte completa de testes automatizados com `dotnet test AeroAscent.slnx` garantindo 100% de sucesso e zero regressões em `tests/`
-- [ ] T020 Revisar documentação XML (`///`) de todas as novas classes, métodos, structs e propriedades públicas em pt-BR conforme GEMINI.md e Constituição
+- [X] T017 [P] Criar testes de estresse de concorrência assíncrona comprovando exclusão mútua segura via `SemaphoreSlim(1, 1)` sem colisão de I/O (SC-002) em `tests/AeroAscent.Infraestrutura.Testes/Persistencia/RepositorioProgressoConcorrenciaTestes.cs`
+- [X] T018 [P] Criar teste automatizado de benchmark comprovando latência de salvamento assíncrono inferior a 15 milissegundos (SC-001) em `tests/AeroAscent.Infraestrutura.Testes/Persistencia/RepositorioProgressoLocalJsonTestes.cs`
+- [X] T019 Executar suíte completa de testes automatizados com `dotnet test AeroAscent.slnx` garantindo 100% de sucesso e zero regressões em `tests/`
+- [X] T020 Revisar documentação XML (`///`) de todas as novas classes, métodos, structs e propriedades públicas em pt-BR conforme GEMINI.md e Constituição
 
 ---
 
