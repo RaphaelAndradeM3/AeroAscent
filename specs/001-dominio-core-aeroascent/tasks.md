@@ -52,10 +52,10 @@
 **Independent Test**: Executar testes unitários validando criação padrão e rejeição de níveis menores que 1 ou maiores que 10.
 
 ### Tests for User Story 1
-- [ ] T013 [P] [US1] Criar testes unitários para inicialização e validação de níveis da `Aeronave` em `tests/AeroAscent.Core.Dominio.Testes/Entidades/AeronaveTestes.cs`
+- [X] T013 [P] [US1] Criar testes unitários para inicialização e validação de níveis da `Aeronave` em `tests/AeroAscent.Core.Dominio.Testes/Entidades/AeronaveTestes.cs`
 
 ### Implementation for User Story 1
-- [ ] T014 [US1] Implementar entidade `Aeronave` com validação de níveis inteiros (1 a 10) e mutação controlada em `src/AeroAscent.Core.Dominio/Entidades/Aeronave.cs`
+- [X] T014 [US1] Implementar entidade `Aeronave` com validação de níveis inteiros (1 a 10) e mutação controlada em `src/AeroAscent.Core.Dominio/Entidades/Aeronave.cs`
 
 **Checkpoint**: User Story 1 (MVP) funcional e testável de forma 100% isolada.
 
