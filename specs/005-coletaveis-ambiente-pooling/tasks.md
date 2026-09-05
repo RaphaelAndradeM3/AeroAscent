@@ -30,12 +30,12 @@
 
 **⚠️ CRÍTICO**: Nenhuma implementação de história de usuário pode começar sem concluir esta fase.
 
-- [ ] T003 [P] Criar o enum `TipoColetavel` (`Moeda = 1`, `AnelVento = 2`) em `src/AeroAscent.Core.Dominio/Enums/TipoColetavel.cs`
-- [ ] T004 [P] Criar a interface genérica `IPoolObjetos<T>` com zero alocação no heap em `src/AeroAscent.Core.Dominio/Comum/IPoolObjetos.cs`
-- [ ] T005 [P] Implementar a classe genérica `GerenciadorPoolObjetos<T>` com pilha O(1) e expansão elástica de segurança em `src/AeroAscent.Core.Dominio/Comum/GerenciadorPoolObjetos.cs`
-- [ ] T006 [P] Criar a struct imutável `ResultadoProcessamentoColetaveis` (`readonly record struct` na stack) em `src/AeroAscent.Core.Dominio/ObjetosDeValor/ResultadoProcessamentoColetaveis.cs`
-- [ ] T007 [P] Criar a interface `IServicoGeracaoProceduralColetaveis` em `src/AeroAscent.Core.Dominio/Contratos/IServicoGeracaoProceduralColetaveis.cs`
-- [ ] T008 [P] Criar a interface `IProcessarColetaveisVooCasoDeUso` em `src/AeroAscent.Core.Aplicacao/Contratos/IProcessarColetaveisVooCasoDeUso.cs`
+- [x] T003 [P] Criar o enum `TipoColetavel` (`Moeda = 1`, `AnelVento = 2`) em `src/AeroAscent.Core.Dominio/Enums/TipoColetavel.cs`
+- [x] T004 [P] Criar a interface genérica `IPoolObjetos<T>` com zero alocação no heap em `src/AeroAscent.Core.Dominio/Comum/IPoolObjetos.cs`
+- [x] T005 [P] Implementar a classe genérica `GerenciadorPoolObjetos<T>` com pilha O(1) e expansão elástica de segurança em `src/AeroAscent.Core.Dominio/Comum/GerenciadorPoolObjetos.cs`
+- [x] T006 [P] Criar a struct imutável `ResultadoProcessamentoColetaveis` (`readonly record struct` na stack) em `src/AeroAscent.Core.Dominio/ObjetosDeValor/ResultadoProcessamentoColetaveis.cs`
+- [x] T007 [P] Criar a interface `IServicoGeracaoProceduralColetaveis` em `src/AeroAscent.Core.Dominio/Contratos/IServicoGeracaoProceduralColetaveis.cs`
+- [x] T008 [P] Criar a interface `IProcessarColetaveisVooCasoDeUso` em `src/AeroAscent.Core.Aplicacao/Contratos/IProcessarColetaveisVooCasoDeUso.cs`
 
 **Ponto de Verificação**: Estruturas de dados, contratos e gerenciador de pool de objetos prontos para as histórias de usuário.
 
