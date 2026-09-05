@@ -32,10 +32,10 @@
 
 **⚠️ CRÍTICO**: Nenhuma implementação de história de usuário pode começar sem concluir esta fase.
 
-- [ ] T005 [P] Implementar a classe de configuração `ConfiguracaoPersistenciaLocal` em `src/AeroAscent.Infraestrutura/Configuracao/ConfiguracaoPersistenciaLocal.cs`
-- [ ] T006 [P] Criar testes unitários para a classe `ConfiguracaoPersistenciaLocal` em `tests/AeroAscent.Infraestrutura.Testes/Configuracao/ConfiguracaoPersistenciaLocalTestes.cs`
-- [ ] T007 [P] Implementar a estrutura `ProgressoJogadorDTO` (`readonly record struct`) com mapeamento bidirecional e `VersaoSchema = 1` em `src/AeroAscent.Infraestrutura/DTOs/ProgressoJogadorDTO.cs`
-- [ ] T008 [P] Criar testes unitários de serialização e mapeamento para `ProgressoJogadorDTO` em `tests/AeroAscent.Infraestrutura.Testes/DTOs/ProgressoJogadorDTOTestes.cs`
+- [X] T005 [P] Implementar a classe de configuração `ConfiguracaoPersistenciaLocal` em `src/AeroAscent.Infraestrutura/Configuracao/ConfiguracaoPersistenciaLocal.cs`
+- [X] T006 [P] Criar testes unitários para a classe `ConfiguracaoPersistenciaLocal` em `tests/AeroAscent.Infraestrutura.Testes/Configuracao/ConfiguracaoPersistenciaLocalTestes.cs`
+- [X] T007 [P] Implementar a estrutura `ProgressoJogadorDTO` (`readonly record struct`) com mapeamento bidirecional e `VersaoSchema = 1` em `src/AeroAscent.Infraestrutura/DTOs/ProgressoJogadorDTO.cs`
+- [X] T008 [P] Criar testes unitários de serialização e mapeamento para `ProgressoJogadorDTO` em `tests/AeroAscent.Infraestrutura.Testes/DTOs/ProgressoJogadorDTOTestes.cs`
 
 **Ponto de Verificação**: Estruturas de configuração e DTO prontas, testadas e integradas.
 
