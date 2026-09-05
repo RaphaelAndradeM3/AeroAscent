@@ -344,6 +344,109 @@ public class ServicoFisicaVooTestes
         // Assert (SC-002: GC Alloc = 0 bytes no loop contínuo de física)
         Assert.Equal(0, bytesAlocados);
     }
+
+    [Theory]
+    [InlineData(1, 120.0f)]
+    [InlineData(2, 156.0f)]
+    [InlineData(3, 192.0f)]
+    [InlineData(5, 264.0f)]
+    [InlineData(10, 444.0f)]
+    public void CalcularEmpuxoMotor_NiveisValidos_DeveRetornarEmpuxoEscalonadoCorretamente(int nivelMotor, float empuxoEsperado)
+    {
+        // Act
+        var empuxo = _servicoFisica.CalcularEmpuxoMotor(nivelMotor);
+
+        // Assert
+        Assert.Equal(empuxoEsperado, empuxo, precision: 2);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(11)]
+    public void CalcularEmpuxoMotor_NivelInvalido_DeveLancarDominioInvalidoException(int nivelInvalido)
+    {
+        // Act & Assert
+        Assert.Throws<DominioInvalidoException>(() => _servicoFisica.CalcularEmpuxoMotor(nivelInvalido));
+    }
+
+    [Fact]
+    public void SimularPasso_ComBoostAtivo_NivelMotor3GeraAceleracaoSuperiorAoNivel1()
+    {
+        // Arrange
+        var estadoInicial = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 100f, 0f),
+            new VetorVoo(0f, 0f, 20f),
+            0.0f);
+
+        var controle = new ParametrosControlePiloto(0f, ParametrosControlePiloto.TAXA_ANGULAR_PADRAO, acionarBoost: true);
+
+        // Act: Simula 1 passo com motor 1 vs motor 3
+        var resultadoMotor1 = _servicoFisica.SimularPasso(estadoInicial, controle, 1, 1, 0.1f, 0.1f);
+        var resultadoMotor3 = _servicoFisica.SimularPasso(estadoInicial, controle, 1, 3, 0.1f, 0.1f);
+
+        // Assert
+        Assert.True(resultadoMotor3.Velocidade.Z > resultadoMotor1.Velocidade.Z,
+            $"A velocidade com motor 3 ({resultadoMotor3.Velocidade.Z}) deve superar motor 1 ({resultadoMotor1.Velocidade.Z}).");
+    }
+
+    [Fact]
+    public void SimularPasso_ComPitch30GrausEBoost_DeveDecomporEmpuxoNosEixosY_E_Z()
+    {
+        // Arrange: Bico inclinado para cima em 30 graus
+        var estadoInicial = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 100f, 0f),
+            new VetorVoo(0f, 0f, 20f),
+            30.0f);
+
+        var controle = new ParametrosControlePiloto(0f, ParametrosControlePiloto.TAXA_ANGULAR_PADRAO, acionarBoost: true);
+
+        // Act
+        var estadoComBoost = _servicoFisica.SimularPasso(estadoInicial, controle, 1, 1, 0.1f, 0.1f);
+        var estadoSemBoost = _servicoFisica.SimularPasso(estadoInicial, controle, 1, 1, 0.0f, 0.1f);
+
+        // Assert: Componente Y e Z receberam empuxo positivo comparado a sem boost
+        Assert.True(estadoComBoost.Velocidade.Y > estadoSemBoost.Velocidade.Y,
+            "Empuxo com pitch 30° deve adicionar velocidade vertical (Y).");
+        Assert.True(estadoComBoost.Velocidade.Z > estadoSemBoost.Velocidade.Z,
+            "Empuxo com pitch 30° deve adicionar velocidade horizontal (Z).");
+    }
+
+    [Fact]
+    public void SimularPasso_ComBoostAtivoContinuo_NaoDeveAlocarMemoriaNoHeap()
+    {
+        // Arrange
+        var estado = EstadoFisicoAeronave.CriarInicial(
+            new VetorVoo(0f, 1000f, 0f),
+            new VetorVoo(0f, 0f, 30f),
+            15.0f);
+
+        var controle = new ParametrosControlePiloto(0f, ParametrosControlePiloto.TAXA_ANGULAR_PADRAO, acionarBoost: true);
+
+        // Warm-up JIT
+        for (var i = 0; i < 100; i++)
+        {
+            estado = _servicoFisica.SimularPasso(estado, controle, 3, 5, 0.02f, 0.02f);
+        }
+
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
+        GC.Collect();
+
+        // Medição estrita de memória alocada no heap
+        var memoriaAntes = GC.GetAllocatedBytesForCurrentThread();
+
+        // Act: 10.000 iterações com boost ativo e cálculos trigonométricos de empuxo
+        for (var i = 0; i < 10000; i++)
+        {
+            estado = _servicoFisica.SimularPasso(estado, controle, 3, 5, 0.02f, 0.02f);
+        }
+
+        var memoriaDepois = GC.GetAllocatedBytesForCurrentThread();
+        var bytesAlocados = memoriaDepois - memoriaAntes;
+
+        // Assert (SC-002: GC Alloc = 0 bytes no loop contínuo de simulação física)
+        Assert.Equal(0, bytesAlocados);
+    }
 }
 
 

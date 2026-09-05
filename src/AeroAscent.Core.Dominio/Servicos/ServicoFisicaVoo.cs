@@ -7,8 +7,8 @@ using AeroAscent.Core.Dominio.Excecoes;
 using AeroAscent.Core.Dominio.ObjetosDeValor;
 
 /// <summary>
-/// Serviço de domínio puro responsável pelos cálculos matemáticos cinemáticos e aerodinâmicos do voo,
-/// operando sem alocação de memória no loop contínuo e sem qualquer dependência da Unity Engine.
+/// Serviço de domínio puro responsável pelos cálculos matemáticos cinemáticos, aerodinâmicos e propulsão de voo,
+/// operando sem alocação de memória no loop contínuo (GC Alloc = 0 bytes) e sem qualquer dependência da Unity Engine.
 /// </summary>
 public class ServicoFisicaVoo : IServicoFisicaVoo
 {
@@ -46,6 +46,16 @@ public class ServicoFisicaVoo : IServicoFisicaVoo
     /// Aceleração gravitacional terrestre padrão apontando para baixo (9.81 m/s²).
     /// </summary>
     public const float ACELERACAO_GRAVIDADE = 9.81f;
+
+    /// <summary>
+    /// Força de empuxo escalar base conferida pelo motor no nível 1 (120.0 N).
+    /// </summary>
+    public const float EMPUXO_BASE_NEWTONS = 120.0f;
+
+    /// <summary>
+    /// Fator de incremento de empuxo por nível de melhoria do motor (+30% por nível).
+    /// </summary>
+    public const float INCREMENTO_MOTOR_POR_NIVEL = 0.30f;
 
     /// <summary>
     /// Coeficiente de arrasto parasita base (CD0 = 0.04).
@@ -137,7 +147,7 @@ public class ServicoFisicaVoo : IServicoFisicaVoo
 
     /// <summary>
     /// Simula um passo cinemático completo da aeronave integrando forças de sustentação, arrasto, gravidade,
-    /// controle de arfagem/pitch e dinâmica de solo, retornando um novo EstadoFisicoAeronave na stack.
+    /// controle de arfagem/pitch e dinâmica de solo sem propulsão de motor.
     /// </summary>
     /// <param name="estadoAtual">Estado físico anterior da aeronave.</param>
     /// <param name="controle">Comandos de controle do piloto.</param>
@@ -148,6 +158,28 @@ public class ServicoFisicaVoo : IServicoFisicaVoo
         EstadoFisicoAeronave estadoAtual,
         ParametrosControlePiloto controle,
         int nivelAerodinamica,
+        float deltaTempoSegundos)
+    {
+        return SimularPasso(estadoAtual, controle, nivelAerodinamica, 1, 0f, deltaTempoSegundos);
+    }
+
+    /// <summary>
+    /// Simula um passo cinemático completo da aeronave integrando forças de sustentação, arrasto, gravidade,
+    /// controle de arfagem/pitch, dinâmica de solo e propulsão de boost na direção do nariz.
+    /// </summary>
+    /// <param name="estadoAtual">Estado físico anterior da aeronave.</param>
+    /// <param name="controle">Comandos de controle do piloto (pitch e boost).</param>
+    /// <param name="nivelAerodinamica">Nível da melhoria de aerodinâmica (1 a 10).</param>
+    /// <param name="nivelMotor">Nível da melhoria do motor (1 a 10).</param>
+    /// <param name="tempoEfetivoQueimaSegundos">Tempo efetivo durante o qual houve queima de combustível autorizada no passo.</param>
+    /// <param name="deltaTempoSegundos">Intervalo de tempo transcorrido (dt).</param>
+    /// <returns>Novo EstadoFisicoAeronave atualizado com alocação zero no heap.</returns>
+    public EstadoFisicoAeronave SimularPasso(
+        EstadoFisicoAeronave estadoAtual,
+        ParametrosControlePiloto controle,
+        int nivelAerodinamica,
+        int nivelMotor,
+        float tempoEfetivoQueimaSegundos,
         float deltaTempoSegundos)
     {
         if (deltaTempoSegundos <= 0f)
@@ -177,16 +209,22 @@ public class ServicoFisicaVoo : IServicoFisicaVoo
             var forcaAtritoZ = novaVzSolo > 0f ? -(COEFICIENTE_ATRITO_SOLO * MASSA_REFERENCIA_KG * ACELERACAO_GRAVIDADE) : 0f;
             var forcaResultanteSolo = new VetorVoo(0f, 0f, forcaAtritoZ);
 
+            var propulsorInativoSolo = EstadoPropulsor.CriarInativo(
+                estadoAtual.Propulsor.CombustivelRestante,
+                estadoAtual.Propulsor.CombustivelRestante,
+                estadoAtual.Propulsor.TaxaConsumoPorSegundo);
+
             return new EstadoFisicoAeronave(
                 new VetorVoo(0f, 0f, novaPosicaoZSolo),
                 new VetorVoo(0f, 0f, novaVzSolo),
                 novoPitchSolo,
                 forcaResultanteSolo,
-                true);
+                true,
+                propulsorInativoSolo);
         }
 
         // -------------------------------------------------------------
-        // CASO 2: Dinâmica de Voo Livre (Aerodinâmica + Gravidade)
+        // CASO 2: Dinâmica de Voo Livre (Aerodinâmica + Gravidade + Empuxo)
         // -------------------------------------------------------------
 
         // 1. Atualização da Arfagem (Pitch)
@@ -220,80 +258,114 @@ public class ServicoFisicaVoo : IServicoFisicaVoo
             }
         }
 
-        // 2. Balanço Aerodinâmico e Forças
+        // 2. Balanço Aerodinâmico e Gravitacional
         var vy = estadoAtual.Velocidade.Y;
         var vz = estadoAtual.Velocidade.Z;
         var velocidadeEscalar = MathF.Sqrt(vy * vy + vz * vz);
 
-        VetorVoo forcaTotal;
+        float forcaAeroGravY;
+        float forcaAeroGravZ;
 
         if (velocidadeEscalar < 0.1f)
         {
-            // Praticamente parado: apenas gravidade atuando
-            forcaTotal = new VetorVoo(0f, -MASSA_REFERENCIA_KG * ACELERACAO_GRAVIDADE, 0f);
+            forcaAeroGravY = -MASSA_REFERENCIA_KG * ACELERACAO_GRAVIDADE;
+            forcaAeroGravZ = 0f;
         }
         else
         {
-            // Ângulo de trajetória (gamma) e Ângulo de ataque (alpha)
             var anguloTrajetoriaGraus = MathF.Atan2(vy, vz) * 180.0f / MathF.PI;
             var anguloAtaqueGraus = novoPitch - anguloTrajetoriaGraus;
 
-            // Coeficiente de sustentação CL(alpha) com estol suave acolhedor (Artigos I e II)
             var cl = CalcularCoeficienteSustentacao(anguloAtaqueGraus);
 
-            // Coeficiente de arrasto CD(alpha) com escalonamento redutor por nível de aerodinâmica
             var divisorAerodinamica = 1.0f + (nivelAeroEfetivo - 1) * INCREMENTO_AERODINAMICA_POR_NIVEL;
             var cdBase = COEFICIENTE_ARRASTO_BASE + FATOR_ARRASTO_INDUZIDO * (cl * cl);
             var cdEfetivo = cdBase / divisorAerodinamica;
 
-            // Magnitudes de força
             var pressaoDinamica = 0.5f * DENSIDADE_AR_PADRAO * (velocidadeEscalar * velocidadeEscalar) * AREA_ASA_REFERENCIA;
             var magnitudeSustentacao = pressaoDinamica * cl;
             var magnitudeArrasto = pressaoDinamica * cdEfetivo;
 
-            // Decomposição vetorial
-            // Vetor unitário na direção da velocidade:
             var uVelY = vy / velocidadeEscalar;
             var uVelZ = vz / velocidadeEscalar;
 
-            // Vetor unitário normal de sustentação (girado +90 graus no plano Y-Z):
             var uLiftY = uVelZ;
             var uLiftZ = -uVelY;
 
-            // Força de sustentação
             var fLiftY = uLiftY * magnitudeSustentacao;
             var fLiftZ = uLiftZ * magnitudeSustentacao;
 
-            // Força de arrasto (aponta contra a velocidade)
             var fDragY = -uVelY * magnitudeArrasto;
             var fDragZ = -uVelZ * magnitudeArrasto;
 
-            // Força da gravidade
             var fGravY = -MASSA_REFERENCIA_KG * ACELERACAO_GRAVIDADE;
 
-            // Força total resultante
-            forcaTotal = new VetorVoo(0f, fLiftY + fDragY + fGravY, fLiftZ + fDragZ);
+            forcaAeroGravY = fLiftY + fDragY + fGravY;
+            forcaAeroGravZ = fLiftZ + fDragZ;
         }
 
-        // 3. Integração Numérica Semi-Implícita de Euler (Euler-Cromer)
-        var aceleracaoY = forcaTotal.Y / MASSA_REFERENCIA_KG;
-        var aceleracaoZ = forcaTotal.Z / MASSA_REFERENCIA_KG;
+        // 3. Empuxo Vetorial do Motor / Propulsão (Boost)
+        float deltaVyEmpuxo = 0f;
+        float deltaVzEmpuxo = 0f;
+        float forcaEmpuxoMediaY = 0f;
+        float forcaEmpuxoMediaZ = 0f;
+        float empuxoInstantaneoNewtons = 0f;
 
-        var novaVy = vy + aceleracaoY * deltaTempoSegundos;
-        var novaVz = vz + aceleracaoZ * deltaTempoSegundos;
+        var tempoQueimaValido = MathF.Max(0f, MathF.Min(deltaTempoSegundos, tempoEfetivoQueimaSegundos));
+
+        if (controle.AcionarBoost && tempoQueimaValido > 0f)
+        {
+            empuxoInstantaneoNewtons = CalcularEmpuxoMotor(nivelMotor);
+
+            var pitchRad = novoPitch * MathF.PI / 180.0f;
+            var uNarizY = MathF.Sin(pitchRad);
+            var uNarizZ = MathF.Cos(pitchRad);
+
+            var ty = empuxoInstantaneoNewtons * uNarizY;
+            var tz = empuxoInstantaneoNewtons * uNarizZ;
+
+            var impulsoY = ty * tempoQueimaValido;
+            var impulsoZ = tz * tempoQueimaValido;
+
+            deltaVyEmpuxo = impulsoY / MASSA_REFERENCIA_KG;
+            deltaVzEmpuxo = impulsoZ / MASSA_REFERENCIA_KG;
+
+            forcaEmpuxoMediaY = ty * (tempoQueimaValido / deltaTempoSegundos);
+            forcaEmpuxoMediaZ = tz * (tempoQueimaValido / deltaTempoSegundos);
+        }
+
+        var forcaTotal = new VetorVoo(0f, forcaAeroGravY + forcaEmpuxoMediaY, forcaAeroGravZ + forcaEmpuxoMediaZ);
+
+        // 4. Integração Numérica Semi-Implícita de Euler
+        var aceleracaoAeroGravY = forcaAeroGravY / MASSA_REFERENCIA_KG;
+        var aceleracaoAeroGravZ = forcaAeroGravZ / MASSA_REFERENCIA_KG;
+
+        var novaVy = vy + aceleracaoAeroGravY * deltaTempoSegundos + deltaVyEmpuxo;
+        var novaVz = vz + aceleracaoAeroGravZ * deltaTempoSegundos + deltaVzEmpuxo;
 
         var novaPosY = estadoAtual.Posicao.Y + novaVy * deltaTempoSegundos;
         var novaPosZ = estadoAtual.Posicao.Z + novaVz * deltaTempoSegundos;
 
-        // 4. Detecção e resposta de colisão com o solo no final do passo
+        var estaAtivoPropulsor = controle.AcionarBoost && tempoQueimaValido > 0f;
+        var propulsorResultante = estaAtivoPropulsor
+            ? EstadoPropulsor.CriarAtivo(empuxoInstantaneoNewtons, estadoAtual.Propulsor.CombustivelRestante, 20f, 5f)
+            : EstadoPropulsor.CriarInativo(estadoAtual.Propulsor.CombustivelRestante, 20f, 5f);
+
+        // 5. Detecção e resposta de colisão com o solo no final do passo
         if (novaPosY <= 0f)
         {
+            var propulsorSolo = EstadoPropulsor.CriarInativo(
+                estadoAtual.Propulsor.CombustivelRestante,
+                20f,
+                5f);
+
             return new EstadoFisicoAeronave(
                 new VetorVoo(0f, 0f, novaPosZ),
                 new VetorVoo(0f, 0f, MathF.Max(0f, novaVz)),
                 Math.Max(0f, novoPitch),
                 forcaTotal,
-                true);
+                true,
+                propulsorSolo);
         }
 
         return new EstadoFisicoAeronave(
@@ -301,7 +373,8 @@ public class ServicoFisicaVoo : IServicoFisicaVoo
             new VetorVoo(0f, novaVy, novaVz),
             novoPitch,
             forcaTotal,
-            false);
+            false,
+            propulsorResultante);
     }
 
     /// <summary>
@@ -317,12 +390,9 @@ public class ServicoFisicaVoo : IServicoFisicaVoo
 
         if (absAlfa <= ANGULO_ESTOL_GRAUS)
         {
-            // Resposta linear arcade: CL = 0.075 * alfa (atinge 1.5 a 20°)
             return 0.075f * anguloAtaqueGraus;
         }
 
-        // Estol Suave Acolhedor (Artigo I e II):
-        // Decai suavemente com cosseno sem corte abrupto a zero
         var alfaClamped = MathF.Min(90f, absAlfa);
         var t = (alfaClamped - ANGULO_ESTOL_GRAUS) / (90f - ANGULO_ESTOL_GRAUS);
         var fatorSuave = MathF.Cos(t * MathF.PI * 0.5f);
@@ -340,6 +410,32 @@ public class ServicoFisicaVoo : IServicoFisicaVoo
     /// <returns>Vetor de velocidade incrementado pelo empuxo do motor.</returns>
     public VetorVoo AplicarPropulsaoMotor(VetorVoo velocidadeAtual, int nivelMotor, float deltaTempoSegundos)
     {
-        return velocidadeAtual;
+        if (deltaTempoSegundos <= 0f)
+        {
+            return velocidadeAtual;
+        }
+
+        var empuxo = CalcularEmpuxoMotor(nivelMotor);
+        var aceleracao = empuxo / MASSA_REFERENCIA_KG;
+        var novaVz = velocidadeAtual.Z + aceleracao * deltaTempoSegundos;
+        return new VetorVoo(velocidadeAtual.X, velocidadeAtual.Y, novaVz);
+    }
+
+    /// <summary>
+    /// Calcula a magnitude escalar de empuxo (T) gerada pelo motor em Newtons com base no nível da melhoria.
+    /// </summary>
+    /// <param name="nivelMotor">Nível do motor da aeronave (1 a 10).</param>
+    /// <returns>Força escalar de empuxo em Newtons (N).</returns>
+    /// <exception cref="DominioInvalidoException">Lançada se o nível do motor estiver fora dos limites (1 a 10).</exception>
+    public float CalcularEmpuxoMotor(int nivelMotor)
+    {
+        if (nivelMotor < Aeronave.NIVEL_MINIMO || nivelMotor > Aeronave.NIVEL_MAXIMO)
+        {
+            throw new DominioInvalidoException(
+                nameof(nivelMotor),
+                $"O nível do motor deve estar entre {Aeronave.NIVEL_MINIMO} e {Aeronave.NIVEL_MAXIMO}. Valor informado: {nivelMotor}.");
+        }
+
+        return EMPUXO_BASE_NEWTONS * (1.0f + (nivelMotor - 1) * INCREMENTO_MOTOR_POR_NIVEL);
     }
 }

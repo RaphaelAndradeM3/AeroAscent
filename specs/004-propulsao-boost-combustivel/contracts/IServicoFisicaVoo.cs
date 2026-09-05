@@ -27,7 +27,7 @@ public interface IServicoFisicaVoo
 
     /// <summary>
     /// Simula um passo cinemático completo da aeronave integrando sustentação, arrasto, gravidade,
-    /// controle de arfagem/pitch e dinâmica de solo (sem propulsão ativa).
+    /// controle de arfagem/pitch e dinâmica de solo (compatibilidade com propulsão desativada).
     /// </summary>
     /// <param name="estadoAtual">Estado físico anterior da aeronave.</param>
     /// <param name="controle">Comandos de controle do piloto.</param>
@@ -42,7 +42,7 @@ public interface IServicoFisicaVoo
 
     /// <summary>
     /// Simula um passo cinemático completo da aeronave integrando sustentação, arrasto, gravidade,
-    /// controle de arfagem/pitch, dinâmica de solo e propulsão vetorial de boost por queima de combustível.
+    /// controle de arfagem/pitch, dinâmica de solo e propulsão vetorial do motor por queima de combustível.
     /// </summary>
     /// <param name="estadoAtual">Estado físico anterior da aeronave.</param>
     /// <param name="controle">Comandos de controle do piloto (pitch e boost).</param>

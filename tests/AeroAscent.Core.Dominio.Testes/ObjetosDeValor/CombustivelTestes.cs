@@ -5,7 +5,7 @@ using AeroAscent.Core.Dominio.ObjetosDeValor;
 using Xunit;
 
 /// <summary>
-/// Testes unitários para o objeto de valor Combustivel.
+/// Testes unitários para o objeto de valor Combustivel cobrindo consumo normal, esgotamento fracionário e conservação.
 /// </summary>
 public class CombustivelTestes
 {
@@ -87,6 +87,51 @@ public class CombustivelTestes
 
         // Assert
         Assert.Equal(100f, resultado.QuantidadeAtual);
+    }
+
+    [Fact]
+    public void ConsumirFracionario_ComCombustivelSuficiente_DeveRetornarTempoIntegral()
+    {
+        // Arrange
+        var combustivel = Combustivel.CriarCheio(20.0f, 5.0f);
+
+        // Act (passo de 0.02s a 5.0 un/s consome 0.1 un)
+        var resultante = combustivel.ConsumirFracionario(0.02f, out var tempoQueima);
+
+        // Assert
+        Assert.Equal(0.02f, tempoQueima, precision: 5);
+        Assert.Equal(19.9f, resultante.QuantidadeAtual, precision: 3);
+        Assert.False(resultante.EstaVazio);
+    }
+
+    [Fact]
+    public void ConsumirFracionario_QuandoCombustivelEsgotaNoMeioDoPasso_DeveCalcularTempoResidualExato()
+    {
+        // Arrange: Tanque com apenas 0.025 unidades e taxa de 5.0 un/s (dura exatamente 0.005s)
+        var combustivel = new Combustivel(0.025f, 20.0f, 5.0f);
+
+        // Act: Passo de 0.02s (20ms)
+        var resultante = combustivel.ConsumirFracionario(0.02f, out var tempoQueima);
+
+        // Assert
+        Assert.Equal(0.005f, tempoQueima, precision: 5);
+        Assert.Equal(0.0f, resultante.QuantidadeAtual);
+        Assert.True(resultante.EstaVazio);
+    }
+
+    [Fact]
+    public void ConsumirFracionario_QuandoJaVazio_DeveRetornarTempoZero()
+    {
+        // Arrange
+        var combustivel = new Combustivel(0.0f, 20.0f, 5.0f);
+
+        // Act
+        var resultante = combustivel.ConsumirFracionario(0.02f, out var tempoQueima);
+
+        // Assert
+        Assert.Equal(0.0f, tempoQueima);
+        Assert.Equal(0.0f, resultante.QuantidadeAtual);
+        Assert.True(resultante.EstaVazio);
     }
 
     [Fact]

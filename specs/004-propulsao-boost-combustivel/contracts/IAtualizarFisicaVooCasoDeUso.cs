@@ -12,7 +12,7 @@ public interface IAtualizarFisicaVooCasoDeUso
 {
     /// <summary>
     /// Executa a simulação física de um passo de tempo (dt), calculando o novo estado cinemático e de propulsão,
-    /// atualizando o reservatório de combustível da entidade Voo e gerenciando a transição para Pousado ao parar no solo.
+    /// atualizando o tanque de combustível da entidade Voo e gerenciando a transição para Pousado ao parar no solo.
     /// </summary>
     /// <param name="voo">Entidade da sessão de voo ativa.</param>
     /// <param name="estadoAtual">Estado físico instantâneo anterior da aeronave.</param>

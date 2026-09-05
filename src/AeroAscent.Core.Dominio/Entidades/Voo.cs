@@ -62,7 +62,8 @@ public class Voo
         AltitudeMaxima = 0f;
         MoedasColetadas = 0;
         Resultado = null;
-        Combustivel = Combustivel.CriarCheio(20f + (aeronave.NivelTanqueCombustivel - 1) * 10f, 5.0f);
+        var capacidadeTanque = 20.0f * (1.0f + (aeronave.NivelTanqueCombustivel - 1) * 0.25f);
+        Combustivel = Combustivel.CriarCheio(capacidadeTanque, 5.0f);
     }
 
     /// <summary>
@@ -127,6 +128,25 @@ public class Voo
         DistanciaPercorrida = MathF.Max(DistanciaPercorrida, distancia);
         AltitudeMaxima = MathF.Max(AltitudeMaxima, altitudeAtual);
         MoedasColetadas += moedasNovas;
+    }
+
+    /// <summary>
+    /// Consome combustível da aeronave durante o acionamento do propulsor (boost).
+    /// Se a sessão de voo não estiver no status ativo EmVoo, a queima é estritamente bloqueada e retorna zero.
+    /// </summary>
+    /// <param name="deltaTempoSegundos">Intervalo de tempo de acionamento em segundos.</param>
+    /// <param name="tempoEfetivoQueima">Duração efetiva durante a qual houve queima de combustível autorizada.</param>
+    /// <returns>Tempo efetivo de queima no passo em segundos.</returns>
+    public float ConsumirCombustivel(float deltaTempoSegundos, out float tempoEfetivoQueima)
+    {
+        if (Status != StatusVoo.EmVoo || deltaTempoSegundos <= 0f)
+        {
+            tempoEfetivoQueima = 0f;
+            return 0f;
+        }
+
+        Combustivel = Combustivel.ConsumirFracionario(deltaTempoSegundos, out tempoEfetivoQueima);
+        return tempoEfetivoQueima;
     }
 
     /// <summary>
