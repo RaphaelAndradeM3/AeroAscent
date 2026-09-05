@@ -48,13 +48,13 @@
 
 ### Testes da User Story 1
 
-- [ ] T008 [P] [US1] Criar testes unitários para o cálculo e crédito da premiação financeira por distância, altitude e coletáveis em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
-- [ ] T009 [P] [US1] Criar testes unitários para a persistência atômica do saldo atualizado via `IRepositorioProgresso.SalvarProgressoAsync` em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
+- [X] T008 [P] [US1] Criar testes unitários para o cálculo e crédito da premiação financeira por distância, altitude e coletáveis em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
+- [X] T009 [P] [US1] Criar testes unitários para a persistência atômica do saldo atualizado via `IRepositorioProgresso.SalvarProgressoAsync` em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
 
 ### Implementação da User Story 1
 
-- [ ] T010 [US1] Implementar o caso de uso `FinalizarVooCasoDeUso` com injeção de `IRepositorioProgresso`, cálculo discriminado e crédito de moedas em `src/AeroAscent.Core.Aplicacao/CasosDeUso/FinalizarVooCasoDeUso.cs`
-- [ ] T011 [US1] Criar testes para casos de borda de voos muito curtos (concedendo 0 moedas) e resiliência na primeira execução quando o repositório retorna null em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
+- [X] T010 [US1] Implementar o caso de uso `FinalizarVooCasoDeUso` com injeção de `IRepositorioProgresso`, cálculo discriminado e crédito de moedas em `src/AeroAscent.Core.Aplicacao/CasosDeUso/FinalizarVooCasoDeUso.cs`
+- [X] T011 [US1] Criar testes para casos de borda de voos muito curtos (concedendo 0 moedas) e resiliência na primeira execução quando o repositório retorna null em `tests/AeroAscent.Core.Aplicacao.Testes/CasosDeUso/FinalizarVooCasoDeUsoTestes.cs`
 
 **Ponto de Verificação**: Core Loop financeiro de conversão de métricas e persistência de moedas 100% funcional e testado.
 
