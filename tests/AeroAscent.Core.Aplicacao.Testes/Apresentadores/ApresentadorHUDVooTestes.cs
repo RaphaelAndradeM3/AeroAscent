@@ -280,4 +280,46 @@ public class ApresentadorHUDVooTestes
         Assert.False(_apresentador.ObterComandosControle().AcionarBoost);
         Assert.Equal(0.0f, _apresentador.ObterComandosControle().IntensidadePitch);
     }
+
+    [Fact]
+    public void BenchmarkLatencia_DespachoDeComandosETelemetria_DeveSerInferiorA16Milissegundos()
+    {
+        // Arrange: Configura voo e estado para simulação contínua
+        _apresentador.Inicializar(200f);
+        var voo = Voo.Iniciar(Aeronave.CriarPadrao());
+        voo.Decolar();
+        var estado = EstadoFisicoAeronave.CriarInicial(new VetorVoo(0, 50, 100), new VetorVoo(0, 0, 25), 0f);
+
+        // Aquecimento JIT
+        for (int i = 0; i < 50; i++)
+        {
+            _apresentador.IniciarSubida();
+            _ = _apresentador.ObterComandosControle();
+            _apresentador.PararSubida();
+            _apresentador.Atualizar(voo, in estado);
+        }
+
+        // Act: 1000 ciclos de comando e atualização de telemetria
+        const int iteracoes = 1000;
+        var cronometro = System.Diagnostics.Stopwatch.StartNew();
+
+        for (int i = 0; i < iteracoes; i++)
+        {
+            _apresentador.IniciarSubida();
+            _ = _apresentador.ObterComandosControle();
+            _apresentador.IniciarBoost();
+            _ = _apresentador.ObterComandosControle();
+            _apresentador.PararSubida();
+            _apresentador.PararBoost();
+            _apresentador.Atualizar(voo, in estado);
+        }
+
+        cronometro.Stop();
+        double tempoMedioMsPorCiclo = (double)cronometro.ElapsedMilliseconds / iteracoes;
+
+        // Assert: SC-002 - Latência inferior a 16ms (1 frame a 60 FPS)
+        Assert.True(
+            tempoMedioMsPorCiclo < 16.0,
+            $"O tempo médio por ciclo ({tempoMedioMsPorCiclo:F4} ms) excedeu o limite máximo de 16 ms.");
+    }
 }

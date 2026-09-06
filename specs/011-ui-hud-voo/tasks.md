@@ -71,9 +71,9 @@
 
 **Objetivo**: Garantir conformidade com os critérios de sucesso mensuráveis (`SC-001`, `SC-002`), validação integral da suíte de testes e documentação XML em pt-BR.
 
-- [ ] T016 [P] Criar teste automatizado de benchmark comprovando tempo de processamento de comandos inferior a 16 milissegundos (SC-002) em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorHUDVooTestes.cs`
-- [ ] T017 Executar suíte completa de testes automatizados com `dotnet test AeroAscent.slnx` garantindo 100% de sucesso e zero regressões em toda a solução
-- [ ] T018 Revisar documentação XML (`///`) de todas as novas classes, interfaces, métodos e structs públicas em pt-BR conforme GEMINI.md e Constituição
+- [X] T016 [P] Criar teste automatizado de benchmark comprovando tempo de processamento de comandos inferior a 16 milissegundos (SC-002) em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorHUDVooTestes.cs`
+- [X] T017 Executar suíte completa de testes automatizados com `dotnet test AeroAscent.slnx` garantindo 100% de sucesso e zero regressões em toda a solução
+- [X] T018 Revisar documentação XML (`///`) de todas as novas classes, interfaces, métodos e structs públicas em pt-BR conforme GEMINI.md e Constituição
 
 ---
 
