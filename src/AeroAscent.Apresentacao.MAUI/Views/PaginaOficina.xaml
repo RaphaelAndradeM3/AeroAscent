@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AeroAscent.Apresentacao.MAUI.Views.PaginaOficina"
+             Title="Oficina AeroAscent"
+             BackgroundColor="#0F172A"
+             NavigationPage.HasNavigationBar="False">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="20" MaximumWidthRequest="650" HorizontalOptions="Center">
+
+            <!-- Cabeçalho com Título do Jogo e Carteira -->
+            <Border BackgroundColor="#1E293B" StrokeShape="RoundRectangle 16" Stroke="#334155" StrokeThickness="1" Padding="16">
+                <Grid ColumnDefinitions="*, Auto" RowDefinitions="Auto, Auto" ColumnSpacing="12">
+                    <VerticalStackLayout Grid.Row="0" Grid.Column="0">
+                        <Label Text="✈️ AEROASCENT" FontSize="26" FontAttributes="Bold" TextColor="#38BDF8" />
+                        <Label Text="Hangar &amp; Oficina Mecânica" FontSize="14" TextColor="#94A3B8" />
+                    </VerticalStackLayout>
+
+                    <!-- Saldo Atual -->
+                    <Border Grid.Row="0" Grid.Column="1" BackgroundColor="#0F172A" Stroke="#F59E0B" StrokeThickness="2" StrokeShape="RoundRectangle 24" Padding="14,6">
+                        <Label x:Name="LabelSaldo" Text="💰 0" FontSize="18" FontAttributes="Bold" TextColor="#FCD34D" VerticalOptions="Center" />
+                    </Border>
+
+                    <!-- Recordes Históricos -->
+                    <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2" Spacing="16" Margin="0,12,0,0">
+                        <Label x:Name="LabelRecordeDistancia" Text="🏆 Recorde: 0 m" FontSize="13" TextColor="#E2E8F0" />
+                        <Label Text="•" TextColor="#64748B" />
+                        <Label x:Name="LabelRecordeAltitude" Text="☁️ Alt. Máx: 0 m" FontSize="13" TextColor="#E2E8F0" />
+                    </HorizontalStackLayout>
+                </Grid>
+            </Border>
+
+            <!-- Banner / Alerta de Mensagem ou Feedback -->
+            <Border x:Name="BorderFeedback" IsVisible="False" BackgroundColor="#10B981" StrokeShape="RoundRectangle 8" Padding="12,8">
+                <Label x:Name="LabelFeedback" Text="Melhoria comprada com sucesso!" TextColor="White" FontAttributes="Bold" HorizontalTextAlignment="Center" />
+            </Border>
+
+            <!-- Seção de Melhorias Mecânicas (4 Cartões) -->
+            <Label Text="UPGRADES DA AERONAVE" FontSize="16" FontAttributes="Bold" TextColor="#CBD5E1" Margin="4,4,0,0" />
+
+            <Grid ColumnDefinitions="*, *" RowDefinitions="Auto, Auto" ColumnSpacing="12" RowSpacing="12">
+                <!-- Cartão 1: Motor -->
+                <Border x:Name="CardMotor" Grid.Row="0" Grid.Column="0" BackgroundColor="#1E293B" StrokeShape="RoundRectangle 12" Stroke="#334155" StrokeThickness="1" Padding="14">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="🚀 MOTOR" FontSize="15" FontAttributes="Bold" TextColor="#F87171" />
+                        <Label x:Name="LabelNivelMotor" Text="Nível 1" FontSize="12" TextColor="#94A3B8" />
+                        <ProgressBar x:Name="ProgressMotor" Progress="0.1" ProgressColor="#EF4444" HeightRequest="6" />
+                        <Button x:Name="BtnMotor" Text="💰 100" BackgroundColor="#DC2626" TextColor="White" FontAttributes="Bold" CornerRadius="8" HeightRequest="40" Clicked="OnComprarMotorClicked" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Cartão 2: Aerodinâmica / Asas -->
+                <Border x:Name="CardAerodinamica" Grid.Row="0" Grid.Column="1" BackgroundColor="#1E293B" StrokeShape="RoundRectangle 12" Stroke="#334155" StrokeThickness="1" Padding="14">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="🪽 ASAS" FontSize="15" FontAttributes="Bold" TextColor="#60A5FA" />
+                        <Label x:Name="LabelNivelAerodinamica" Text="Nível 1" FontSize="12" TextColor="#94A3B8" />
+                        <ProgressBar x:Name="ProgressAerodinamica" Progress="0.1" ProgressColor="#3B82F6" HeightRequest="6" />
+                        <Button x:Name="BtnAerodinamica" Text="💰 100" BackgroundColor="#2563EB" TextColor="White" FontAttributes="Bold" CornerRadius="8" HeightRequest="40" Clicked="OnComprarAerodinamicaClicked" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Cartão 3: Combustível -->
+                <Border x:Name="CardCombustivel" Grid.Row="1" Grid.Column="0" BackgroundColor="#1E293B" StrokeShape="RoundRectangle 12" Stroke="#334155" StrokeThickness="1" Padding="14">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="⛽ COMBUSTÍVEL" FontSize="15" FontAttributes="Bold" TextColor="#34D399" />
+                        <Label x:Name="LabelNivelCombustivel" Text="Nível 1" FontSize="12" TextColor="#94A3B8" />
+                        <ProgressBar x:Name="ProgressCombustivel" Progress="0.1" ProgressColor="#10B981" HeightRequest="6" />
+                        <Button x:Name="BtnCombustivel" Text="💰 100" BackgroundColor="#059669" TextColor="White" FontAttributes="Bold" CornerRadius="8" HeightRequest="40" Clicked="OnComprarCombustivelClicked" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Cartão 4: Catapulta -->
+                <Border x:Name="CardCatapulta" Grid.Row="1" Grid.Column="1" BackgroundColor="#1E293B" StrokeShape="RoundRectangle 12" Stroke="#334155" StrokeThickness="1" Padding="14">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="🏹 CATAPULTA" FontSize="15" FontAttributes="Bold" TextColor="#FBBF24" />
+                        <Label x:Name="LabelNivelCatapulta" Text="Nível 1" FontSize="12" TextColor="#94A3B8" />
+                        <ProgressBar x:Name="ProgressCatapulta" Progress="0.1" ProgressColor="#F59E0B" HeightRequest="6" />
+                        <Button x:Name="BtnCatapulta" Text="💰 100" BackgroundColor="#D97706" TextColor="White" FontAttributes="Bold" CornerRadius="8" HeightRequest="40" Clicked="OnComprarCatapultaClicked" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Botão Principal DECOLAR -->
+            <Button x:Name="BtnDecolar"
+                    Text="🚀 DECOLAR PARA O VOO"
+                    BackgroundColor="#10B981"
+                    TextColor="White"
+                    FontSize="18"
+                    FontAttributes="Bold"
+                    CornerRadius="14"
+                    HeightRequest="56"
+                    Margin="0,16,0,10"
+                    Clicked="OnDecolarClicked" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

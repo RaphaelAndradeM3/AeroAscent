@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:render="clr-namespace:AeroAscent.Apresentacao.MAUI.Renderizadores"
+             x:Class="AeroAscent.Apresentacao.MAUI.Views.PaginaVoo"
+             Title="Simulação de Voo"
+             BackgroundColor="#000000"
+             NavigationPage.HasNavigationBar="False">
+
+    <Grid>
+        <!-- 1. Canvas 2D acelerado por hardware para renderização do mundo -->
+        <GraphicsView x:Name="VisualizadorGrafico"
+                      HorizontalOptions="Fill"
+                      VerticalOptions="Fill" />
+
+        <!-- 2. Overlay de Lançamento da Catapulta (Fase de Preparação) -->
+        <Border x:Name="PainelCatapulta"
+                HorizontalOptions="Center"
+                VerticalOptions="Center"
+                BackgroundColor="#1E293B"
+                StrokeShape="RoundRectangle 20"
+                Stroke="#3B82F6"
+                StrokeThickness="2"
+                Padding="24"
+                WidthRequest="340">
+            <VerticalStackLayout Spacing="16" HorizontalOptions="Center">
+                <Label Text="🎯 LANÇAMENTO INICIAL" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center" />
+                <Label Text="Acerte o medidor na zona máxima para voar mais longe!" FontSize="12" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
+
+                <!-- Barra de Força Oscilante -->
+                <Grid HeightRequest="24">
+                    <ProgressBar x:Name="BarraForcaCatapulta" Progress="0.5" ProgressColor="#10B981" HeightRequest="16" />
+                </Grid>
+
+                <Label x:Name="LabelStatusForca" Text="Zona Ideal: 80% - 95%" FontSize="13" FontAttributes="Bold" TextColor="#FCD34D" HorizontalTextAlignment="Center" />
+
+                <Button x:Name="BtnDisparar"
+                        Text="🚀 DISPARAR CATAPULTA!"
+                        BackgroundColor="#EF4444"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        CornerRadius="12"
+                        HeightRequest="50"
+                        Clicked="OnDispararCatapultaClicked" />
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- 3. HUD de Voo em Tempo Real (Fase de Voo Ativo) -->
+        <Grid x:Name="PainelHUDVoo" IsVisible="False" RowDefinitions="Auto, *, Auto" Padding="16">
+
+            <!-- Barra Superior de Telemetria -->
+            <Border Grid.Row="0" BackgroundColor="#0F172ACC" StrokeShape="RoundRectangle 16" Stroke="#334155" Padding="14,10">
+                <Grid ColumnDefinitions="*, *, *, *, Auto" ColumnSpacing="10">
+                    <!-- Distância -->
+                    <VerticalStackLayout Grid.Column="0">
+                        <Label Text="DISTÂNCIA" FontSize="10" TextColor="#94A3B8" />
+                        <Label x:Name="LabelDistancia" Text="0 m" FontSize="16" FontAttributes="Bold" TextColor="White" />
+                    </VerticalStackLayout>
+
+                    <!-- Altitude -->
+                    <VerticalStackLayout Grid.Column="1">
+                        <Label Text="ALTITUDE" FontSize="10" TextColor="#94A3B8" />
+                        <Label x:Name="LabelAltitude" Text="0 m" FontSize="16" FontAttributes="Bold" TextColor="#38BDF8" />
+                    </VerticalStackLayout>
+
+                    <!-- Velocidade -->
+                    <VerticalStackLayout Grid.Column="2">
+                        <Label Text="VELOCIDADE" FontSize="10" TextColor="#94A3B8" />
+                        <Label x:Name="LabelVelocidade" Text="0 km/h" FontSize="16" FontAttributes="Bold" TextColor="#34D399" />
+                    </VerticalStackLayout>
+
+                    <!-- Combustível -->
+                    <VerticalStackLayout Grid.Column="3">
+                        <Label Text="COMBUSTÍVEL" FontSize="10" TextColor="#94A3B8" />
+                        <ProgressBar x:Name="BarraCombustivel" Progress="1.0" ProgressColor="#F59E0B" HeightRequest="6" Margin="0,4,0,0" />
+                    </VerticalStackLayout>
+
+                    <!-- Moedas Coletadas -->
+                    <Border Grid.Column="4" BackgroundColor="#1E293B" StrokeShape="RoundRectangle 12" Stroke="#F59E0B" Padding="10,4" VerticalOptions="Center">
+                        <Label x:Name="LabelMoedasColetadas" Text="💰 +0" FontSize="14" FontAttributes="Bold" TextColor="#FCD34D" />
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- Notificação comemorativa de novo recorde -->
+            <Border x:Name="BadgeNovoRecorde" Grid.Row="0" IsVisible="False" HorizontalOptions="Center" VerticalOptions="End" BackgroundColor="#D97706" StrokeShape="RoundRectangle 16" Padding="16,6" Margin="0,55,0,0">
+                <Label Text="🎉 NOVO RECORDE PESSOAL! 🎉" TextColor="White" FontAttributes="Bold" FontSize="14" />
+            </Border>
+
+            <!-- Controles Táteis Inferiores (Mobile & Suporte a Toque) -->
+            <Grid x:Name="PainelControles" Grid.Row="2" ColumnDefinitions="Auto, *, Auto" Margin="0,0,0,10">
+
+                <!-- Controles de Arfagem (Subir / Descer) -->
+                <HorizontalStackLayout Grid.Column="0" Spacing="12">
+                    <Button x:Name="BtnSubir"
+                            Text="⬆️ SUBIR"
+                            BackgroundColor="#1E293BE6"
+                            BorderColor="#38BDF8"
+                            BorderWidth="2"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            CornerRadius="16"
+                            WidthRequest="100"
+                            HeightRequest="70"
+                            Pressed="OnSubirPressed"
+                            Released="OnSubirReleased" />
+
+                    <Button x:Name="BtnDescer"
+                            Text="⬇️ DESCER"
+                            BackgroundColor="#1E293BE6"
+                            BorderColor="#38BDF8"
+                            BorderWidth="2"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            CornerRadius="16"
+                            WidthRequest="100"
+                            HeightRequest="70"
+                            Pressed="OnDescerPressed"
+                            Released="OnDescerReleased" />
+                </HorizontalStackLayout>
+
+                <!-- Atalhos de Teclado no Centro -->
+                <Label Grid.Column="1"
+                       Text="Dica: No Windows use [W] / [S] para Inclinação e [ESPAÇO] para Boost"
+                       FontSize="11"
+                       TextColor="#94A3B8"
+                       HorizontalTextAlignment="Center"
+                       VerticalOptions="Center" />
+
+                <!-- Botão de Boost / Propulsão -->
+                <Button x:Name="BtnBoost"
+                        Grid.Column="2"
+                        Text="🔥 BOOST"
+                        BackgroundColor="#DC2626"
+                        BorderColor="#F97316"
+                        BorderWidth="2"
+                        TextColor="White"
+                        FontAttributes="Bold"
+                        FontSize="18"
+                        CornerRadius="20"
+                        WidthRequest="130"
+                        HeightRequest="75"
+                        Pressed="OnBoostPressed"
+                        Released="OnBoostReleased" />
+            </Grid>
+
+        </Grid>
+    </Grid>
+
+</ContentPage>
