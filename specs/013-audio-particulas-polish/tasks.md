@@ -86,8 +86,8 @@
 
 **Purpose**: Verificações de conformidade com a Constituição, documentação XML integral em pt-BR e validação global da suíte de testes.
 
-- [ ] T019 [P] Revisar documentação XML integral em pt-BR em todos os tipos novos de Domínio, Aplicação e Infraestrutura em src/
-- [ ] T020 Executar validação completa do quickstart.md e suíte global de testes via dotnet test AeroAscent.slnx
+- [X] T019 [P] Revisar documentação XML integral em pt-BR em todos os tipos novos de Domínio, Aplicação e Infraestrutura em src/
+- [X] T020 Executar validação completa do quickstart.md e suíte global de testes via dotnet test AeroAscent.slnx
 
 ---
 
