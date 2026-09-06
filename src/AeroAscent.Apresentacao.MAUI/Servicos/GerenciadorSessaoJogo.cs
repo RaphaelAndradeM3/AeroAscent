@@ -86,7 +86,7 @@ public sealed class GerenciadorSessaoJogo
     /// </summary>
     public async Task InicializarAsync()
     {
-        _progresso = await _repositorioProgresso.CarregarProgressoAsync();
+        _progresso = await _repositorioProgresso.CarregarProgressoAsync() ?? ProgressoJogador.CriarNovo();
     }
 
     /// <summary>
@@ -94,7 +94,7 @@ public sealed class GerenciadorSessaoJogo
     /// </summary>
     public void PrepararNovoVoo()
     {
-        if (_progresso == null) return;
+        _progresso ??= ProgressoJogador.CriarNovo();
 
         // Recicla coletáveis anteriores
         for (int i = 0; i < _coletaveisAtivos.Count; i++)
@@ -122,7 +122,12 @@ public sealed class GerenciadorSessaoJogo
     {
         if (_vooAtual == null)
         {
-            return ResultadoLancamento.CriarFalha("Voo não inicializado.");
+            PrepararNovoVoo();
+        }
+
+        if (_vooAtual == null)
+        {
+            return ResultadoLancamento.CriarFalha("Não foi possível inicializar a sessão de voo.");
         }
 
         var param = new ParametrosLancamento(precisao0a1, 25f);

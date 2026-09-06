@@ -74,6 +74,11 @@ public partial class PaginaVoo : ContentPage, IVisaoHUDVoo
     {
         base.OnAppearing();
 
+        if (_gerenciadorSessao.VooAtual == null)
+        {
+            _gerenciadorSessao.PrepararNovoVoo();
+        }
+
         var recorde = _gerenciadorSessao.Progresso?.RecordeDistanciaMetros ?? 0f;
         _drawable.RecordeDistancia = recorde;
         _drawable.EstadoAeronave = _gerenciadorSessao.EstadoFisico;
@@ -111,6 +116,11 @@ public partial class PaginaVoo : ContentPage, IVisaoHUDVoo
             PainelCatapulta.IsVisible = false;
             PainelHUDVoo.IsVisible = true;
             _drawable.StatusAtual = StatusVoo.EmVoo;
+        }
+        else
+        {
+            LabelStatusForca.Text = $"⚠️ {resultado.MensagemErro}";
+            LabelStatusForca.TextColor = Color.FromArgb("#EF4444");
         }
     }
 

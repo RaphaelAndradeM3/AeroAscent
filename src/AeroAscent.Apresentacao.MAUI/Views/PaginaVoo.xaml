@@ -10,11 +10,14 @@
     <Grid>
         <!-- 1. Canvas 2D acelerado por hardware para renderização do mundo -->
         <GraphicsView x:Name="VisualizadorGrafico"
+                      InputTransparent="True"
+                      ZIndex="0"
                       HorizontalOptions="Fill"
                       VerticalOptions="Fill" />
 
         <!-- 2. Overlay de Lançamento da Catapulta (Fase de Preparação) -->
         <Border x:Name="PainelCatapulta"
+                ZIndex="10"
                 HorizontalOptions="Center"
                 VerticalOptions="Center"
                 BackgroundColor="#1E293B"
@@ -47,7 +50,7 @@
         </Border>
 
         <!-- 3. HUD de Voo em Tempo Real (Fase de Voo Ativo) -->
-        <Grid x:Name="PainelHUDVoo" IsVisible="False" RowDefinitions="Auto, *, Auto" Padding="16">
+        <Grid x:Name="PainelHUDVoo" ZIndex="10" IsVisible="False" RowDefinitions="Auto, *, Auto" Padding="16">
 
             <!-- Barra Superior de Telemetria -->
             <Border Grid.Row="0" BackgroundColor="#0F172ACC" StrokeShape="RoundRectangle 16" Stroke="#334155" Padding="14,10">
