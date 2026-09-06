@@ -34,13 +34,13 @@
 
 ### Testes da User Story 1
 
-- [ ] T007 [P] [US1] Criar testes unitários para inicialização do HUD e projeção exata de telemetria (distância, altitude, velocidade, combustível, moedas) em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorHUDVooTestes.cs`
-- [ ] T008 [P] [US1] Criar testes unitários para verificação de quebra de recorde histórico e disparo único de notificação comemorativa em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorHUDVooTestes.cs`
-- [ ] T009 [P] [US1] Criar testes unitários comprovando que o ciclo de atualização de telemetria não aloca memória no heap (`GC Alloc = 0 bytes`) em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorHUDVooTestes.cs`
+- [X] T007 [P] [US1] Criar testes unitários para inicialização do HUD e projeção exata de telemetria (distância, altitude, velocidade, combustível, moedas) em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorHUDVooTestes.cs`
+- [X] T008 [P] [US1] Criar testes unitários para verificação de quebra de recorde histórico e disparo único de notificação comemorativa em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorHUDVooTestes.cs`
+- [X] T009 [P] [US1] Criar testes unitários comprovando que o ciclo de atualização de telemetria não aloca memória no heap (`GC Alloc = 0 bytes`) em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorHUDVooTestes.cs`
 
 ### Implementação da User Story 1
 
-- [ ] T010 [US1] Implementar a classe `ApresentadorHUDVoo` com suporte a inicialização, projeção de telemetria, detecção de recorde e atualização da visão passiva em `src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorHUDVoo.cs`
+- [X] T010 [US1] Implementar a classe `ApresentadorHUDVoo` com suporte a inicialização, projeção de telemetria, detecção de recorde e atualização da visão passiva em `src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorHUDVoo.cs`
 
 **Ponto de Verificação**: Telemetria do voo projetada com precisão, sem alocações de memória e com sinalização de recorde (MVP concluído).
 
