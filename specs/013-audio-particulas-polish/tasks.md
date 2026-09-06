@@ -34,13 +34,13 @@
 **Independent Test**: Disparar eventos através de `IServicoAudio`, simular loops contínuos de vento/boost e validar a modulação de pitch e teto de polifonia via testes unitários automatizados em xUnit.
 
 ### Tests for User Story 1
-- [ ] T006 [P] [US1] Criar testes unitários para IServicoAudio e ServicoAudioFalso em tests/AeroAscent.Core.Aplicacao.Testes/Servicos/ServicoAudioTestes.cs
+- [X] T006 [P] [US1] Criar testes unitários para IServicoAudio e ServicoAudioFalso em tests/AeroAscent.Core.Aplicacao.Testes/Servicos/ServicoAudioTestes.cs
 
 ### Implementation for User Story 1
-- [ ] T007 [US1] Implementar lógica de registro e despacho de eventos sonoros e música tema em tests/AeroAscent.Core.Aplicacao.Testes/Fixtures/ServicoAudioFalso.cs
-- [ ] T008 [US1] Implementar controle na stack dos loops contínuos de vento e propulsão com atenuação suave em tests/AeroAscent.Core.Aplicacao.Testes/Fixtures/ServicoAudioFalso.cs
-- [ ] T009 [US1] Implementar e testar cálculo de modulação harmônica de pitch (+0.05) e limite de polifonia em tests/AeroAscent.Core.Aplicacao.Testes/Servicos/ServicoAudioTestes.cs
-- [ ] T010 [US1] Validar testes de User Story 1 e garantir zero alocação de memória no heap em tests/AeroAscent.Core.Aplicacao.Testes/Servicos/ServicoAudioTestes.cs
+- [X] T007 [US1] Implementar lógica de registro e despacho de eventos sonoros e música tema em tests/AeroAscent.Core.Aplicacao.Testes/Fixtures/ServicoAudioFalso.cs
+- [X] T008 [US1] Implementar controle na stack dos loops contínuos de vento e propulsão com atenuação suave em tests/AeroAscent.Core.Aplicacao.Testes/Fixtures/ServicoAudioFalso.cs
+- [X] T009 [US1] Implementar e testar cálculo de modulação harmônica de pitch (+0.05) e limite de polifonia em tests/AeroAscent.Core.Aplicacao.Testes/Servicos/ServicoAudioTestes.cs
+- [X] T010 [US1] Validar testes de User Story 1 e garantir zero alocação de memória no heap em tests/AeroAscent.Core.Aplicacao.Testes/Servicos/ServicoAudioTestes.cs
 
 **Checkpoint**: User Story 1 concluída, testada e funcional de forma independente como MVP.
 
