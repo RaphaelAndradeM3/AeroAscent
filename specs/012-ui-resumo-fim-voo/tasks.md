@@ -52,11 +52,11 @@
 **Independent Test**: Apresentar um voo com `EhNovoRecordeDistancia = true` ou `EhNovoRecordeAltitude = true` e validar a ativação do banner de recorde e confetes no modelo visual; validar ausência em voos comuns.
 
 ### Tests for User Story 2
-- [ ] T010 [P] [US2] Adicionar testes unitários para detecção e ativação de novo recorde pessoal no resumo em tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorResumoVooTestes.cs
+- [X] T010 [P] [US2] Adicionar testes unitários para detecção e ativação de novo recorde pessoal no resumo em tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorResumoVooTestes.cs
 
 ### Implementation for User Story 2
-- [ ] T011 [US2] Implementar lógica de agregação de recordes e acionamento de celebração festiva em src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorResumoVoo.cs
-- [ ] T012 [US2] Executar e validar testes de User Story 2 garantindo separação correta entre voos com e sem recorde em tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorResumoVooTestes.cs
+- [X] T011 [US2] Implementar lógica de agregação de recordes e acionamento de celebração festiva em src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorResumoVoo.cs
+- [X] T012 [US2] Executar e validar testes de User Story 2 garantindo separação correta entre voos com e sem recorde em tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorResumoVooTestes.cs
 
 **Checkpoint**: User Stories 1 e 2 funcionando de maneira integrada e independente.
 

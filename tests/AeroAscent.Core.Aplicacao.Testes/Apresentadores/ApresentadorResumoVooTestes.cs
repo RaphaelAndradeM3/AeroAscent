@@ -163,4 +163,35 @@ public class ApresentadorResumoVooTestes
         Assert.False(_apresentador.AnimacaoEmAndamento);
         Assert.True(_visao.BotoesNavegacaoHabilitados);
     }
+
+    [Theory]
+    [InlineData(true, false, true)]
+    [InlineData(false, true, true)]
+    [InlineData(true, true, true)]
+    [InlineData(false, false, false)]
+    public void Exibir_ComCombinacoesDeRecorde_DeveConfigurarFlagEhNovoRecordeAdequadamente(
+        bool quebrouRecordeDistancia,
+        bool quebrouRecordeAltitude,
+        bool esperadoNovoRecordeGeral)
+    {
+        // Arrange
+        var resumo = ResumoFinalizacaoVoo.Criar(
+            distanciaMetros: 250f,
+            altitudeMaximaMetros: 80f,
+            moedasPorDistancia: 25,
+            moedasPorAltitude: 4,
+            moedasColetadas: 10,
+            moedasTotalGanhas: new Moeda(39),
+            saldoTotalAtualizado: new Moeda(2000),
+            ehNovoRecordeDistancia: quebrouRecordeDistancia,
+            ehNovoRecordeAltitude: quebrouRecordeAltitude);
+
+        // Act
+        _apresentador.Exibir(in resumo);
+
+        // Assert
+        Assert.Equal(quebrouRecordeDistancia, _visao.UltimoModelo.EhNovoRecordeDistancia);
+        Assert.Equal(quebrouRecordeAltitude, _visao.UltimoModelo.EhNovoRecordeAltitude);
+        Assert.Equal(esperadoNovoRecordeGeral, _visao.UltimoModelo.EhNovoRecorde);
+    }
 }
