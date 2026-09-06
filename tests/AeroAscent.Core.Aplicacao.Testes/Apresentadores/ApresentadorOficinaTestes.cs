@@ -225,4 +225,34 @@ public class ApresentadorOficinaTestes
         Assert.Equal(2, modelo.Cartoes.First(c => c.Tipo == TipoMelhoria.Motor).NivelAtual);
         Assert.True(_visaoMock.UltimoEstadoInteracao, "A visão deve ter sido reabilitada ao final da transação.");
     }
+
+    [Fact]
+    public void SolicitarDecolagem_DeveInvocarOuvinteDoEventoAoSolicitarDecolagem()
+    {
+        // Arrange
+        using var apresentador = CriarApresentador();
+        bool eventoDisparado = false;
+        apresentador.AoSolicitarDecolagem += () => eventoDisparado = true;
+
+        // Act
+        apresentador.SolicitarDecolagem();
+
+        // Assert
+        Assert.True(eventoDisparado, "O evento AoSolicitarDecolagem deve ter sido disparado.");
+    }
+
+    [Fact]
+    public void Visao_QuandoDisparaAoClicarDecolar_DeveRepassarParaAoSolicitarDecolagemNoApresentador()
+    {
+        // Arrange
+        using var apresentador = CriarApresentador();
+        int vezesDisparado = 0;
+        apresentador.AoSolicitarDecolagem += () => vezesDisparado++;
+
+        // Act - Simula o clique do jogador no botão DECOLAR na visão passiva
+        _visaoMock.SimularCliqueDecolar();
+
+        // Assert
+        Assert.Equal(1, vezesDisparado);
+    }
 }

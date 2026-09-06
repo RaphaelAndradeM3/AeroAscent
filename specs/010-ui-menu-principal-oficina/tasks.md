@@ -75,11 +75,11 @@
 
 ### Testes da User Story 3
 
-- [ ] T016 [P] [US3] Criar testes unitários para disparo do evento `AoSolicitarDecolagem` ao receber o comando de decolagem em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorOficinaTestes.cs`
+- [X] T016 [P] [US3] Criar testes unitários para disparo do evento `AoSolicitarDecolagem` ao receber o comando de decolagem em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorOficinaTestes.cs`
 
 ### Implementação da User Story 3
 
-- [ ] T017 [US3] Implementar o método `SolicitarDecolagem()` e o evento `AoSolicitarDecolagem` na classe `ApresentadorOficina` em `src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorOficina.cs`
+- [X] T017 [US3] Implementar o método `SolicitarDecolagem()` e o evento `AoSolicitarDecolagem` na classe `ApresentadorOficina` em `src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorOficina.cs`
 
 **Ponto de Verificação**: Integração de decolagem pronta para conexão com orquestradores de cena da Unity.
 
