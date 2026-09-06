@@ -8,7 +8,7 @@
 
 **Objetivo**: Preparação das pastas de apresentação do HUD na camada de Aplicação e na suíte de testes unitários.
 
-- [ ] T001 Estruturar diretórios de contratos, DTOs e apresentadores do HUD em `src/AeroAscent.Core.Aplicacao/Contratos/`, `src/AeroAscent.Core.Aplicacao/DTOs/` e `src/AeroAscent.Core.Aplicacao/Apresentadores/`
+- [X] T001 Estruturar diretórios de contratos, DTOs e apresentadores do HUD em `src/AeroAscent.Core.Aplicacao/Contratos/`, `src/AeroAscent.Core.Aplicacao/DTOs/` e `src/AeroAscent.Core.Aplicacao/Apresentadores/`
 
 ---
 
