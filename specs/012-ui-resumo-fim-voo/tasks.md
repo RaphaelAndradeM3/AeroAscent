@@ -34,12 +34,12 @@
 **Independent Test**: Simular a finalização de um voo com 34 moedas ganhas e verificar que a tela exibe valores formatados em pt-BR, executa a animação bloqueando navegação e permite concluir instantaneamente via toque.
 
 ### Tests for User Story 1
-- [ ] T006 [P] [US1] Criar testes unitários para formatação do modelo visual, contagem de moedas e pulo da animação em tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorResumoVooTestes.cs
+- [X] T006 [P] [US1] Criar testes unitários para formatação do modelo visual, contagem de moedas e pulo da animação em tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorResumoVooTestes.cs
 
 ### Implementation for User Story 1
-- [ ] T007 [US1] Implementar esqueleto de ApresentadorResumoVoo e projeção com formatação pt-BR em src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorResumoVoo.cs
-- [ ] T008 [US1] Implementar controle da animação de contagem de moedas, bloqueio inicial de navegação e método PularAnimacao em src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorResumoVoo.cs
-- [ ] T009 [US1] Executar e validar testes de User Story 1 assegurando zero alocação no heap em tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorResumoVooTestes.cs
+- [X] T007 [US1] Implementar esqueleto de ApresentadorResumoVoo e projeção com formatação pt-BR em src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorResumoVoo.cs
+- [X] T008 [US1] Implementar controle da animação de contagem de moedas, bloqueio inicial de navegação e método PularAnimacao em src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorResumoVoo.cs
+- [X] T009 [US1] Executar e validar testes de User Story 1 assegurando zero alocação no heap em tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorResumoVooTestes.cs
 
 **Checkpoint**: User Story 1 concluída, testada e funcional de forma independente como MVP.
 
