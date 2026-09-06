@@ -35,13 +35,13 @@
 
 ### Testes da User Story 1
 
-- [ ] T008 [P] [US1] Criar testes unitários para inicialização da oficina e projeção de exatamente 4 cartões mecânicos com dados consistentes em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorOficinaTestes.cs`
-- [ ] T009 [P] [US1] Criar testes unitários para validação de formatação de moedas em pt-BR com separador de milhar por ponto (formato `N0`, ex: `💰 1.250`) em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorOficinaTestes.cs`
-- [ ] T010 [P] [US1] Criar testes unitários para cálculo dinâmico de habilitação do botão de compra baseado na capacidade financeira do jogador em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorOficinaTestes.cs`
+- [X] T008 [P] [US1] Criar testes unitários para inicialização da oficina e projeção de exatamente 4 cartões mecânicos com dados consistentes em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorOficinaTestes.cs`
+- [X] T009 [P] [US1] Criar testes unitários para validação de formatação de moedas em pt-BR com separador de milhar por ponto (formato `N0`, ex: `💰 1.250`) em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorOficinaTestes.cs`
+- [X] T010 [P] [US1] Criar testes unitários para cálculo dinâmico de habilitação do botão de compra baseado na capacidade financeira do jogador em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorOficinaTestes.cs`
 
 ### Implementação da User Story 1
 
-- [ ] T011 [US1] Implementar a classe `ApresentadorOficina` com suporte a inicialização assíncrona, consulta de catálogo e atualização da visão passiva em `src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorOficina.cs`
+- [X] T011 [US1] Implementar a classe `ApresentadorOficina` com suporte a inicialização assíncrona, consulta de catálogo e atualização da visão passiva em `src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorOficina.cs`
 
 **Ponto de Verificação**: Oficina carrega e renderiza perfeitamente o estado inicial do jogador com visualização e formatação corretas (MVP concluído).
 
