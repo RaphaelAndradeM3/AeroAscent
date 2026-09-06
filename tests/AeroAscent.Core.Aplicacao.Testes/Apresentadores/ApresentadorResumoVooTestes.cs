@@ -194,4 +194,149 @@ public class ApresentadorResumoVooTestes
         Assert.Equal(quebrouRecordeAltitude, _visao.UltimoModelo.EhNovoRecordeAltitude);
         Assert.Equal(esperadoNovoRecordeGeral, _visao.UltimoModelo.EhNovoRecorde);
     }
+
+    [Fact]
+    public void SimularCliqueOficina_AposConclusaoAnimacao_DeveDispararEventoEOcultarTela()
+    {
+        // Arrange
+        var resumo = ResumoFinalizacaoVoo.Criar(
+            distanciaMetros: 100f,
+            altitudeMaximaMetros: 30f,
+            moedasPorDistancia: 10,
+            moedasPorAltitude: 1,
+            moedasColetadas: 5,
+            moedasTotalGanhas: new Moeda(16),
+            saldoTotalAtualizado: new Moeda(800),
+            ehNovoRecordeDistancia: false,
+            ehNovoRecordeAltitude: false);
+
+        _apresentador.Exibir(in resumo);
+        _apresentador.ConcluirAnimacao();
+
+        bool eventoDisparado = false;
+        _apresentador.AoSolicitarIrParaOficina += () => eventoDisparado = true;
+
+        // Act
+        _visao.SimularCliqueOficina();
+
+        // Assert
+        Assert.True(eventoDisparado);
+        Assert.True(_visao.TelaOcultada);
+        Assert.Equal(1, _visao.ContadorOcultacoes);
+    }
+
+    [Fact]
+    public void SimularCliqueVoarNovamente_AposConclusaoAnimacao_DeveDispararEventoEOcultarTela()
+    {
+        // Arrange
+        var resumo = ResumoFinalizacaoVoo.Criar(
+            distanciaMetros: 100f,
+            altitudeMaximaMetros: 30f,
+            moedasPorDistancia: 10,
+            moedasPorAltitude: 1,
+            moedasColetadas: 5,
+            moedasTotalGanhas: new Moeda(16),
+            saldoTotalAtualizado: new Moeda(800),
+            ehNovoRecordeDistancia: false,
+            ehNovoRecordeAltitude: false);
+
+        _apresentador.Exibir(in resumo);
+        _apresentador.ConcluirAnimacao();
+
+        bool eventoDisparado = false;
+        _apresentador.AoSolicitarVoarNovamente += () => eventoDisparado = true;
+
+        // Act
+        _visao.SimularCliqueVoarNovamente();
+
+        // Assert
+        Assert.True(eventoDisparado);
+        Assert.True(_visao.TelaOcultada);
+        Assert.Equal(1, _visao.ContadorOcultacoes);
+    }
+
+    [Fact]
+    public void SimularCliqueOficina_DuranteAnimacao_DeveApenasPularAnimacaoESoNavegarNoSegundoClique()
+    {
+        // Arrange
+        var resumo = ResumoFinalizacaoVoo.Criar(
+            distanciaMetros: 100f,
+            altitudeMaximaMetros: 30f,
+            moedasPorDistancia: 10,
+            moedasPorAltitude: 1,
+            moedasColetadas: 5,
+            moedasTotalGanhas: new Moeda(16),
+            saldoTotalAtualizado: new Moeda(800),
+            ehNovoRecordeDistancia: false,
+            ehNovoRecordeAltitude: false);
+
+        _apresentador.Exibir(in resumo);
+
+        int contagemDisparos = 0;
+        _apresentador.AoSolicitarIrParaOficina += () => contagemDisparos++;
+
+        // Act 1: Primeiro clique durante a animação
+        _visao.SimularCliqueOficina();
+
+        // Assert 1: Não deve navegar, apenas concluir a animação
+        Assert.Equal(0, contagemDisparos);
+        Assert.False(_visao.TelaOcultada);
+        Assert.False(_apresentador.AnimacaoEmAndamento);
+        Assert.Equal(1, _visao.ContadorConclusoesAnimacao);
+
+        // Act 2: Segundo clique agora com animação já concluída
+        _visao.SimularCliqueOficina();
+
+        // Assert 2: Agora sim deve navegar e ocultar a tela
+        Assert.Equal(1, contagemDisparos);
+        Assert.True(_visao.TelaOcultada);
+    }
+
+    [Fact]
+    public void SimularCliqueVoarNovamente_DuranteAnimacao_DeveApenasPularAnimacaoESoNavegarNoSegundoClique()
+    {
+        // Arrange
+        var resumo = ResumoFinalizacaoVoo.Criar(
+            distanciaMetros: 100f,
+            altitudeMaximaMetros: 30f,
+            moedasPorDistancia: 10,
+            moedasPorAltitude: 1,
+            moedasColetadas: 5,
+            moedasTotalGanhas: new Moeda(16),
+            saldoTotalAtualizado: new Moeda(800),
+            ehNovoRecordeDistancia: false,
+            ehNovoRecordeAltitude: false);
+
+        _apresentador.Exibir(in resumo);
+
+        int contagemDisparos = 0;
+        _apresentador.AoSolicitarVoarNovamente += () => contagemDisparos++;
+
+        // Act 1: Primeiro clique durante a animação
+        _visao.SimularCliqueVoarNovamente();
+
+        // Assert 1: Não navega, apenas encerra a contagem
+        Assert.Equal(0, contagemDisparos);
+        Assert.False(_visao.TelaOcultada);
+        Assert.False(_apresentador.AnimacaoEmAndamento);
+        Assert.Equal(1, _visao.ContadorConclusoesAnimacao);
+
+        // Act 2: Segundo clique com animação concluída
+        _visao.SimularCliqueVoarNovamente();
+
+        // Assert 2: Navega e oculta a tela
+        Assert.Equal(1, contagemDisparos);
+        Assert.True(_visao.TelaOcultada);
+    }
+
+    [Fact]
+    public void Ocultar_ChamadaDireta_DeveComandarVisaoParaOcultar()
+    {
+        // Act
+        _apresentador.Ocultar();
+
+        // Assert
+        Assert.True(_visao.TelaOcultada);
+        Assert.Equal(1, _visao.ContadorOcultacoes);
+    }
 }

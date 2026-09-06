@@ -69,12 +69,12 @@
 **Independent Test**: Simular cliques nos botões de navegação, verificando o disparo dos eventos C# correspondentes, a proteção contra avanço prematuro durante a animação e o fechamento da tela via `Ocultar()`.
 
 ### Tests for User Story 3
-- [ ] T013 [P] [US3] Adicionar testes unitários para eventos de navegação pós-voo e interceptação de clique durante animação em tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorResumoVooTestes.cs
+- [X] T013 [P] [US3] Adicionar testes unitários para eventos de navegação pós-voo e interceptação de clique durante animação em tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorResumoVooTestes.cs
 
 ### Implementation for User Story 3
-- [ ] T014 [US3] Implementar inscrição de eventos da visão e disparo de AoSolicitarIrParaOficina e AoSolicitarVoarNovamente em src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorResumoVoo.cs
-- [ ] T015 [US3] Implementar método Ocultar e proteção contra múltiplos disparos em src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorResumoVoo.cs
-- [ ] T016 [US3] Executar e validar testes de User Story 3 garantindo cobertura completa do ciclo de navegação em tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorResumoVooTestes.cs
+- [X] T014 [US3] Implementar inscrição de eventos da visão e disparo de AoSolicitarIrParaOficina e AoSolicitarVoarNovamente em src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorResumoVoo.cs
+- [X] T015 [US3] Implementar método Ocultar e proteção contra múltiplos disparos em src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorResumoVoo.cs
+- [X] T016 [US3] Executar e validar testes de User Story 3 garantindo cobertura completa do ciclo de navegação em tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorResumoVooTestes.cs
 
 **Checkpoint**: Todas as histórias de usuário (US1, US2 e US3) implementadas e testadas independentemente.
 
