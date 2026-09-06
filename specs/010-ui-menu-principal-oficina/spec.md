@@ -7,6 +7,18 @@
 
 ---
 
+## Clarifications
+
+### Session 2026-09-05
+
+- Q: Qual padrão de apresentação deve ser adotado para a interface da Oficina e Menu Principal para assegurar testabilidade automatizada e desacoplamento do Unity? → A: Model-View-Presenter (MVP) com Presenter puro em C# (.NET Standard 2.1) e Visão passiva implementando interface C# (`IVisaoOficina`), permitindo 100% de cobertura de testes de unidade em xUnit sem acoplamento com a engine Unity.
+- Q: Como o cartão de melhoria e o botão de compra devem se comportar visualmente quando um componente atinge o nível máximo (10/10)? → A: O botão de compra permanece no layout com estado desabilitado exibindo o texto "MÁXIMO" (sem valor de moedas), o nível exibe "Nível 10 (MAX)" e a barra de progresso atinge 100% preenchida com estilo comemorativo de destaque.
+- Q: Como o apresentador e a visão devem gerenciar cliques rápidos consecutivos (spam click) nos botões de compra para evitar reentrância e compras duplicadas indesejadas? → A: Bloqueio de reentrância por flag no Presenter acompanhado de desabilitação temporária da interação na visão (`IVisaoOficina.DefinirInteracaoHabilitada(false)`) durante o `await` da transação assíncrona, restaurando o estado calculado imediatamente após o salvamento.
+- Q: Qual formato de exibição numérica deve ser adotado para o saldo de moedas e os custos dos upgrades na interface? → A: Padrão pt-BR integral com separador de milhar por ponto (formato `N0` com `CultureInfo("pt-BR")`, ex: `1.250`, `15.000`), garantindo acessibilidade familiar e conformidade com o idioma oficial sem abreviações em inglês (k/M).
+- Q: Como o apresentador (`ApresentadorOficina`) deve sinalizar e disparar o fluxo de transição para o voo ao ser acionado o botão "DECOLAR"? → A: Evento C# desacoplado no Presenter (`event Action? AoSolicitarDecolagem`), permitindo que o orquestrador de fluxo de jogo da Unity assine a solicitação, execute a interpolação suave da câmera do hangar e inicie o lançamento.
+
+---
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Visualização e Navegação na Oficina / Hangar (Priority: P1)
@@ -51,7 +63,7 @@ Como jogador, ao pressionar o botão "DECOLAR", desejo que o jogo transite suave
 
 ### Edge Cases
 
-- Toques múltiplos ultra-rápidos (*spam click*) no botão de compra: a UI deve debouncear e processar cada compra sequencialmente sem duplicar débitos.
+- **Cliques ultra-rápidos e concorrentes (*spam click*) no botão de compra**: O apresentador bloqueia reentrância via flag interna e desativa os botões na visão até a conclusão do `SalvarProgressoAsync`, garantindo que nenhuma transação duplicada seja enviada ou processada.
 - Troca de idioma ou valores numéricos grandes: a interface deve suportar formatação limpa sem quebrar layout.
 - Falha na leitura do progresso: a UI deve exibir mensagem amigável sem travar em tela preta.
 
@@ -61,11 +73,11 @@ Como jogador, ao pressionar o botão "DECOLAR", desejo que o jogo transite suave
 
 ### Functional Requirements
 
-- **FR-001**: O sistema DEVE fornecer o controlador de apresentação `ControladorUIOficina` (ou `MenuPrincipalPresenter`) desacoplado de lógica de negócio direta, interagindo exclusivamente através de Casos de Uso.
-- **FR-002**: A interface DEVE exibir o saldo total de moedas no canto superior com formatação clara (ex: `💰 1.250`).
-- **FR-003**: A interface DEVE renderizar 4 cartões de melhoria contendo: ícone temático, nome da melhoria, nível numérico atual, barra visual de progresso e botão de ação com o custo da próxima evolução.
-- **FR-004**: O botão de compra DEVE ser dinamicamente ativado/desativado baseado na capacidade financeira do jogador (`Saldo >= Custo`).
-- **FR-005**: O botão principal "DECOLAR" DEVE disparar a transição para a cena/fase de voo.
+- **FR-001**: O sistema DEVE fornecer a arquitetura Model-View-Presenter (MVP) com o apresentador `ApresentadorOficina` puro em C# (.NET Standard 2.1) desacoplado de `UnityEngine`, interagindo exclusivamente através de casos de uso (`IConsultarOficinaCasoDeUso`, `IComprarMelhoriaCasoDeUso`) e notificando a visão passiva através da interface `IVisaoOficina`.
+- **FR-002**: A interface DEVE exibir o saldo total de moedas no canto superior com formatação explícita em pt-BR utilizando separador de milhar por ponto (ex: `💰 1.250`, `💰 15.000`), sem sufixos em língua inglesa.
+- **FR-003**: A interface DEVE renderizar 4 cartões de melhoria contendo: ícone temático, nome da melhoria, nível numérico atual, barra visual de progresso (0% a 100%) e botão de ação com o custo da próxima evolução; quando no nível máximo (10), deve exibir "Nível 10 (MAX)" com barra a 100%.
+- **FR-004**: O botão de compra DEVE ser dinamicamente ativado/desativado baseado na capacidade financeira do jogador (`Saldo >= Custo`); se o componente já estiver no nível máximo, o botão DEVE permanecer visível porém desabilitado exibindo o texto "MÁXIMO" sem custo numérico.
+- **FR-005**: O botão principal "DECOLAR" DEVE disparar o evento C# desacoplado `AoSolicitarDecolagem` no `ApresentadorOficina`, permitindo ao orquestrador da Unity executar a transição de câmera e carregar a rampa de lançamento.
 
 ### Key Entities
 
