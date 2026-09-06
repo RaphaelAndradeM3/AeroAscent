@@ -8,7 +8,7 @@
 
 **Purpose**: Estruturação inicial do namespace e organização de diretórios do projeto para a interface de resumo de voo.
 
-- [ ] T001 [P] Configurar estrutura de pastas e namespaces para resumo de voo em src/AeroAscent.Core.Aplicacao/Apresentadores/ e tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/
+- [X] T001 [P] Configurar estrutura de pastas e namespaces para resumo de voo em src/AeroAscent.Core.Aplicacao/Apresentadores/ e tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/
 
 ---
 
@@ -18,10 +18,10 @@
 
 **⚠️ CRITICAL**: Nenhuma história de usuário pode ser iniciada antes da conclusão desta fase.
 
-- [ ] T002 [P] Implementar DTO imutável na stack ModeloVisualResumoVoo em src/AeroAscent.Core.Aplicacao/DTOs/ModeloVisualResumoVoo.cs
-- [ ] T003 [P] Implementar contrato de visão passiva IVisaoResumoVoo em src/AeroAscent.Core.Aplicacao/Contratos/IVisaoResumoVoo.cs
-- [ ] T004 [P] Implementar contrato do apresentador IApresentadorResumoVoo em src/AeroAscent.Core.Aplicacao/Contratos/IApresentadorResumoVoo.cs
-- [ ] T005 [P] Criar fixture VisaoResumoVooFalsa (Spy/Mock) para testes unitários em tests/AeroAscent.Core.Aplicacao.Testes/Fixtures/VisaoResumoVooFalsa.cs
+- [X] T002 [P] Implementar DTO imutável na stack ModeloVisualResumoVoo em src/AeroAscent.Core.Aplicacao/DTOs/ModeloVisualResumoVoo.cs
+- [X] T003 [P] Implementar contrato de visão passiva IVisaoResumoVoo em src/AeroAscent.Core.Aplicacao/Contratos/IVisaoResumoVoo.cs
+- [X] T004 [P] Implementar contrato do apresentador IApresentadorResumoVoo em src/AeroAscent.Core.Aplicacao/Contratos/IApresentadorResumoVoo.cs
+- [X] T005 [P] Criar fixture VisaoResumoVooFalsa (Spy/Mock) para testes unitários em tests/AeroAscent.Core.Aplicacao.Testes/Fixtures/VisaoResumoVooFalsa.cs
 
 **Checkpoint**: Infraestrutura e contratos base prontos — a implementação das histórias de usuário pode começar.
 
