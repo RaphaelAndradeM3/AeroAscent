@@ -16,11 +16,11 @@
 
 **Objetivo**: Criação do DTO imutável de telemetria na stack (`GC Alloc = 0 bytes`), contratos desacoplados da visão/apresentador e fixture de testes.
 
-- [ ] T002 [P] Implementar o DTO imutável `TelemetriaHUDDTO` em `src/AeroAscent.Core.Aplicacao/DTOs/TelemetriaHUDDTO.cs`
-- [ ] T003 [P] Implementar o contrato da visão passiva `IVisaoHUDVoo` em `src/AeroAscent.Core.Aplicacao/Contratos/IVisaoHUDVoo.cs`
-- [ ] T004 [P] Implementar o contrato do apresentador `IApresentadorHUDVoo` em `src/AeroAscent.Core.Aplicacao/Contratos/IApresentadorHUDVoo.cs`
-- [ ] T005 [P] Implementar a fixture/mock `VisaoHUDVooFalsa` para testes em `tests/AeroAscent.Core.Aplicacao.Testes/Fixtures/VisaoHUDVooFalsa.cs`
-- [ ] T006 [P] Criar testes unitários de integridade e imutabilidade para `TelemetriaHUDDTO` em `tests/AeroAscent.Core.Aplicacao.Testes/DTOs/TelemetriaHUDDTOTestes.cs`
+- [X] T002 [P] Implementar o DTO imutável `TelemetriaHUDDTO` em `src/AeroAscent.Core.Aplicacao/DTOs/TelemetriaHUDDTO.cs`
+- [X] T003 [P] Implementar o contrato da visão passiva `IVisaoHUDVoo` em `src/AeroAscent.Core.Aplicacao/Contratos/IVisaoHUDVoo.cs`
+- [X] T004 [P] Implementar o contrato do apresentador `IApresentadorHUDVoo` em `src/AeroAscent.Core.Aplicacao/Contratos/IApresentadorHUDVoo.cs`
+- [X] T005 [P] Implementar a fixture/mock `VisaoHUDVooFalsa` para testes em `tests/AeroAscent.Core.Aplicacao.Testes/Fixtures/VisaoHUDVooFalsa.cs`
+- [X] T006 [P] Criar testes unitários de integridade e imutabilidade para `TelemetriaHUDDTO` em `tests/AeroAscent.Core.Aplicacao.Testes/DTOs/TelemetriaHUDDTOTestes.cs`
 
 **Ponto de Verificação**: Contratos e DTOs prontos, testados e disponíveis para a implementação do apresentador de voo.
 
