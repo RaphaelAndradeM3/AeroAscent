@@ -54,14 +54,14 @@
 
 ### Testes da User Story 2
 
-- [ ] T011 [P] [US2] Criar testes unitários para comandos contínuos de inclinação (subir, descer, neutro e anulação de multitoque conflitante) e geração de `ParametrosControlePiloto` em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorHUDVooTestes.cs`
-- [ ] T012 [P] [US2] Criar testes unitários para sustentação de Boost, cancelamento automático e desativação do botão na visão ao esgotar combustível em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorHUDVooTestes.cs`
-- [ ] T013 [P] [US2] Criar testes unitários para acionamento de pausa (`SolicitarPausa`), emissão de evento e liberação imediata de comandos sustentados em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorHUDVooTestes.cs`
-- [ ] T014 [P] [US2] Criar testes unitários para detecção de término de voo (`StatusVoo.Pousado` e `StatusVoo.Colidido`) com comando de ocultação imediata dos controles táteis em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorHUDVooTestes.cs`
+- [X] T011 [P] [US2] Criar testes unitários para comandos contínuos de inclinação (subir, descer, neutro e anulação de multitoque conflitante) e geração de `ParametrosControlePiloto` em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorHUDVooTestes.cs`
+- [X] T012 [P] [US2] Criar testes unitários para sustentação de Boost, cancelamento automático e desativação do botão na visão ao esgotar combustível em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorHUDVooTestes.cs`
+- [X] T013 [P] [US2] Criar testes unitários para acionamento de pausa (`SolicitarPausa`), emissão de evento e liberação imediata de comandos sustentados em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorHUDVooTestes.cs`
+- [X] T014 [P] [US2] Criar testes unitários para detecção de término de voo (`StatusVoo.Pousado` e `StatusVoo.Colidido`) com comando de ocultação imediata dos controles táteis em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorHUDVooTestes.cs`
 
 ### Implementação da User Story 2
 
-- [ ] T015 [US2] Implementar na classe `ApresentadorHUDVoo` os métodos `IniciarSubida`, `PararSubida`, `IniciarDescida`, `PararDescida`, `IniciarBoost`, `PararBoost`, `SolicitarPausa`, `ObterComandosControle` e o evento `AoSolicitarPausa` em `src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorHUDVoo.cs`
+- [X] T015 [US2] Implementar na classe `ApresentadorHUDVoo` os métodos `IniciarSubida`, `PararSubida`, `IniciarDescida`, `PararDescida`, `IniciarBoost`, `PararBoost`, `SolicitarPausa`, `ObterComandosControle` e o evento `AoSolicitarPausa` em `src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorHUDVoo.cs`
 
 **Ponto de Verificação**: Controles táteis e de teclado totalmente integrados, com tratamento de combustível, pausa e ocultação no pouso.
 

@@ -142,4 +142,142 @@ public class ApresentadorHUDVooTestes
         // Assert: SC-001 - Zero alocação de lixo no heap
         Assert.Equal(0L, diferencaBytes);
     }
+
+    [Fact]
+    public void ComandosInclinacao_SubirDescerENeutro_DeveGerarParametrosControleEsperados()
+    {
+        // Act & Assert 1: Inicialmente neutro
+        var controle = _apresentador.ObterComandosControle();
+        Assert.Equal(0.0f, controle.IntensidadePitch);
+        Assert.False(controle.TemComandoAtivo);
+
+        // Act & Assert 2: Iniciar subida
+        _apresentador.IniciarSubida();
+        controle = _apresentador.ObterComandosControle();
+        Assert.Equal(1.0f, controle.IntensidadePitch);
+        Assert.True(controle.TemComandoAtivo);
+
+        // Act & Assert 3: Iniciar descida concorrente (multitoque oposto anula para neutro)
+        _apresentador.IniciarDescida();
+        controle = _apresentador.ObterComandosControle();
+        Assert.Equal(0.0f, controle.IntensidadePitch);
+
+        // Act & Assert 4: Parar subida (permanece apenas descendo)
+        _apresentador.PararSubida();
+        controle = _apresentador.ObterComandosControle();
+        Assert.Equal(-1.0f, controle.IntensidadePitch);
+
+        // Act & Assert 5: Parar descida (retorna a neutro)
+        _apresentador.PararDescida();
+        controle = _apresentador.ObterComandosControle();
+        Assert.Equal(0.0f, controle.IntensidadePitch);
+    }
+
+    [Fact]
+    public void EventosDaVisao_DevemAtualizarComandosDoApresentador()
+    {
+        // Act & Assert: Subida via visão
+        _visao.SimularPressionarSubida();
+        Assert.Equal(1.0f, _apresentador.ObterComandosControle().IntensidadePitch);
+
+        _visao.SimularLiberarSubida();
+        Assert.Equal(0.0f, _apresentador.ObterComandosControle().IntensidadePitch);
+
+        // Act & Assert: Descida via visão
+        _visao.SimularPressionarDescida();
+        Assert.Equal(-1.0f, _apresentador.ObterComandosControle().IntensidadePitch);
+
+        _visao.SimularLiberarDescida();
+        Assert.Equal(0.0f, _apresentador.ObterComandosControle().IntensidadePitch);
+
+        // Act & Assert: Boost via visão
+        _visao.SimularPressionarBoost();
+        Assert.True(_apresentador.ObterComandosControle().AcionarBoost);
+
+        _visao.SimularLiberarBoost();
+        Assert.False(_apresentador.ObterComandosControle().AcionarBoost);
+    }
+
+    [Fact]
+    public void Boost_QuandoCombustivelEsgotar_DeveDesativarComandoEEsmaecerBotao()
+    {
+        // Arrange
+        _apresentador.Inicializar(100f);
+        var voo = Voo.Iniciar(Aeronave.CriarPadrao());
+        voo.Decolar();
+
+        // Aeronave no ar com boost ativado
+        var estadoAr = EstadoFisicoAeronave.CriarInicial(new VetorVoo(0, 50, 100), new VetorVoo(0, 0, 30), 0f);
+        _apresentador.IniciarBoost();
+        _apresentador.Atualizar(voo, in estadoAr);
+
+        Assert.True(_apresentador.ObterComandosControle().AcionarBoost);
+        Assert.True(_visao.BoostHabilitado);
+
+        // Consome todo o combustível da aeronave
+        voo.ConsumirCombustivel(100f, out _);
+        Assert.True(voo.Combustivel.EstaVazio);
+
+        // Act: Atualização do HUD com combustível esgotado
+        _apresentador.Atualizar(voo, in estadoAr);
+
+        // Assert: Boost desativado automaticamente e botão desabilitado na visão
+        Assert.False(_apresentador.ObterComandosControle().AcionarBoost);
+        Assert.False(_visao.BoostHabilitado);
+        Assert.False(_visao.UltimaTelemetria.BoostDisponivel);
+    }
+
+    [Fact]
+    public void SolicitarPausa_DeveAlternarEstadoEmitirEventoEResetarComandosAtivos()
+    {
+        // Arrange
+        var eventoDisparado = false;
+        _apresentador.AoSolicitarPausa += () => eventoDisparado = true;
+
+        _apresentador.IniciarSubida();
+        _apresentador.IniciarBoost();
+        Assert.True(_apresentador.ObterComandosControle().AcionarBoost);
+        Assert.Equal(1.0f, _apresentador.ObterComandosControle().IntensidadePitch);
+
+        // Act 1: Pausar
+        _apresentador.SolicitarPausa();
+
+        // Assert 1: Jogo pausado, inputs resetados e neutros
+        Assert.True(_apresentador.EstaPausado);
+        Assert.True(eventoDisparado);
+        var controlePausado = _apresentador.ObterComandosControle();
+        Assert.Equal(0.0f, controlePausado.IntensidadePitch);
+        Assert.False(controlePausado.AcionarBoost);
+
+        // Tentar enviar comando durante a pausa deve ser ignorado
+        _apresentador.IniciarDescida();
+        Assert.Equal(0.0f, _apresentador.ObterComandosControle().IntensidadePitch);
+
+        // Act 2: Despausar
+        _apresentador.SolicitarPausa();
+        Assert.False(_apresentador.EstaPausado);
+    }
+
+    [Fact]
+    public void Atualizar_QuandoVooPousarOuCancelar_DeveOcultarControlesVisuais()
+    {
+        // Arrange
+        _apresentador.Inicializar(100f);
+        var voo = Voo.Iniciar(Aeronave.CriarPadrao());
+        voo.Decolar();
+        var estadoAr = EstadoFisicoAeronave.CriarInicial(new VetorVoo(0, 20, 100), new VetorVoo(0, 0, 10), 0f);
+
+        _apresentador.Atualizar(voo, in estadoAr);
+        Assert.True(_visao.ControlesVisiveis);
+
+        // Act: Pouso da aeronave
+        voo.Pousar();
+        var estadoSolo = EstadoFisicoAeronave.CriarInicial(new VetorVoo(0, 0, 150), VetorVoo.Zero, 0f);
+        _apresentador.Atualizar(voo, in estadoSolo);
+
+        // Assert: Botões táteis ocultados da interface
+        Assert.False(_visao.ControlesVisiveis);
+        Assert.False(_apresentador.ObterComandosControle().AcionarBoost);
+        Assert.Equal(0.0f, _apresentador.ObterComandosControle().IntensidadePitch);
+    }
 }
