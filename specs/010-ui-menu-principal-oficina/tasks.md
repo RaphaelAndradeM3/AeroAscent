@@ -89,9 +89,9 @@
 
 **Objetivo**: Benchmarks de performance $< 5\text{ms}$ (SC-001), garantia de zero alocação no loop, suíte completa de regressão e documentação XML integral em pt-BR.
 
-- [ ] T018 [P] Criar teste automatizado de benchmark comprovando tempo de processamento e projeção do modelo de apresentação inferior a 5 milissegundos (SC-001) em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorOficinaTestes.cs`
-- [ ] T019 Executar suíte completa de testes automatizados com `dotnet test AeroAscent.slnx` garantindo 100% de sucesso e zero regressões em toda a solução
-- [ ] T020 Revisar documentação XML (`///`) de todas as novas classes, interfaces, métodos e structs públicas em pt-BR conforme GEMINI.md e Constituição
+- [X] T018 [P] Criar teste automatizado de benchmark comprovando tempo de processamento e projeção do modelo de apresentação inferior a 5 milissegundos (SC-001) em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorOficinaTestes.cs`
+- [X] T019 Executar suíte completa de testes automatizados com `dotnet test AeroAscent.slnx` garantindo 100% de sucesso e zero regressões em toda a solução
+- [X] T020 Revisar documentação XML (`///`) de todas as novas classes, interfaces, métodos e structs públicas em pt-BR conforme GEMINI.md e Constituição
 
 ---
 

@@ -255,4 +255,24 @@ public class ApresentadorOficinaTestes
         // Assert
         Assert.Equal(1, vezesDisparado);
     }
+
+    [Fact]
+    public async Task InicializarAsync_DeveExecutarEmMenosDe5Milissegundos_SC001()
+    {
+        // Arrange
+        using var apresentador = CriarApresentador();
+
+        // Warmup
+        await apresentador.InicializarAsync();
+
+        // Act & Measure
+        var cronometro = System.Diagnostics.Stopwatch.StartNew();
+        await apresentador.InicializarAsync();
+        cronometro.Stop();
+
+        // Assert - SC-001: Tempo de processamento e projeção visual < 5ms
+        Assert.True(
+            cronometro.ElapsedMilliseconds < 5,
+            $"Tempo de processamento ({cronometro.ElapsedMilliseconds}ms) excedeu o teto estipulado de 5ms.");
+    }
 }
