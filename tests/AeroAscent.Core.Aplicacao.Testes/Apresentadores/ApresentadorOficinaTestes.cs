@@ -128,4 +128,101 @@ public class ApresentadorOficinaTestes
         Assert.True(tanque.PodeComprar);
         Assert.False(catapulta.PodeComprar);
     }
+
+    [Fact]
+    public async Task ProcessarCompraAsync_ComSaldoSuficiente_DeveEvoluirComponenteDeduzirSaldoEEmitirFeedback()
+    {
+        // Arrange - Saldo de 100 moedas, Motor nível 1 (custo 50)
+        var progresso = ProgressoJogador.CriarNovo();
+        progresso.CreditarMoedas(new Moeda(100));
+        _repositorioMock.ProgressoArmazenado = progresso;
+
+        using var apresentador = CriarApresentador();
+        await apresentador.InicializarAsync();
+
+        // Act - Compra o motor
+        await apresentador.ProcessarCompraAsync(TipoMelhoria.Motor);
+
+        // Assert
+        Assert.Equal(TipoMelhoria.Motor, _visaoMock.UltimoTipoFeedback);
+        Assert.Equal(2, _visaoMock.UltimoNivelFeedback);
+
+        var modelo = _visaoMock.UltimoModeloRecebido!.Value;
+        Assert.Equal(50, modelo.SaldoMoedas);
+        Assert.Equal("💰 50", modelo.SaldoFormatado);
+
+        var motor = modelo.Cartoes.First(c => c.Tipo == TipoMelhoria.Motor);
+        Assert.Equal(2, motor.NivelAtual);
+        Assert.Equal("Nível 2", motor.TextoNivel);
+        Assert.Equal(0.2f, motor.ProgressoNormalizado);
+    }
+
+    [Fact]
+    public async Task ProcessarCompraAsync_ComSaldoInsuficiente_DeveExibirMensagemErroNaVisaoSemTravar()
+    {
+        // Arrange - Saldo de 10 moedas, Motor custa 50
+        var progresso = ProgressoJogador.CriarNovo();
+        progresso.CreditarMoedas(new Moeda(10));
+        _repositorioMock.ProgressoArmazenado = progresso;
+
+        using var apresentador = CriarApresentador();
+        await apresentador.InicializarAsync();
+
+        // Act - Tenta comprar com saldo insuficiente
+        await apresentador.ProcessarCompraAsync(TipoMelhoria.Motor);
+
+        // Assert
+        Assert.NotNull(_visaoMock.UltimaMensagemErro);
+        Assert.Null(_visaoMock.UltimoTipoFeedback); // Nenhum feedback de sucesso
+    }
+
+    [Fact]
+    public async Task InicializarAsync_QuandoComponenteEstaNoNivelMaximo_DeveExibirSeloMaximoEBotaoDesabilitado()
+    {
+        // Arrange - Motor no nível 10
+        var progresso = ProgressoJogador.CriarNovo();
+        progresso.CreditarMoedas(new Moeda(5000));
+        progresso.Aeronave.AtualizarNivel(TipoMelhoria.Motor, 10);
+        _repositorioMock.ProgressoArmazenado = progresso;
+
+        using var apresentador = CriarApresentador();
+
+        // Act
+        await apresentador.InicializarAsync();
+
+        // Assert
+        var modelo = _visaoMock.UltimoModeloRecebido!.Value;
+        var motor = modelo.Cartoes.First(c => c.Tipo == TipoMelhoria.Motor);
+
+        Assert.True(motor.EstaNoNivelMaximo);
+        Assert.Equal("Nível 10 (MAX)", motor.TextoNivel);
+        Assert.Equal(1.0f, motor.ProgressoNormalizado);
+        Assert.Equal("MÁXIMO", motor.TextoBotao);
+        Assert.Null(motor.CustoProximoNivel);
+        Assert.False(motor.PodeComprar);
+    }
+
+    [Fact]
+    public async Task ProcessarCompraAsync_QuandoOcorreToqueDuploConcorrente_DeveBloquearReentranciaPorSpamClick()
+    {
+        // Arrange - Saldo de 100 moedas, Motor custa 50
+        var progresso = ProgressoJogador.CriarNovo();
+        progresso.CreditarMoedas(new Moeda(100));
+        _repositorioMock.ProgressoArmazenado = progresso;
+
+        using var apresentador = CriarApresentador();
+        await apresentador.InicializarAsync();
+
+        // Act - Dispara duas compras simultaneamente simulando spam click
+        var tarefa1 = apresentador.ProcessarCompraAsync(TipoMelhoria.Motor);
+        var tarefa2 = apresentador.ProcessarCompraAsync(TipoMelhoria.Motor);
+
+        await Task.WhenAll(tarefa1, tarefa2);
+
+        // Assert - Apenas uma compra deve ter sido executada com sucesso
+        var modelo = _visaoMock.UltimoModeloRecebido!.Value;
+        Assert.Equal(50, modelo.SaldoMoedas);
+        Assert.Equal(2, modelo.Cartoes.First(c => c.Tipo == TipoMelhoria.Motor).NivelAtual);
+        Assert.True(_visaoMock.UltimoEstadoInteracao, "A visão deve ter sido reabilitada ao final da transação.");
+    }
 }

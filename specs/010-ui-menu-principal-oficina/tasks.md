@@ -55,13 +55,13 @@
 
 ### Testes da User Story 2
 
-- [ ] T012 [P] [US2] Criar testes unitários para processamento reativo de compra com emissão de feedback de sucesso e recálculo da tela em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorOficinaTestes.cs`
-- [ ] T013 [P] [US2] Criar testes unitários para validação de apresentação de componente no nível máximo 10 ("Nível 10 (MAX)", barra 100%, botão "MÁXIMO" desabilitado) em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorOficinaTestes.cs`
-- [ ] T014 [P] [US2] Criar testes unitários de prevenção de concorrência (*spam click*) comprovando desativação temporária da visão e bloqueio de reentrância durante o salvamento assíncrono em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorOficinaTestes.cs`
+- [X] T012 [P] [US2] Criar testes unitários para processamento reativo de compra com emissão de feedback de sucesso e recálculo da tela em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorOficinaTestes.cs`
+- [X] T013 [P] [US2] Criar testes unitários para validação de apresentação de componente no nível máximo 10 ("Nível 10 (MAX)", barra 100%, botão "MÁXIMO" desabilitado) em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorOficinaTestes.cs`
+- [X] T014 [P] [US2] Criar testes unitários de prevenção de concorrência (*spam click*) comprovando desativação temporária da visão e bloqueio de reentrância durante o salvamento assíncrono em `tests/AeroAscent.Core.Aplicacao.Testes/Apresentadores/ApresentadorOficinaTestes.cs`
 
 ### Implementação da User Story 2
 
-- [ ] T015 [US2] Implementar na classe `ApresentadorOficina` o método `ProcessarCompraAsync`, flag `_estaProcessandoCompra`, controle de `IVisaoOficina.DefinirInteracaoHabilitada` e emissão de `IVisaoOficina.ExibirFeedbackCompra` em `src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorOficina.cs`
+- [X] T015 [US2] Implementar na classe `ApresentadorOficina` o método `ProcessarCompraAsync`, flag `_estaProcessandoCompra`, controle de `IVisaoOficina.DefinirInteracaoHabilitada` e emissão de `IVisaoOficina.ExibirFeedbackCompra` em `src/AeroAscent.Core.Aplicacao/Apresentadores/ApresentadorOficina.cs`
 
 **Ponto de Verificação**: Compra funcional, reativa, imune a toques repetidos e com tratamento completo de nível máximo.
 
