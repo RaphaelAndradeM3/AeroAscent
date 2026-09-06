@@ -71,12 +71,12 @@
 **Independent Test**: Testável alterando volumes e flags de SFX/Música em `ProgressoJogador`, persistindo e restaurando via `IRepositorioProgresso` e validando valores recuperados.
 
 ### Tests for User Story 3
-- [ ] T015 [P] [US3] Criar testes unitários de invariantes e imutabilidade de ConfiguracaoAudio em tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ConfiguracaoAudioTestes.cs
+- [X] T015 [P] [US3] Criar testes unitários de invariantes e imutabilidade de ConfiguracaoAudio em tests/AeroAscent.Core.Dominio.Testes/ObjetosDeValor/ConfiguracaoAudioTestes.cs
 
 ### Implementation for User Story 3
-- [ ] T016 [US3] Integrar ConfiguracaoAudio e método AtualizarConfiguracaoAudio no agregado ProgressoJogador em src/AeroAscent.Core.Dominio/Entidades/ProgressoJogador.cs
-- [ ] T017 [US3] Atualizar serialização e desserialização com retrocompatibilidade em src/AeroAscent.Infraestrutura/Repositorios/RepositorioProgressoJson.cs
-- [ ] T018 [US3] Executar e validar testes de persistência de áudio em tests/AeroAscent.Infraestrutura.Testes/Repositorios/RepositorioProgressoJsonTestes.cs
+- [X] T016 [US3] Integrar ConfiguracaoAudio e método AtualizarConfiguracaoAudio no agregado ProgressoJogador em src/AeroAscent.Core.Dominio/Entidades/ProgressoJogador.cs
+- [X] T017 [US3] Atualizar serialização e desserialização com retrocompatibilidade em src/AeroAscent.Infraestrutura/Repositorios/RepositorioProgressoJson.cs
+- [X] T018 [US3] Executar e validar testes de persistência de áudio em tests/AeroAscent.Infraestrutura.Testes/Repositorios/RepositorioProgressoJsonTestes.cs
 
 **Checkpoint**: Todas as histórias de usuário (US1, US2 e US3) implementadas e testadas independentemente.
 
