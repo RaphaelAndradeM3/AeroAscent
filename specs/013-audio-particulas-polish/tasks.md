@@ -8,7 +8,7 @@
 
 **Purpose**: Estruturação de diretórios, pastas de serviços e namespaces para áudio e partículas.
 
-- [ ] T001 [P] Configurar estrutura de diretórios e namespaces para áudio e configurações em src/AeroAscent.Core.Dominio/ e src/AeroAscent.Core.Aplicacao/
+- [X] T001 [P] Configurar estrutura de diretórios e namespaces para áudio e configurações em src/AeroAscent.Core.Dominio/ e src/AeroAscent.Core.Aplicacao/
 
 ---
 
@@ -18,10 +18,10 @@
 
 **⚠️ CRITICAL**: Nenhuma história de usuário pode ser iniciada antes da conclusão desta fase.
 
-- [ ] T002 [P] Implementar enum EventoAudio com os 10 gatilhos sonoros em src/AeroAscent.Core.Dominio/Enums/EventoAudio.cs
-- [ ] T003 [P] Implementar struct imutável ConfiguracaoAudio em src/AeroAscent.Core.Dominio/ObjetosDeValor/ConfiguracaoAudio.cs
-- [ ] T004 [P] Implementar contrato IServicoAudio em src/AeroAscent.Core.Aplicacao/Contratos/IServicoAudio.cs
-- [ ] T005 [P] Criar fixture ServicoAudioFalso (Spy/Mock) para testes unitários em tests/AeroAscent.Core.Aplicacao.Testes/Fixtures/ServicoAudioFalso.cs
+- [X] T002 [P] Implementar enum EventoAudio com os 10 gatilhos sonoros em src/AeroAscent.Core.Dominio/Enums/EventoAudio.cs
+- [X] T003 [P] Implementar struct imutável ConfiguracaoAudio em src/AeroAscent.Core.Dominio/ObjetosDeValor/ConfiguracaoAudio.cs
+- [X] T004 [P] Implementar contrato IServicoAudio em src/AeroAscent.Core.Aplicacao/Contratos/IServicoAudio.cs
+- [X] T005 [P] Criar fixture ServicoAudioFalso (Spy/Mock) para testes unitários em tests/AeroAscent.Core.Aplicacao.Testes/Fixtures/ServicoAudioFalso.cs
 
 **Checkpoint**: Infraestrutura e contratos base prontos — a implementação das histórias de usuário pode começar.
 
