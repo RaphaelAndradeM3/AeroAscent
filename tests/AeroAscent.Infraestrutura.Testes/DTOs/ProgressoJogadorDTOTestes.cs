@@ -84,6 +84,7 @@ public class ProgressoJogadorDTOTestes
         var progressoOriginal = ProgressoJogador.CriarNovo();
         progressoOriginal.CreditarMoedas(new Moeda(250));
         progressoOriginal.Aeronave.AtualizarNivel(TipoMelhoria.Motor, 6);
+        progressoOriginal.AtualizarConfiguracaoAudio(new ConfiguracaoAudio(0.4f, 0.3f, false, true));
         var dtoOriginal = ProgressoJogadorDTO.DoDominio(progressoOriginal);
 
         // Act
@@ -95,11 +96,52 @@ public class ProgressoJogadorDTOTestes
         Assert.Equal(dtoOriginal.Id, dtoDesserializado.Id);
         Assert.Equal(dtoOriginal.SaldoMoedas, dtoDesserializado.SaldoMoedas);
         Assert.Equal(dtoOriginal.NivelMotor, dtoDesserializado.NivelMotor);
+        Assert.Equal(0.4f, dtoDesserializado.VolumeEfeitos);
+        Assert.Equal(0.3f, dtoDesserializado.VolumeMusica);
+        Assert.False(dtoDesserializado.EfeitosAtivos);
+        Assert.True(dtoDesserializado.MusicaAtiva);
 
         var progressoReconstituido = dtoDesserializado.ParaDominio();
         Assert.Equal(progressoOriginal.Id, progressoReconstituido.Id);
         Assert.Equal(250, progressoReconstituido.SaldoMoedas.Quantidade);
         Assert.Equal(6, progressoReconstituido.Aeronave.NivelMotor);
+        Assert.Equal(0.4f, progressoReconstituido.ConfiguracaoAudio.VolumeEfeitos);
+        Assert.Equal(0.3f, progressoReconstituido.ConfiguracaoAudio.VolumeMusica);
+        Assert.False(progressoReconstituido.ConfiguracaoAudio.EfeitosAtivos);
+        Assert.True(progressoReconstituido.ConfiguracaoAudio.MusicaAtiva);
+    }
+
+    [Fact]
+    public void ParaDominio_QuandoCamposAudioForemNulos_DeveAplicarValoresPadraoDeConfiguracaoAudio()
+    {
+        // Arrange - Simulando JSON legado sem as chaves de áudio
+        var dtoLegado = new ProgressoJogadorDTO
+        {
+            VersaoSchema = 1,
+            DataHoraSalvamentoUtc = DateTime.UtcNow,
+            Id = Guid.NewGuid(),
+            SaldoMoedas = 100,
+            NivelMotor = 1,
+            NivelAerodinamica = 1,
+            NivelTanqueCombustivel = 1,
+            NivelCatapulta = 1,
+            RecordeDistanciaMetros = 50f,
+            RecordeAltitudeMetros = 20f,
+            TotalVoosRealizados = 2,
+            VolumeEfeitos = null,
+            VolumeMusica = null,
+            EfeitosAtivos = null,
+            MusicaAtiva = null
+        };
+
+        // Act
+        var progresso = dtoLegado.ParaDominio();
+
+        // Assert - Deve adotar com segurança os padrões de ConfiguracaoAudio.Padrao
+        Assert.Equal(ConfiguracaoAudio.Padrao.VolumeEfeitos, progresso.ConfiguracaoAudio.VolumeEfeitos);
+        Assert.Equal(ConfiguracaoAudio.Padrao.VolumeMusica, progresso.ConfiguracaoAudio.VolumeMusica);
+        Assert.Equal(ConfiguracaoAudio.Padrao.EfeitosAtivos, progresso.ConfiguracaoAudio.EfeitosAtivos);
+        Assert.Equal(ConfiguracaoAudio.Padrao.MusicaAtiva, progresso.ConfiguracaoAudio.MusicaAtiva);
     }
 
     [Fact]

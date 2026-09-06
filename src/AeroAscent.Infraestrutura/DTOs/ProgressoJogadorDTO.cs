@@ -80,6 +80,30 @@ public readonly record struct ProgressoJogadorDTO
     public int TotalVoosRealizados { get; init; }
 
     /// <summary>
+    /// Volume normalizado dos efeitos sonoros (0.0 a 1.0). Nulo em schemas legados.
+    /// </summary>
+    [JsonPropertyName("volumeEfeitos")]
+    public float? VolumeEfeitos { get; init; }
+
+    /// <summary>
+    /// Volume normalizado da música temática (0.0 a 1.0). Nulo em schemas legados.
+    /// </summary>
+    [JsonPropertyName("volumeMusica")]
+    public float? VolumeMusica { get; init; }
+
+    /// <summary>
+    /// Sinaliza se a reprodução dos efeitos sonoros está ativa. Nulo em schemas legados.
+    /// </summary>
+    [JsonPropertyName("efeitosAtivos")]
+    public bool? EfeitosAtivos { get; init; }
+
+    /// <summary>
+    /// Sinaliza se a reprodução da música ambiente está ativa. Nulo em schemas legados.
+    /// </summary>
+    [JsonPropertyName("musicaAtiva")]
+    public bool? MusicaAtiva { get; init; }
+
+    /// <summary>
     /// Cria uma instância de DTO a partir de uma entidade de domínio <see cref="ProgressoJogador"/>.
     /// </summary>
     /// <param name="progresso">Entidade de domínio a ser mapeada.</param>
@@ -104,12 +128,17 @@ public readonly record struct ProgressoJogadorDTO
             NivelCatapulta = progresso.Aeronave.ObterNivel(TipoMelhoria.Catapulta),
             RecordeDistanciaMetros = progresso.RecordeDistanciaMetros,
             RecordeAltitudeMetros = progresso.RecordeAltitudeMetros,
-            TotalVoosRealizados = progresso.TotalVoosRealizados
+            TotalVoosRealizados = progresso.TotalVoosRealizados,
+            VolumeEfeitos = progresso.ConfiguracaoAudio.VolumeEfeitos,
+            VolumeMusica = progresso.ConfiguracaoAudio.VolumeMusica,
+            EfeitosAtivos = progresso.ConfiguracaoAudio.EfeitosAtivos,
+            MusicaAtiva = progresso.ConfiguracaoAudio.MusicaAtiva
         };
     }
 
     /// <summary>
-    /// Converte o DTO desserializado para a entidade de domínio <see cref="ProgressoJogador"/>.
+    /// Converte o DTO desserializado para a entidade de domínio <see cref="ProgressoJogador"/>,
+    /// garantindo tolerância a campos ausentes com retrocompatibilidade para valores canônicos padrão.
     /// </summary>
     /// <returns>Entidade de domínio com invariantes válidas.</returns>
     public ProgressoJogador ParaDominio()
@@ -121,12 +150,19 @@ public readonly record struct ProgressoJogadorDTO
             NivelTanqueCombustivel,
             NivelCatapulta);
 
+        var configAudio = new ConfiguracaoAudio(
+            VolumeEfeitos ?? ConfiguracaoAudio.Padrao.VolumeEfeitos,
+            VolumeMusica ?? ConfiguracaoAudio.Padrao.VolumeMusica,
+            EfeitosAtivos ?? ConfiguracaoAudio.Padrao.EfeitosAtivos,
+            MusicaAtiva ?? ConfiguracaoAudio.Padrao.MusicaAtiva);
+
         return new ProgressoJogador(
             Id,
             aeronave,
             new Moeda(SaldoMoedas),
             RecordeDistanciaMetros,
             RecordeAltitudeMetros,
-            TotalVoosRealizados);
+            TotalVoosRealizados,
+            configAudio);
     }
 }

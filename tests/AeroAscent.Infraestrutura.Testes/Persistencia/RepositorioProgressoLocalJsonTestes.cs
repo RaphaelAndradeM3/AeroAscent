@@ -78,6 +78,10 @@ public class RepositorioProgressoLocalJsonTestes : IDisposable
         Assert.Equal(progressoOriginal.RecordeDistanciaMetros, progressoCarregado.RecordeDistanciaMetros);
         Assert.Equal(progressoOriginal.RecordeAltitudeMetros, progressoCarregado.RecordeAltitudeMetros);
         Assert.Equal(progressoOriginal.TotalVoosRealizados, progressoCarregado.TotalVoosRealizados);
+        Assert.Equal(progressoOriginal.ConfiguracaoAudio.VolumeEfeitos, progressoCarregado.ConfiguracaoAudio.VolumeEfeitos);
+        Assert.Equal(progressoOriginal.ConfiguracaoAudio.VolumeMusica, progressoCarregado.ConfiguracaoAudio.VolumeMusica);
+        Assert.Equal(progressoOriginal.ConfiguracaoAudio.EfeitosAtivos, progressoCarregado.ConfiguracaoAudio.EfeitosAtivos);
+        Assert.Equal(progressoOriginal.ConfiguracaoAudio.MusicaAtiva, progressoCarregado.ConfiguracaoAudio.MusicaAtiva);
     }
 
     [Fact]
@@ -221,5 +225,59 @@ public class RepositorioProgressoLocalJsonTestes : IDisposable
 
         // Assert - SC-001: Tempo < 15ms
         Assert.True(cronometro.ElapsedMilliseconds < 15, $"Tempo de salvamento ({cronometro.ElapsedMilliseconds}ms) excedeu o teto de 15ms.");
+    }
+
+    [Fact]
+    public async Task SalvarProgressoAsync_ComConfiguracaoAudioCustomizada_DevePersistirERecarregarValoresExatos()
+    {
+        // Arrange
+        var progresso = ProgressoJogador.CriarNovo();
+        var configCustomizada = new ConfiguracaoAudio(0.35f, 0.45f, false, true);
+        progresso.AtualizarConfiguracaoAudio(configCustomizada);
+
+        // Act
+        await _repositorio.SalvarProgressoAsync(progresso);
+        var recarregado = await _repositorio.CarregarProgressoAsync();
+
+        // Assert
+        Assert.NotNull(recarregado);
+        Assert.Equal(0.35f, recarregado.ConfiguracaoAudio.VolumeEfeitos);
+        Assert.Equal(0.45f, recarregado.ConfiguracaoAudio.VolumeMusica);
+        Assert.False(recarregado.ConfiguracaoAudio.EfeitosAtivos);
+        Assert.True(recarregado.ConfiguracaoAudio.MusicaAtiva);
+    }
+
+    [Fact]
+    public async Task CarregarProgressoAsync_QuandoJsonLegadoNaoPossuiCamposDeAudio_DeveRetornarConfiguracaoAudioPadraoComRetrocompatibilidade()
+    {
+        // Arrange - Criar arquivo JSON legado diretamente no disco sem as chaves de áudio
+        string jsonLegado = """
+        {
+          "versaoSchema": 1,
+          "dataHoraSalvamentoUtc": "2026-09-01T00:00:00Z",
+          "id": "11111111-1111-1111-1111-111111111111",
+          "saldoMoedas": 999,
+          "nivelMotor": 2,
+          "nivelAerodinamica": 2,
+          "nivelTanqueCombustivel": 2,
+          "nivelCatapulta": 2,
+          "recordeDistanciaMetros": 100.0,
+          "recordeAltitudeMetros": 30.0,
+          "totalVoosRealizados": 5
+        }
+        """;
+        await File.WriteAllTextAsync(_configuracao.CaminhoCompletoPrincipal, jsonLegado);
+
+        // Act
+        var progressoRecuperado = await _repositorio.CarregarProgressoAsync();
+
+        // Assert - Deve carregar com sucesso atribuindo ConfiguracaoAudio.Padrao
+        Assert.NotNull(progressoRecuperado);
+        Assert.Equal(Guid.Parse("11111111-1111-1111-1111-111111111111"), progressoRecuperado.Id);
+        Assert.Equal(999, progressoRecuperado.SaldoMoedas.Quantidade);
+        Assert.Equal(ConfiguracaoAudio.Padrao.VolumeEfeitos, progressoRecuperado.ConfiguracaoAudio.VolumeEfeitos);
+        Assert.Equal(ConfiguracaoAudio.Padrao.VolumeMusica, progressoRecuperado.ConfiguracaoAudio.VolumeMusica);
+        Assert.Equal(ConfiguracaoAudio.Padrao.EfeitosAtivos, progressoRecuperado.ConfiguracaoAudio.EfeitosAtivos);
+        Assert.Equal(ConfiguracaoAudio.Padrao.MusicaAtiva, progressoRecuperado.ConfiguracaoAudio.MusicaAtiva);
     }
 }

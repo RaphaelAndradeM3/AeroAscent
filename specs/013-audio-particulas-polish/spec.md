@@ -7,6 +7,18 @@
 
 ---
 
+## Clarifications
+
+### Session 2026-09-06
+
+- Q: Onde o contrato do serviço de áudio (`IServicoAudio`) deve residir na arquitetura da solução e como a reprodução deve ser desacoplada para garantir testes automatizados sem acoplamento à Unity Engine? → A: Contrato `IServicoAudio` em `Core.Aplicacao.Contratos` com `EventoAudio` e parâmetros na stack; implementação na Unity com `AudioSource` agrupados por canal (SFX e Música) e fallback seguro caso hardware esteja indisponível.
+- Q: Como o serviço de áudio (`IServicoAudio`) deve controlar os efeitos contínuos de intensidade variável (vento relativo à velocidade e propulsão do boost) assegurando alocação zero de memória (`GC Alloc = 0 bytes`)? → A: Métodos dedicados na stack (`AtualizarLoopVento` e `DefinirLoopPropulsao`) que ajustam volume e pitch dos canais contínuos com atenuação suave (*fade in/out*), mantendo zero alocação no heap.
+- Q: Como a entidade/objeto de valor `ConfiguracaoAudio` deve ser modelada e como suas preferências de volume e mudo devem ser persistidas entre sessões de jogo? → A: `ConfiguracaoAudio` como `readonly record struct` imutável no Domínio (volumes normalizados 0.0f a 1.0f e flags de ativação), persistida de forma unificada no agregado `ProgressoJogador` via repositório JSON local.
+- Q: Como os emissores de partículas (rastro de cauda, chamas de boost, brilho de coleta de moedas e confetes) devem ser organizados e gerenciados no Unity para garantir taxa de quadros de 60 FPS estáveis e zero alocação no heap (`GC Alloc = 0 bytes`)? → A: `GerenciadorParticulas` na camada de apresentação com *Object Pooling* pré-alocado para efeitos voláteis de cenário/UI (moedas e confetes) e alternância de emissão contínua (`emission.enabled`) nos módulos de cauda e boost fixados à aeronave.
+- Q: Como o subsistema de áudio deve processar a coleta de múltiplas moedas ou anéis de vento em rápida sucessão para garantir retorno sonoro prazeroso sem cacofonia ou corte de áudio? → A: Pool de canais de SFX com limite de até 4 vozes simultâneas e modulação procedural de pitch ascendente (+0.05 por moeda consecutiva rápida), criando efeito melódico satisfatório sem estourar o volume máximo.
+
+---
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Efeitos Sonoros Imersivos e Suaves (Priority: P1)
@@ -53,8 +65,8 @@ Como jogador em um smartphone ou tablet, desejo que o jogo execute a 60 FPS est�
 
 ### Edge Cases
 
-- Dispositivo com áudio no mudo: o sistema de som deve respeitar a configuração do sistema operacional e não gerar exceções.
-- Múltiplas moedas coletadas em rápida sucessão: o áudio deve permitir sobreposição suave com leve variação de pitch (*pitch modulation*) sem estourar o volume máximo.
+- Dispositivo com áudio no mudo ou sem hardware de áudio: o sistema de som deve operar em modo silencioso seguro sem lançar exceções.
+- Múltiplas moedas coletadas em rápida sucessão: o subsistema de áudio limita a polifonia simultânea a 4 vozes e aplica modulação harmônica procedural de pitch ascendente (+0.05 por coleta consecutiva em janela < 0,3s), evitando distorção ou corte áspero de som.
 
 ---
 
@@ -71,7 +83,7 @@ Como jogador em um smartphone ou tablet, desejo que o jogo execute a 60 FPS est�
 ### Key Entities
 
 - **`EventoAudio`**: Enumeração com os sons do jogo (`LancamentoCatapulta`, `VooVento`, `PropulsorBoost`, `ColetaMoeda`, `PassagemAnelVento`, `PousoSuave`, `NovoRecorde`, `CliqueBotao`).
-- **`ConfiguracaoAudio`**: Objeto com volumes independentes para SFX e Música.
+- **`ConfiguracaoAudio`**: Objeto de valor imutável (`readonly record struct`) na camada de Domínio contendo volumes normalizados (`VolumeEfeitos`, `VolumeMusica` de 0.0f a 1.0f) e flags de controle (`EfeitosAtivos`, `MusicaAtiva`), com valores padrão e métodos de alteração segura.
 
 ---
 

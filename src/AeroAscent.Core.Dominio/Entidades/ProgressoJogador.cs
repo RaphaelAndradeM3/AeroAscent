@@ -40,6 +40,38 @@ public class ProgressoJogador
     public int TotalVoosRealizados { get; private set; }
 
     /// <summary>
+    /// Preferências acústicas de áudio do jogador (volumes e canais de efeitos e música).
+    /// </summary>
+    public ConfiguracaoAudio ConfiguracaoAudio { get; private set; }
+
+    /// <summary>
+    /// Construtor de compatibilidade do agregado ProgressoJogador, aplicando a configuração de áudio padrão.
+    /// </summary>
+    /// <param name="id">Identificador único do progresso.</param>
+    /// <param name="aeronave">Aeronave ativa associada.</param>
+    /// <param name="saldoMoedas">Saldo atual de moedas.</param>
+    /// <param name="recordeDistanciaMetros">Recorde histórico de distância horizontal.</param>
+    /// <param name="recordeAltitudeMetros">Recorde histórico de altitude máxima.</param>
+    /// <param name="totalVoosRealizados">Total acumulado de voos executados.</param>
+    public ProgressoJogador(
+        Guid id,
+        Aeronave aeronave,
+        Moeda saldoMoedas,
+        float recordeDistanciaMetros,
+        float recordeAltitudeMetros,
+        int totalVoosRealizados)
+        : this(
+            id,
+            aeronave,
+            saldoMoedas,
+            recordeDistanciaMetros,
+            recordeAltitudeMetros,
+            totalVoosRealizados,
+            ConfiguracaoAudio.Padrao)
+    {
+    }
+
+    /// <summary>
     /// Construtor completo do agregado ProgressoJogador com validação rigorosa de invariantes.
     /// </summary>
     /// <param name="id">Identificador único do progresso.</param>
@@ -48,6 +80,7 @@ public class ProgressoJogador
     /// <param name="recordeDistanciaMetros">Recorde histórico de distância horizontal.</param>
     /// <param name="recordeAltitudeMetros">Recorde histórico de altitude máxima.</param>
     /// <param name="totalVoosRealizados">Total acumulado de voos executados.</param>
+    /// <param name="configuracaoAudio">Preferências acústicas de volume e canais sonoros.</param>
     /// <exception cref="DominioInvalidoException">Lançada caso algum dado viole as regras do domínio.</exception>
     public ProgressoJogador(
         Guid id,
@@ -55,7 +88,8 @@ public class ProgressoJogador
         Moeda saldoMoedas,
         float recordeDistanciaMetros,
         float recordeAltitudeMetros,
-        int totalVoosRealizados)
+        int totalVoosRealizados,
+        ConfiguracaoAudio configuracaoAudio)
     {
         if (id == Guid.Empty)
         {
@@ -88,10 +122,11 @@ public class ProgressoJogador
         RecordeDistanciaMetros = recordeDistanciaMetros;
         RecordeAltitudeMetros = recordeAltitudeMetros;
         TotalVoosRealizados = totalVoosRealizados;
+        ConfiguracaoAudio = configuracaoAudio;
     }
 
     /// <summary>
-    /// Inicializa um novo registro de progresso limpo para um novo jogador, com aeronave padrão e saldos zerados.
+    /// Inicializa um novo registro de progresso limpo para um novo jogador, com aeronave padrão, saldos zerados e áudio padrão.
     /// </summary>
     /// <returns>Nova instância de ProgressoJogador.</returns>
     public static ProgressoJogador CriarNovo()
@@ -102,7 +137,17 @@ public class ProgressoJogador
             Moeda.Zero,
             recordeDistanciaMetros: 0f,
             recordeAltitudeMetros: 0f,
-            totalVoosRealizados: 0);
+            totalVoosRealizados: 0,
+            ConfiguracaoAudio.Padrao);
+    }
+
+    /// <summary>
+    /// Atualiza as preferências sonoras de áudio do jogador.
+    /// </summary>
+    /// <param name="novaConfiguracao">Novas opções de volume e canais ativos.</param>
+    public void AtualizarConfiguracaoAudio(ConfiguracaoAudio novaConfiguracao)
+    {
+        ConfiguracaoAudio = novaConfiguracao;
     }
 
     /// <summary>
