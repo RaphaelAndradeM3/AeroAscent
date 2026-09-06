@@ -53,12 +53,12 @@
 **Independent Test**: Testável acionando os comandos de emissão de partículas e validando que o pool não gera instâncias repetitivas no heap.
 
 ### Tests for User Story 2
-- [ ] T011 [P] [US2] Criar testes unitários para contrato de partículas em tests/AeroAscent.Core.Aplicacao.Testes/Servicos/GerenciadorParticulasTestes.cs
+- [X] T011 [P] [US2] Criar testes unitários para contrato de partículas em tests/AeroAscent.Core.Aplicacao.Testes/Servicos/GerenciadorParticulasTestes.cs
 
 ### Implementation for User Story 2
-- [ ] T012 [P] [US2] Implementar contrato IGerenciadorParticulas em src/AeroAscent.Core.Aplicacao/Contratos/IGerenciadorParticulas.cs
-- [ ] T013 [US2] Criar fixture GerenciadorParticulasFalso em tests/AeroAscent.Core.Aplicacao.Testes/Fixtures/GerenciadorParticulasFalso.cs
-- [ ] T014 [US2] Executar e validar testes de User Story 2 assegurando conformidade de acionamento em tests/AeroAscent.Core.Aplicacao.Testes/Servicos/GerenciadorParticulasTestes.cs
+- [X] T012 [P] [US2] Implementar contrato IGerenciadorParticulas em src/AeroAscent.Core.Aplicacao/Contratos/IGerenciadorParticulas.cs
+- [X] T013 [US2] Criar fixture GerenciadorParticulasFalso em tests/AeroAscent.Core.Aplicacao.Testes/Fixtures/GerenciadorParticulasFalso.cs
+- [X] T014 [US2] Executar e validar testes de User Story 2 assegurando conformidade de acionamento em tests/AeroAscent.Core.Aplicacao.Testes/Servicos/GerenciadorParticulasTestes.cs
 
 **Checkpoint**: User Stories 1 e 2 funcionando de maneira integrada e independente.
 
