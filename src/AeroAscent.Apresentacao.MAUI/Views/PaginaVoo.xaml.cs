@@ -27,6 +27,46 @@ public partial class PaginaVoo : ContentPage, IVisaoHUDVoo
     private bool _emVooAtivo;
     private bool _finalizandoVoo;
 
+#if WINDOWS
+    private bool _aguardandoLiberarEspacoDisparo;
+    private bool _teclaSubidaAtiva;
+    private bool _teclaDescidaAtiva;
+    private bool _teclaBoostAtiva;
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern short GetAsyncKeyState(int vKey);
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern IntPtr GetForegroundWindow();
+
+    [System.Runtime.InteropServices.DllImport("user32.dll")]
+    private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
+
+    private const int VK_RETURN = 0x0D;
+    private const int VK_SPACE = 0x20;
+    private const int VK_UP = 0x26;
+    private const int VK_DOWN = 0x28;
+    private const int VK_W = 0x57;
+    private const int VK_S = 0x53;
+
+    private static bool TeclaPressionada(int vKey)
+    {
+        return (GetAsyncKeyState(vKey) & 0x8000) != 0;
+    }
+
+    private static bool JanelaDoJogoEstaAtiva()
+    {
+        var hwndAtivo = GetForegroundWindow();
+        if (hwndAtivo == IntPtr.Zero)
+        {
+            return true;
+        }
+
+        GetWindowThreadProcessId(hwndAtivo, out uint idProcessoAtivo);
+        return idProcessoAtivo == (uint)Environment.ProcessId;
+    }
+#endif
+
     /// <inheritdoc />
     public event Action? AoSolicitarSubida;
 
@@ -88,8 +128,28 @@ public partial class PaginaVoo : ContentPage, IVisaoHUDVoo
 
         _emVooAtivo = false;
         _finalizandoVoo = false;
+
+#if WINDOWS
+        _aguardandoLiberarEspacoDisparo = false;
+        _teclaSubidaAtiva = false;
+        _teclaDescidaAtiva = false;
+        _teclaBoostAtiva = false;
+#endif
+
+        BtnDisparar.IsEnabled = true;
+
+        OverlayCatapulta.IsVisible = true;
+        OverlayCatapulta.Opacity = 1;
+        OverlayCatapulta.InputTransparent = false;
+
         PainelCatapulta.IsVisible = true;
+        PainelCatapulta.Opacity = 1;
+        PainelCatapulta.InputTransparent = false;
+
         PainelHUDVoo.IsVisible = false;
+        PainelHUDVoo.Opacity = 0;
+        PainelHUDVoo.InputTransparent = true;
+        BadgeNovoRecorde.IsVisible = false;
 
         _cronometro.Restart();
         _timer.Start();
@@ -100,9 +160,23 @@ public partial class PaginaVoo : ContentPage, IVisaoHUDVoo
         base.OnDisappearing();
         _timer.Stop();
         _cronometro.Stop();
+
+#if WINDOWS
+        if (_teclaBoostAtiva) AoInterromperBoost?.Invoke();
+        if (_teclaSubidaAtiva) AoInterromperSubida?.Invoke();
+        if (_teclaDescidaAtiva) AoInterromperDescida?.Invoke();
+        _teclaBoostAtiva = false;
+        _teclaSubidaAtiva = false;
+        _teclaDescidaAtiva = false;
+#endif
     }
 
     private void OnDispararCatapultaClicked(object? sender, EventArgs e)
+    {
+        DispararCatapulta();
+    }
+
+    private void DispararCatapulta()
     {
         if (_emVooAtivo) return;
 
@@ -113,8 +187,27 @@ public partial class PaginaVoo : ContentPage, IVisaoHUDVoo
         if (resultado.Sucesso)
         {
             _emVooAtivo = true;
+
+#if WINDOWS
+            // Se o lançamento foi com a tecla espaço, aguarda soltá-la antes de ligar o boost
+            _aguardandoLiberarEspacoDisparo = TeclaPressionada(VK_SPACE);
+#endif
+
+            BtnDisparar.IsEnabled = false;
+            BtnDisparar.Unfocus();
+
+            OverlayCatapulta.IsVisible = false;
+            OverlayCatapulta.Opacity = 0;
+            OverlayCatapulta.InputTransparent = true;
+
             PainelCatapulta.IsVisible = false;
+            PainelCatapulta.Opacity = 0;
+            PainelCatapulta.InputTransparent = true;
+
             PainelHUDVoo.IsVisible = true;
+            PainelHUDVoo.Opacity = 1;
+            PainelHUDVoo.InputTransparent = false;
+
             _drawable.StatusAtual = StatusVoo.EmVoo;
         }
         else
@@ -137,6 +230,18 @@ public partial class PaginaVoo : ContentPage, IVisaoHUDVoo
 
         if (!_emVooAtivo)
         {
+#if WINDOWS
+            // Suporte imediato via teclado para disparar a catapulta no Windows com Enter ou Espaço
+            if (JanelaDoJogoEstaAtiva())
+            {
+                if (TeclaPressionada(VK_RETURN) || TeclaPressionada(VK_SPACE))
+                {
+                    DispararCatapulta();
+                    return;
+                }
+            }
+#endif
+
             // Fase de preparação: oscilação do medidor de força da catapulta
             _faseCatapulta += deltaSegundos * 3.5f;
             var valorOscilante = (MathF.Sin(_faseCatapulta) + 1f) * 0.5f;
@@ -160,6 +265,68 @@ public partial class PaginaVoo : ContentPage, IVisaoHUDVoo
             return;
         }
 
+#if WINDOWS
+        // Polling contínuo de hardware com zero alocação (GC Alloc = 0 bytes) para controles fluidos no Windows
+        if (JanelaDoJogoEstaAtiva())
+        {
+            // 1. Propulsão / Boost (Barra de Espaço)
+            var espacoPressionado = TeclaPressionada(VK_SPACE);
+            if (_aguardandoLiberarEspacoDisparo)
+            {
+                if (!espacoPressionado)
+                {
+                    _aguardandoLiberarEspacoDisparo = false;
+                }
+            }
+            else
+            {
+                if (espacoPressionado && !_teclaBoostAtiva)
+                {
+                    _teclaBoostAtiva = true;
+                    AoSolicitarBoost?.Invoke();
+                }
+                else if (!espacoPressionado && _teclaBoostAtiva)
+                {
+                    _teclaBoostAtiva = false;
+                    AoInterromperBoost?.Invoke();
+                }
+            }
+
+            // 2. Inclinação para Subida (W ou Seta para Cima)
+            var subidaPressionada = TeclaPressionada(VK_W) || TeclaPressionada(VK_UP);
+            if (subidaPressionada && !_teclaSubidaAtiva)
+            {
+                _teclaSubidaAtiva = true;
+                AoSolicitarSubida?.Invoke();
+            }
+            else if (!subidaPressionada && _teclaSubidaAtiva)
+            {
+                _teclaSubidaAtiva = false;
+                AoInterromperSubida?.Invoke();
+            }
+
+            // 3. Inclinação para Descida (S ou Seta para Baixo)
+            var descidaPressionada = TeclaPressionada(VK_S) || TeclaPressionada(VK_DOWN);
+            if (descidaPressionada && !_teclaDescidaAtiva)
+            {
+                _teclaDescidaAtiva = true;
+                AoSolicitarDescida?.Invoke();
+            }
+            else if (!descidaPressionada && _teclaDescidaAtiva)
+            {
+                _teclaDescidaAtiva = false;
+                AoInterromperDescida?.Invoke();
+            }
+        }
+        else
+        {
+            // Se a janela perdeu foco, desativa entradas ativas para segurança
+            if (_teclaBoostAtiva) { _teclaBoostAtiva = false; AoInterromperBoost?.Invoke(); }
+            if (_teclaSubidaAtiva) { _teclaSubidaAtiva = false; AoInterromperSubida?.Invoke(); }
+            if (_teclaDescidaAtiva) { _teclaDescidaAtiva = false; AoInterromperDescida?.Invoke(); }
+        }
+#endif
+
         // Fase de voo ativo: consome comandos do piloto e atualiza a simulação física
         var comandoPiloto = _apresentadorHUD.ObterComandosControle();
         _gerenciadorSessao.AtualizarFrameVoo(comandoPiloto, deltaSegundos);
@@ -181,6 +348,15 @@ public partial class PaginaVoo : ContentPage, IVisaoHUDVoo
                 _finalizandoVoo = true;
                 _timer.Stop();
                 _cronometro.Stop();
+
+#if WINDOWS
+                if (_teclaBoostAtiva) AoInterromperBoost?.Invoke();
+                if (_teclaSubidaAtiva) AoInterromperSubida?.Invoke();
+                if (_teclaDescidaAtiva) AoInterromperDescida?.Invoke();
+                _teclaBoostAtiva = false;
+                _teclaSubidaAtiva = false;
+                _teclaDescidaAtiva = false;
+#endif
 
                 // Aguarda 1 segundo contemplativo da aeronave parada no solo
                 await Task.Delay(1000);

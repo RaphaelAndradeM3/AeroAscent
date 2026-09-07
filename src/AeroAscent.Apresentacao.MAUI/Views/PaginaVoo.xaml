@@ -16,41 +16,51 @@
                       VerticalOptions="Fill" />
 
         <!-- 2. Overlay de Lançamento da Catapulta (Fase de Preparação) -->
-        <Border x:Name="PainelCatapulta"
-                ZIndex="10"
-                HorizontalOptions="Center"
-                VerticalOptions="Center"
-                BackgroundColor="#1E293B"
-                StrokeShape="RoundRectangle 20"
-                Stroke="#3B82F6"
-                StrokeThickness="2"
-                Padding="24"
-                WidthRequest="340">
-            <VerticalStackLayout Spacing="16" HorizontalOptions="Center">
-                <Label Text="🎯 LANÇAMENTO INICIAL" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center" />
-                <Label Text="Acerte o medidor na zona máxima para voar mais longe!" FontSize="12" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
+        <Grid x:Name="OverlayCatapulta"
+              ZIndex="20"
+              HorizontalOptions="Fill"
+              VerticalOptions="Fill"
+              BackgroundColor="#60000000">
+            <Border x:Name="PainelCatapulta"
+                    HorizontalOptions="Center"
+                    VerticalOptions="Center"
+                    BackgroundColor="#1E293B"
+                    StrokeShape="RoundRectangle 20"
+                    Stroke="#3B82F6"
+                    StrokeThickness="2"
+                    Padding="24"
+                    WidthRequest="360">
+                <VerticalStackLayout Spacing="16" HorizontalOptions="Center">
+                    <Label Text="🎯 LANÇAMENTO DA CATAPULTA" FontSize="20" FontAttributes="Bold" TextColor="White" HorizontalTextAlignment="Center" />
+                    <Label Text="Acerte o medidor na zona ideal para voar mais longe!" FontSize="12" TextColor="#94A3B8" HorizontalTextAlignment="Center" />
 
-                <!-- Barra de Força Oscilante -->
-                <Grid HeightRequest="24">
-                    <ProgressBar x:Name="BarraForcaCatapulta" Progress="0.5" ProgressColor="#10B981" HeightRequest="16" />
-                </Grid>
+                    <!-- Barra de Força Oscilante -->
+                    <Grid HeightRequest="24">
+                        <ProgressBar x:Name="BarraForcaCatapulta" Progress="0.5" ProgressColor="#10B981" HeightRequest="16" />
+                    </Grid>
 
-                <Label x:Name="LabelStatusForca" Text="Zona Ideal: 80% - 95%" FontSize="13" FontAttributes="Bold" TextColor="#FCD34D" HorizontalTextAlignment="Center" />
+                    <Label x:Name="LabelStatusForca" Text="Zona Ideal: 80% - 95%" FontSize="13" FontAttributes="Bold" TextColor="#FCD34D" HorizontalTextAlignment="Center" />
 
-                <Button x:Name="BtnDisparar"
-                        Text="🚀 DISPARAR CATAPULTA!"
-                        BackgroundColor="#EF4444"
-                        TextColor="White"
-                        FontAttributes="Bold"
-                        FontSize="16"
-                        CornerRadius="12"
-                        HeightRequest="50"
-                        Clicked="OnDispararCatapultaClicked" />
-            </VerticalStackLayout>
-        </Border>
+                    <Button x:Name="BtnDisparar"
+                            Text="🚀 DISPARAR CATAPULTA!"
+                            BackgroundColor="#EF4444"
+                            TextColor="White"
+                            FontAttributes="Bold"
+                            FontSize="16"
+                            CornerRadius="12"
+                            HeightRequest="50"
+                            Clicked="OnDispararCatapultaClicked" />
+
+                    <Label Text="Atalho: Pressione [ENTER] ou [ESPAÇO] no teclado"
+                           FontSize="11"
+                           TextColor="#64748B"
+                           HorizontalTextAlignment="Center" />
+                </VerticalStackLayout>
+            </Border>
+        </Grid>
 
         <!-- 3. HUD de Voo em Tempo Real (Fase de Voo Ativo) -->
-        <Grid x:Name="PainelHUDVoo" ZIndex="10" IsVisible="False" RowDefinitions="Auto, *, Auto" Padding="16">
+        <Grid x:Name="PainelHUDVoo" ZIndex="10" IsVisible="False" Opacity="0" InputTransparent="True" RowDefinitions="Auto, *, Auto" Padding="16">
 
             <!-- Barra Superior de Telemetria -->
             <Border Grid.Row="0" BackgroundColor="#0F172ACC" StrokeShape="RoundRectangle 16" Stroke="#334155" Padding="14,10">
@@ -125,7 +135,7 @@
 
                 <!-- Atalhos de Teclado no Centro -->
                 <Label Grid.Column="1"
-                       Text="Dica: No Windows use [W] / [S] para Inclinação e [ESPAÇO] para Boost"
+                       Text="🎮 Teclado: [W / ⬆️] Subir | [S / ⬇️] Descer | [ESPAÇO] Boost"
                        FontSize="11"
                        TextColor="#94A3B8"
                        HorizontalTextAlignment="Center"
