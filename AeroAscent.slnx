@@ -3,6 +3,7 @@
     <Project Path="src/AeroAscent.Core.Aplicacao/AeroAscent.Core.Aplicacao.csproj" />
     <Project Path="src/AeroAscent.Core.Dominio/AeroAscent.Core.Dominio.csproj" />
     <Project Path="src/AeroAscent.Infraestrutura/AeroAscent.Infraestrutura.csproj" />
+    <Project Path="src/AeroAscent.Apresentacao.MAUI/AeroAscent.Apresentacao.MAUI.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/AeroAscent.Core.Aplicacao.Testes/AeroAscent.Core.Aplicacao.Testes.csproj" />
