@@ -120,7 +120,7 @@ public sealed class GerenciadorSessaoJogo
     /// </summary>
     public ResultadoLancamento LancarAeronave(float precisao0a1)
     {
-        if (_vooAtual == null)
+        if (_vooAtual == null || _vooAtual.Status != StatusVoo.EmPreparacao)
         {
             PrepararNovoVoo();
         }

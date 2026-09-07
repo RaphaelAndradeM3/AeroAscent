@@ -178,6 +178,9 @@ public partial class PaginaVoo : ContentPage, IVisaoHUDVoo
     {
         InitializeComponent();
 
+        NavigationPage.SetHasNavigationBar(this, false);
+        NavigationPage.SetHasBackButton(this, false);
+
         _gerenciadorSessao = gerenciadorSessao;
         _drawable = new CanvasVooDrawable
         {
@@ -196,6 +199,30 @@ public partial class PaginaVoo : ContentPage, IVisaoHUDVoo
         _timer.Tick += OnGameLoopTick;
     }
 
+#if WINDOWS
+    /// <inheritdoc />
+    protected override void OnHandlerChanged()
+    {
+        base.OnHandlerChanged();
+        if (BtnDisparar.Handler?.PlatformView is Microsoft.UI.Xaml.Controls.Control btnDisparar)
+        {
+            btnDisparar.IsTabStop = false;
+        }
+        if (BtnSubir.Handler?.PlatformView is Microsoft.UI.Xaml.Controls.Control btnSubir)
+        {
+            btnSubir.IsTabStop = false;
+        }
+        if (BtnDescer.Handler?.PlatformView is Microsoft.UI.Xaml.Controls.Control btnDescer)
+        {
+            btnDescer.IsTabStop = false;
+        }
+        if (BtnBoost.Handler?.PlatformView is Microsoft.UI.Xaml.Controls.Control btnBoost)
+        {
+            btnBoost.IsTabStop = false;
+        }
+    }
+#endif
+
     /// <summary>
     /// Executado quando a página torna-se visível na navegação, inicializando o estado de voo.
     /// </summary>
@@ -203,7 +230,14 @@ public partial class PaginaVoo : ContentPage, IVisaoHUDVoo
     {
         base.OnAppearing();
 
-        if (_gerenciadorSessao.VooAtual == null)
+        // Se a simulação já está em voo ativo, não reiniciar o estado de lançamento
+        if (_emVooAtivo)
+        {
+            return;
+        }
+
+        // Garante que o voo esteja inicializado e estritamente no estado de preparação
+        if (_gerenciadorSessao.VooAtual == null || _gerenciadorSessao.VooAtual.Status != StatusVoo.EmPreparacao)
         {
             _gerenciadorSessao.PrepararNovoVoo();
         }
@@ -278,6 +312,12 @@ public partial class PaginaVoo : ContentPage, IVisaoHUDVoo
     private void DispararCatapulta()
     {
         if (_emVooAtivo) return;
+
+        // Garante que o voo esteja em preparação caso tenha ocorrido alguma inconsistência anterior
+        if (_gerenciadorSessao.VooAtual == null || _gerenciadorSessao.VooAtual.Status != StatusVoo.EmPreparacao)
+        {
+            _gerenciadorSessao.PrepararNovoVoo();
+        }
 
         // Precisão baseada no valor instantâneo da barra (0.0 a 1.0)
         var precisao = (float)BarraForcaCatapulta.Progress;
